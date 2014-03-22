@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @movement_annotation.name %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @movement_annotation.description %>
+</p>
+
+<p>
+  <strong>Format:</strong>
+  <%= @movement_annotation.format %>
+</p>
+
+<%= link_to 'Edit', edit_movement_annotation_path(@movement_annotation) %> |
+<%= link_to 'Back', movement_annotations_path %>

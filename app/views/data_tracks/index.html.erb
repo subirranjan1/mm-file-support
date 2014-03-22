@@ -1,0 +1,30 @@
+<h1>All data tracks</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Format</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @data_tracks.each do |data_track| %>
+      <tr>
+        <td><%= data_track.name %></td>
+        <td><%= data_track.description %></td>
+        <td><%= link_to 'Show', data_track %></td>
+        <td><%= link_to 'Edit', edit_data_track_path(data_track) %></td>
+        <td><%= link_to 'Destroy', data_track, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New data track', new_data_track_path %>

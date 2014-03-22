@@ -1,0 +1,31 @@
+<h1>Listing movement_annotations</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Format</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @movement_annotations.each do |movement_annotation| %>
+      <tr>
+        <td><%= movement_annotation.name %></td>
+        <td><%= movement_annotation.description %></td>
+        <td><%= movement_annotation.format %></td>
+        <td><%= link_to 'Show', movement_annotation %></td>
+        <td><%= link_to 'Edit', edit_movement_annotation_path(movement_annotation) %></td>
+        <td><%= link_to 'Destroy', movement_annotation, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Movement annotation', new_movement_annotation_path %>

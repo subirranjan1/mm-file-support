@@ -1,0 +1,29 @@
+<h1>Listing movement_streams</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @movement_streams.each do |movement_stream| %>
+      <tr>
+        <td><%= movement_stream.name %></td>
+        <td><%= movement_stream.description %></td>
+        <td><%= link_to 'Show', movement_stream %></td>
+        <td><%= link_to 'Edit', edit_movement_stream_path(movement_stream) %></td>
+        <td><%= link_to 'Destroy', movement_stream, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Movement stream', new_movement_stream_path %>

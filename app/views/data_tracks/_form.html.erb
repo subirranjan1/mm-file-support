@@ -1,0 +1,36 @@
+<%= form_for(@data_track, :html => { :multipart => true }) do |f| %>
+  <% if @data_track.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@data_track.errors.count, "error") %> prohibited this movement_datum from being saved:</h2>
+
+      <ul>
+      <% @data_track.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :description %><br>
+    <%= f.text_field :description %>
+  </div>
+  <div class="field">
+	<%= f.label :movement_group %>
+	<%= f.collection_select :movement_group_id, @movement_groups, :id, :name %>
+  </div>
+  <div class="field">
+	<%= f.label :asset_file %><br>
+	<% unless @data_track.asset.nil? %>
+		Currently: <%= @data_track.asset.file_file_name %><br/>
+	<% end %>
+	<%= f.file_field :asset_file %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

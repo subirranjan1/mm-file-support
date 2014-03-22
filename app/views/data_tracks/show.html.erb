@@ -1,0 +1,22 @@
+<h1>Data Track Details</h1>
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @data_track.name %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @data_track.description %>
+</p>
+
+<% unless @data_track.asset.nil? %>
+<p>Linked asset: <%= @data_track.asset.file_file_name %> - <%= @data_track.asset.file_content_type %>
+  (<%= link_to 'view in Mova', mova_url, method: :post, data: { csvfile: @data_track.asset.file.url(:original, false) } %>)
+</p>
+<% end %>
+
+<p><em>Part of Movement Group <strong><%= @data_track.movement_group.name %></strong></em></p>
+<%= link_to 'Edit', edit_data_track_path(@data_track) %> |
+<%= link_to 'Back', data_tracks_path %>
