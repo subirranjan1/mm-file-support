@@ -45,5 +45,6 @@ end
 # Use Capistrano for deployment
 gem 'capistrano', group: :development
 
+gem 'mysql', group: [:staging, :production]
 # Use debugger
 # gem 'debugger', group: [:development, :test]
