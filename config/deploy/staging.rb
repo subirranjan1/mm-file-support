@@ -14,6 +14,7 @@
 # definition into the server list. The second argument
 # something that quacks like a hash can be used to set
 # extended properties on the server.
+set :stage, :staging
 server "142.58.181.193", roles: [:app, :web, :db], :primary => true, user: 'movingstories'
 set :deploy_to, '/Users/movingstories/Public/movingstories'
 
