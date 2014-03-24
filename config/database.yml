@@ -18,7 +18,7 @@ test:
   pool: 5
   timeout: 5000
 
-production:
+staging:
   adapter: mysql
   database: mmfilesupport
   hostname: 127.0.0.1
