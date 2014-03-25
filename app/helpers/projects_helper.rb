@@ -15,4 +15,15 @@ module ProjectsHelper
     #"http://www.sfu.ca/~oalemi/movan/"
     "http://142.58.181.193:8080/index.php"
   end
+  
+  def generate_mova_form
+    form_tag(mova_url, :method=>"POST") do 
+      @group.data_tracks.each do |track|
+        unless track.asset.nil?
+          hidden_field_tag :csvfile, URI.join(request.url, track.asset.file.url(:original, false))
+				end
+			end
+		  submit_tag "Launch!"
+    end # end form_tag
+  end # end generate_mova_form
 end

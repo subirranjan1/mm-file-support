@@ -13,7 +13,10 @@
 
 <% unless @data_track.asset.nil? %>
 <p>Linked asset: <%= @data_track.asset.file_file_name %> - <%= @data_track.asset.file_content_type %>
-  (<%= link_to 'view in Mova', mova_url, method: :post, data: { csvfile: @data_track.asset.file.url(:original, false) } %>)
+		<%= form_tag(mova_url, :method=>"POST") do -%>
+			<%= hidden_field_tag :csvfile, URI.join(request.url, @data_track.asset.file.url(:original, false)) %>
+			<%= submit_tag "View in MoVa" %>
+		<% end -%>
 </p>
 <% end %>
 
