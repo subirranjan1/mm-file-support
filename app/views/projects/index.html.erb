@@ -39,7 +39,12 @@
 			<td colspan="<%= most_data_tracks %>">No data tracks attached yet</td>
 	      <% else group.data_tracks.each do |track| %>
 			  <td><%= link_to track.name, track %> <% unless track.asset.nil? %>(<%= track.asset.file_content_type %>):
-			  <%= link_to 'view in Mova', mova_url, method: :post, data: { csvfile: track.asset.file.url(:original, false) } %><% end %></td>			
+				<%= form_tag(mova_url, :method=>"POST") do -%>
+					<%= hidden_field_tag :csvfile, root_path + track.asset.file.url(:original, false) %>
+					<%= submit_tag "View in MoVa" %>
+				<% end -%>
+			<% end %>
+			</td>			
 	        <% end %>
 
 	      <% end %>
