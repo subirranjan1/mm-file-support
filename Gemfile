@@ -41,7 +41,7 @@ end
 
 # Use Capistrano for deployment
 gem 'capistrano', group: :development
-
+gem 'capistrano-rails'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3', group: :development
 gem 'mysql', group: [:staging, :production]
