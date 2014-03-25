@@ -57,7 +57,7 @@
 				  <% if track.asset.file_content_type =~ /mp4/ %>
 		            <%= hidden_field_tag :mp4file, URI.join(request.url, track.asset.file.url(:original, false)) %>
 				  <% end %>
-				  <% if track.asset.file_content_type =~ /mp3/ %>
+				  <% if track.asset.file_content_type =~ /mpeg/ %>
 		            <%= hidden_field_tag :mp3file, URI.join(request.url, track.asset.file.url(:original, false)) %>
 				  <% end %>				
 				<% end %>
