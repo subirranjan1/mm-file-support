@@ -65,12 +65,12 @@ class MovementGroupsController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_movement_stream
+    def set_movement_group
       @movement_group = MovementGroup.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def movement_group_params
-      params.require(:movement_group).permit(:name, :description, :project_id)
+      params.require(:movement_group).permit(:name, :description, :project_id, :tag_list)
     end
 end

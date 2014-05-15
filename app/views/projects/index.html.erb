@@ -39,8 +39,7 @@
 	      <% if group.data_tracks.empty? %>
 			<td colspan="<%= most_data_tracks %>">No data tracks attached yet</td>
 	      <% else group.data_tracks.each do |track| %>
-			  <td><%= link_to track.name, track %> <% unless track.asset.nil? %>(<%= track.asset.file_content_type %>):
-			
+			  <td><%= link_to track.name, track %> <% unless track.asset.nil? %>(<%= track.asset.file_content_type %>)
 			<% end %>
 			</td>			
 	        <% end %>

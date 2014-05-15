@@ -10,5 +10,18 @@
   <%= @movement_group.description %>
 </p>
 
+<p>
+  <strong>Project Name:</strong>
+  <%= @movement_group.project.name %>
+</p>
+
+<% @movement_group.tags.any? %>
+  <p>
+    <strong>Tags:</strong>
+    <% @movement_group.tags.each do |tag| %>
+    	<%= link_to tag.name, tagged_url(:tag => tag.name) %>
+	<% end %>
+  </p>
+
 <%= link_to 'Edit', edit_movement_group_path(@movement_group) %> |
 <%= link_to 'Back', movement_groups_path %>

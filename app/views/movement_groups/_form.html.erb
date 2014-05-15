@@ -23,6 +23,10 @@
 	<%= f.label :project %>
 	<%= f.collection_select :project_id, @projects, :id, :name %>
   </div>
+  <div class="field">
+	<%= f.label :tags %>
+	<%= f.text_field :tag_list %>	
+  </div>
   <div class="actions">
     <%= f.submit %>
   </div>

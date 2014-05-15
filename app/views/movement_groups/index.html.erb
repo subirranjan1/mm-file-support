@@ -1,4 +1,4 @@
-<h1>Listing movement_streams</h1>
+<h1>Listing movement groups</h1>
 
 <table>
   <thead>
@@ -12,13 +12,13 @@
   </thead>
 
   <tbody>
-    <% @movement_streams.each do |movement_stream| %>
+    <% @movement_groups.each do |movement_group| %>
       <tr>
-        <td><%= movement_stream.name %></td>
-        <td><%= movement_stream.description %></td>
-        <td><%= link_to 'Show', movement_stream %></td>
-        <td><%= link_to 'Edit', edit_movement_stream_path(movement_stream) %></td>
-        <td><%= link_to 'Destroy', movement_stream, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= movement_group.name %></td>
+        <td><%= movement_group.description %></td>
+        <td><%= link_to 'Show', movement_group %></td>
+        <td><%= link_to 'Edit', edit_movement_group_path(movement_group) %></td>
+        <td><%= link_to 'Destroy', movement_group, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
@@ -26,4 +26,4 @@
 
 <br>
 
-<%= link_to 'New Movement stream', new_movement_stream_path %>
+<%= link_to 'New Movement stream', new_movement_group_path %>
