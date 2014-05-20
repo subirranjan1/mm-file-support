@@ -1,0 +1,25 @@
+<%= form_for(@sensor_type) do |f| %>
+  <% if @sensor_type.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@sensor_type.errors.count, "error") %> prohibited this sensor_type from being saved:</h2>
+
+      <ul>
+      <% @sensor_type.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name, size: 60 %>
+  </div>
+  <div class="field">
+    <%= f.label :description %><br>
+    <%= f.text_field :description, size: 120 %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

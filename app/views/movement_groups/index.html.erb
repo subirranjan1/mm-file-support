@@ -5,6 +5,9 @@
     <tr>
       <th>Name</th>
       <th>Description</th>
+	  <th>Project</th>
+	  <th>Public</th>
+	  <th>Tags</th>
       <th></th>
       <th></th>
       <th></th>
@@ -16,6 +19,9 @@
       <tr>
         <td><%= movement_group.name %></td>
         <td><%= movement_group.description %></td>
+		<td><%= link_to movement_group.project.name, project_path(movement_group.project) %></td>
+		<td><%= movement_group.public %></td>
+		<td><%= movement_group.tag_list %></td>
         <td><%= link_to 'Show', movement_group %></td>
         <td><%= link_to 'Edit', edit_movement_group_path(movement_group) %></td>
         <td><%= link_to 'Destroy', movement_group, method: :delete, data: { confirm: 'Are you sure?' } %></td>

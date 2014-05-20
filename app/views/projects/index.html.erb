@@ -14,12 +14,12 @@
     <% @projects.each do |project| %>
       <tr>
         <td colspan="5"><strong><%= project.name %></strong></td>
-        <td><%= link_to 'Edit Name', edit_project_path(project) %></td>
+        <td><%= link_to 'Edit Project', edit_project_path(project) %></td>
         <td><%= link_to 'Destroy Project', project, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
 	  <% if !project.movement_groups.empty? %>
 	  	<tr class="stream">
-		  <td>Movement Group</td>
+		  <td>Movement Take</td>
 		  <td>Description</td>
 		  <td>Keywords</td>
 		  <td colspan="<%= most_data_tracks %>">Data Tracks</td>
@@ -27,7 +27,7 @@
 		</tr>
 	  <% else %>
 	    <tr class="stream">
-		  <td colspan="<%= most_data_tracks + 4 %>">No associated movement groups yet</td>
+		  <td colspan="<%= most_data_tracks + 4 %>">No associated movement takes yet</td>
 		</tr>
 	  <% end %>
 	  <% project.movement_groups.each do |group| %>

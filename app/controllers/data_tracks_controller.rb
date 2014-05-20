@@ -14,13 +14,16 @@ class DataTracksController < ApplicationController
 
   # GET /movement_data/new
   def new
-    @data_track = DataTrack.new
+    @data_track = DataTrack.new    
     @movement_groups = MovementGroup.all
+    @sensor_types = SensorType.all  
   end
 
   # GET /movement_data/1/edit
   def edit
     @movement_groups = MovementGroup.all
+    @sensor_types = SensorType.all    
+    p @sensor_types
   end
 
   # POST /movement_data
@@ -34,7 +37,7 @@ class DataTracksController < ApplicationController
       @data_track.asset = asset
     end    
     @movement_groups = MovementGroup.all
-
+    @sensor_types = SensorType.all
     respond_to do |format|
       if @data_track.save
         format.html { redirect_to @data_track, notice: 'Data track was successfully created.' }
@@ -49,6 +52,8 @@ class DataTracksController < ApplicationController
   # PATCH/PUT /movement_data/1
   # PATCH/PUT /movement_data/1.json
   def update
+    @movement_groups = MovementGroup.all
+    @sensor_types = SensorType.all    
     unless params[:data_track]['asset_file'].nil? 
       #this params hash is actually an object of type Rack::Multipart::UploadedFile and this way it gets converted with name etc intact
       asset = Asset.new(:file => params[:data_track]['asset_file'])
@@ -84,6 +89,6 @@ class DataTracksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def data_track_params
-      params.require(:data_track).permit(:name, :description, :format, :movement_group_id)
+      params.require(:data_track).permit(:name, :description, :format, :movement_group_id, :tag_list, :technician, :sensor_type_id, :public, :user_id)
     end
 end

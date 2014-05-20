@@ -9,11 +9,27 @@
   <strong>Description:</strong>
   <%= @movement_annotation.description %>
 </p>
-
 <p>
   <strong>Format:</strong>
   <%= @movement_annotation.format %>
 </p>
-
+<p>
+	<strong>Data Track:</strong>
+	<%= link_to @movement_annotation.data_track.name, data_track_path(@movement_annotation.data_track) %>
+</p>
+<% if ! @movement_annotation.tags.empty? -%>
+  <p>
+    <strong>Tags:</strong>
+    <% @movement_annotation.tags.each do |tag| %>
+    	<%= link_to tag.name, tagged_url(:tag => tag.name) %>
+	<% end %>
+  </p>
+<% else -%>
+ <p>No tags yet</p>
+<% end -%>
+<p>
+  <strong>Public? </strong>
+  <%= @movement_annotation.public %>
+</p>
 <%= link_to 'Edit', edit_movement_annotation_path(@movement_annotation) %> |
 <%= link_to 'Back', movement_annotations_path %>

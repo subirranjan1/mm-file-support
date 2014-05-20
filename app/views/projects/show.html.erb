@@ -4,6 +4,24 @@
   <strong>Name:</strong>
   <%= @project.name %>
 </p>
+<p>
+  <strong>Description:</strong>
+  <%= @project.description %>
+</p>
+<p>
+  <strong>Public? </strong>
+  <%= @project.public %>
+</p>
+<% if ! @project.tags.empty? -%>
+  <p>
+    <strong>Tags:</strong>
+    <% @project.tags.each do |tag| %>
+    	<%= link_to tag.name, tagged_url(:tag => tag.name) %>
+	<% end %>
+  </p>
+<% else -%>
+ <p>No tags yet</p>
+<% end -%>
 
 <%= link_to 'Edit', edit_project_path(@project) %> |
 <%= link_to 'Back', projects_path %>

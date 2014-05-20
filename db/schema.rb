@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140320214101) do
+ActiveRecord::Schema.define(version: 20140519235904) do
 
   create_table "assets", force: true do |t|
     t.integer  "attachable_id"
@@ -26,31 +26,74 @@ ActiveRecord::Schema.define(version: 20140320214101) do
 
   create_table "data_tracks", force: true do |t|
     t.string   "name"
-    t.string   "description"
+    t.text     "description",       limit: 255
     t.integer  "movement_group_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "technician"
+    t.integer  "sensor_type_id"
+    t.boolean  "public",                        default: false
+    t.integer  "user_id"
+  end
+
+  add_index "data_tracks", ["sensor_type_id"], name: "index_data_tracks_on_sensor_type_id"
+  add_index "data_tracks", ["user_id"], name: "index_data_tracks_on_user_id"
+
+  create_table "data_tracks_movers", id: false, force: true do |t|
+    t.integer "data_track_id"
+    t.integer "mover_id"
   end
 
   create_table "movement_annotations", force: true do |t|
     t.string   "name"
-    t.string   "description"
+    t.text     "description",   limit: 255
     t.string   "format"
     t.integer  "data_track_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "public",                    default: false
+    t.integer  "user_id"
   end
+
+  add_index "movement_annotations", ["user_id"], name: "index_movement_annotations_on_user_id"
 
   create_table "movement_groups", force: true do |t|
     t.string   "name"
-    t.string   "description"
+    t.text     "description", limit: 255
     t.integer  "project_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "public",                  default: false
+    t.integer  "user_id"
+  end
+
+  add_index "movement_groups", ["user_id"], name: "index_movement_groups_on_user_id"
+
+  create_table "movers", force: true do |t|
+    t.string   "name"
+    t.date     "dob"
+    t.string   "gender"
+    t.string   "expertise"
+    t.boolean  "cma_like_training"
+    t.string   "other_training"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "projects", force: true do |t|
     t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.text     "description", limit: 255
+    t.boolean  "public",                  default: false
+    t.integer  "user_id"
+  end
+
+  add_index "projects", ["user_id"], name: "index_projects_on_user_id"
+
+  create_table "sensor_types", force: true do |t|
+    t.string   "name"
+    t.string   "description"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -76,6 +119,7 @@ ActiveRecord::Schema.define(version: 20140320214101) do
   create_table "users", force: true do |t|
     t.string "email"
     t.string "hashed_password"
+    t.string "alias"
   end
 
 end

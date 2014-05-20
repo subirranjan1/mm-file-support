@@ -11,17 +11,23 @@
 </p>
 
 <p>
-  <strong>Project Name:</strong>
-  <%= @movement_group.project.name %>
+  <strong>Project:</strong>
+  <%= link_to @movement_group.project.name, project_path(@movement_group.project) %>
 </p>
 
-<% @movement_group.tags.any? %>
+<% if ! @movement_group.tags.empty? -%>
   <p>
     <strong>Tags:</strong>
     <% @movement_group.tags.each do |tag| %>
     	<%= link_to tag.name, tagged_url(:tag => tag.name) %>
 	<% end %>
   </p>
-
+<% else -%>
+ <p>No tags yet</p>
+<% end -%>
+<p>
+  <strong>Public? </strong>
+  <%= @movement_group.public %>
+</p>
 <%= link_to 'Edit', edit_movement_group_path(@movement_group) %> |
 <%= link_to 'Back', movement_groups_path %>

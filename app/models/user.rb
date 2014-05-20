@@ -2,7 +2,10 @@ require 'bcrypt'
 class User < ActiveRecord::Base
  # users.password_hash in the database is a :string
   include BCrypt
-
+  has_many :projects
+  has_many :data_tracks
+  has_many :movement_groups
+  has_many :movement_annotations 
   # Create two virtual (in memory only) attributes to hold the password and its confirmation.
   attr_accessor :new_password, :new_password_confirmation
   # We need to validate that the user has typed the same password twice

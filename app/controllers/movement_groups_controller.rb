@@ -42,6 +42,7 @@ class MovementGroupsController < ApplicationController
   # PATCH/PUT /movement_streams/1
   # PATCH/PUT /movement_streams/1.json
   def update
+    @projects = Project.all
     respond_to do |format|
       if @movement_group.update(movement_group_params)
         format.html { redirect_to @movement_group, notice: 'Movement group was successfully updated.' }
@@ -56,11 +57,19 @@ class MovementGroupsController < ApplicationController
   # DELETE /movement_streams/1
   # DELETE /movement_streams/1.json
   def destroy
-    @movement_stream.destroy
+    @movement_group.destroy
     respond_to do |format|
       format.html { redirect_to movement_groups_url }
       format.json { head :no_content }
     end
+  end
+  
+  def tagged
+    if params[:tag].present? 
+      @movement_groups = MovementGroup.tagged_with(params[:tag])
+    else 
+      @movement_groups = MovementGroup.all
+    end  
   end
 
   private
@@ -71,6 +80,6 @@ class MovementGroupsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def movement_group_params
-      params.require(:movement_group).permit(:name, :description, :project_id, :tag_list)
+      params.require(:movement_group).permit(:name, :description, :project_id, :tag_list, :public, :user_id)
     end
 end

@@ -1,0 +1,29 @@
+<h1>Listing sensor_types</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @sensor_types.each do |sensor_type| %>
+      <tr>
+        <td><%= sensor_type.name %></td>
+        <td><%= sensor_type.description %></td>
+        <td><%= link_to 'Show', sensor_type %></td>
+        <td><%= link_to 'Edit', edit_sensor_type_path(sensor_type) %></td>
+        <td><%= link_to 'Destroy', sensor_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Sensor type', new_sensor_type_path %>

@@ -13,15 +13,32 @@
 
   <div class="field">
     <%= f.label :name %><br>
-    <%= f.text_field :name %>
+    <%= f.text_field :name, size: 60 %>
   </div>
   <div class="field">
     <%= f.label :description %><br>
-    <%= f.text_field :description %>
+    <%= f.text_area :description, size: "60x12" %>
+  </div>
+  <div class="field">
+    <%= f.label :technician %><br>
+    <%= f.text_field :technician, size: 60 %>
   </div>
   <div class="field">
 	<%= f.label :movement_group %>
 	<%= f.collection_select :movement_group_id, @movement_groups, :id, :name %>
+  </div>
+  <div class="field">
+	<%= f.label :sensor_type %>
+	<%= f.collection_select :sensor_type_id, @sensor_types, :id, :name %>
+  </div>
+  <div class="field">
+	<%= f.label :tags %>
+	<%= f.text_field :tag_list %>	
+  </div>
+  <div class="field">
+    <%= f.label :public %><br>
+    <%= f.check_box :public %> 
+<em>Public pieces are published for everyone to see</em>
   </div>
   <div class="field">
 	<%= f.label :asset_file %><br>

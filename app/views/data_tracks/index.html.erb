@@ -5,7 +5,13 @@
     <tr>
       <th>Name</th>
       <th>Description</th>
+	  <th>Sensor Type</th>
       <th>Format</th>
+      <th>Movement Take</th>
+	  <th>Technician</th>
+	  <th>Owner</th>
+	  <th>Public</th>
+	  <th>Tags</th>
       <th></th>
       <th></th>
       <th></th>
@@ -17,6 +23,17 @@
       <tr>
         <td><%= data_track.name %></td>
         <td><%= data_track.description %></td>
+		<td><% unless data_track.sensor_type.nil? %>
+			<%= data_track.sensor_type.name %> <% else %>
+			<%= "Sensor Undefined" %>
+			<% end %>
+		</td>
+		<td>TBD</td>
+		<td><%= data_track.movement_group.name %></td>
+		<td><%= data_track.technician %></td>
+		<td>TBD</td>
+		<td><%= data_track.public %></td>
+		<td><%= data_track.tag_list %></td>				
         <td><%= link_to 'Show', data_track %></td>
         <td><%= link_to 'Edit', edit_data_track_path(data_track) %></td>
         <td><%= link_to 'Destroy', data_track, method: :delete, data: { confirm: 'Are you sure?' } %></td>

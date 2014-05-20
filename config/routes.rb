@@ -1,4 +1,8 @@
 FileSupportMovingstories::Application.routes.draw do
+  resources :sensor_types
+
+  resources :movers
+
   resources :movement_annotations
 
   resources :data_tracks
@@ -15,6 +19,8 @@ FileSupportMovingstories::Application.routes.draw do
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
   root 'projects#index'
+
+  match 'tagged' => 'movement_groups#tagged', :via => [:get], :as => 'tagged'
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

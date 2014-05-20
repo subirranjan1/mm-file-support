@@ -10,6 +10,32 @@
   <strong>Description:</strong>
   <%= @data_track.description %>
 </p>
+<p>
+  <strong>Technician:</strong>
+  <%= @data_track.technician %>
+</p>
+<p>
+	<strong>Sensor Type:</strong>
+	<td><% unless @data_track.sensor_type.nil? %>
+		<%= @data_track.sensor_type.name %> <% else %>
+		<%= "Sensor Undefined" %>
+		<% end %>
+	</td>
+</p>
+<% if ! @data_track.tags.empty? -%>
+  <p>
+    <strong>Tags:</strong>
+    <% @data_track.tags.each do |tag| %>
+    	<%= link_to tag.name, tagged_url(:tag => tag.name) %>
+	<% end %>
+  </p>
+<% else -%>
+ <p>No tags yet</p>
+<% end -%>
+<p>
+  <strong>Public? </strong>
+  <%= @data_track.public %>
+</p>
 
 <% unless @data_track.asset.nil? %>
 <p>Linked asset: <%= @data_track.asset.file_file_name %> - <%= @data_track.asset.file_content_type %>

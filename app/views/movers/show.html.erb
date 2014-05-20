@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @mover.name %>
+</p>
+
+<p>
+  <strong>Dob:</strong>
+  <%= @mover.dob %>
+</p>
+
+<p>
+  <strong>Gender:</strong>
+  <%= @mover.gender %>
+</p>
+
+<p>
+  <strong>Expertise:</strong>
+  <%= @mover.expertise %>
+</p>
+
+<p>
+  <strong>Cma_like_training:</strong>
+  <%= @mover.cma_like_training %>
+</p>
+
+<p>
+  <strong>Other training:</strong>
+  <%= @mover.other_training %>
+</p>
+
+
+<%= link_to 'Edit', edit_mover_path(@mover) %> |
+<%= link_to 'Back', movers_path %>
