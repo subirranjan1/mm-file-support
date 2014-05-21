@@ -16,12 +16,16 @@
     <%= f.text_field :email %>
   </div>
   <div class="field">
-    <%= f.label :hashed_password %><br>
-    <%= f.text_field :hashed_password %>
+    <%= f.label :alias %><br>
+    <%= f.text_field :alias %> <em>Your alias will be associated with your projects etc. This is your display name</em>
   </div>
   <div class="field">
-    <%= f.label :alias %><br>
-    <%= f.text_field :alias %>
+    <%= f.label :password %><br>
+    <%= f.password_field :password %>
+  </div>
+  <div>
+    <%= f.label :password_confirmation %><br />
+    <%= f.password_field :password_confirmation %>
   </div>
   <div class="actions">
     <%= f.submit %>

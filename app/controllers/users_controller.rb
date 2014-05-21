@@ -26,8 +26,7 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     @user.password = params[:password]
-    @user.save!
-    
+        
     respond_to do |format|
       if @user.save
         format.html { redirect_to @user, notice: 'User was successfully created.' }
@@ -41,7 +40,7 @@ class UsersController < ApplicationController
 
   # PATCH/PUT /users/1
   # PATCH/PUT /users/1.json
-  def update
+  def update    
     respond_to do |format|
       if @user.update(user_params)
         format.html { redirect_to @user, notice: 'User was successfully updated.' }
@@ -62,17 +61,7 @@ class UsersController < ApplicationController
       format.json { head :no_content }
     end
   end
-  
-  def login
-      @user = User.find_by_email(params[:email])
-      if @user.password == params[:password]
-        give_token
-      else
-        flash.now.alert = "Invalid email or password"
-        redirect_to home_url
-      end
-    end
-    
+      
   # assign them a random one and mail it to them, asking them to change it
   # Mailer probably requires setup - not done
    def forgot_password
@@ -91,6 +80,6 @@ class UsersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
-      params.require(:user).permit(:email, :hashed_password, :alias)
+      params.require(:user).permit(:email, :password, :alias, :password_confirmation)
     end
 end

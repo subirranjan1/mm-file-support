@@ -32,8 +32,8 @@ group :doc do
 end
 
 # Use ActiveModel has_secure_password
-  gem 'bcrypt', '~> 3.1.2'
-  
+  gem 'bcrypt', '~> 3.1.7', :require => true
+  #gem 'bcrypt-ruby', '~> 3.0.0'  
   #tagging 
   gem 'acts-as-taggable-on'
 # Use unicorn as the app server
