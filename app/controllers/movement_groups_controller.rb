@@ -1,6 +1,6 @@
 class MovementGroupsController < ApplicationController
   before_action :set_movement_group, only: [:show, :edit, :update, :destroy]
-
+  before_filter :logged_in?, except: [:index, :show]
   # GET /movement_streams
   # GET /movement_streams.json
   def index

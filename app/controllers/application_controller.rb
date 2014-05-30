@@ -17,7 +17,11 @@ class ApplicationController < ActionController::Base
   end
   
   def redirect_back_or_default
-    redirect_to(request.env["HTTP_REFERER"] || root_url)
+    begin
+      redirect_to :back #if request.env["HTTP_REFERER"].nil? then it raises an exception which I rescue to go to the base url
+    rescue
+      redirect_to root_url
+    end
   end
   
   private

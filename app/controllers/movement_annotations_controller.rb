@@ -1,6 +1,6 @@
 class MovementAnnotationsController < ApplicationController
   before_action :set_movement_annotation, only: [:show, :edit, :update, :destroy]
-
+  before_filter :logged_in?, except: [:index, :show]
   # GET /movement_annotations
   # GET /movement_annotations.json
   def index

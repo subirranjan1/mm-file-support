@@ -63,13 +63,13 @@ class UsersController < ApplicationController
   end
       
   # assign them a random one and mail it to them, asking them to change it
-  # Mailer probably requires setup - not done
    def forgot_password
      @user = User.find_by_email(params[:email])
      random_password = Array.new(10).map { (65 + rand(58)).chr }.join
-     @user.password = random_password
+     random_password += "1$" # stupid kludge to make it accepted by the acceptable password regex
+     @user.password = @user.password_confirmation = random_password
      @user.save!
-     Mailer.create_and_deliver_password_change(@user, random_password)
+     Mailer.forgot_password(@user, @user.alias, random_password).deliver
    end
 
   private

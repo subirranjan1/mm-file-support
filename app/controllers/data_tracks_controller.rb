@@ -1,6 +1,6 @@
 class DataTracksController < ApplicationController
   before_action :set_data_track, only: [:show, :edit, :update, :destroy]
-
+  before_filter :logged_in?, except: [:index, :show]
   # GET /movement_data
   # GET /movement_data.json
   def index
@@ -23,7 +23,6 @@ class DataTracksController < ApplicationController
   def edit
     @movement_groups = MovementGroup.all
     @sensor_types = SensorType.all    
-    p @sensor_types
   end
 
   # POST /movement_data
