@@ -1,5 +1,3 @@
-<h1>Moving Stories - Movement Database Prototype</h1>
-
 <table>
   <thead>
     <tr>
@@ -11,63 +9,7 @@
   </thead>
 
   <tbody>
-    <% @projects.each do |project| %>
-      <tr>
-        <td colspan="5"><strong><%= project.name %></strong></td>
-        <td><%= link_to 'Edit Project', edit_project_path(project) %></td>
-        <td><%= link_to 'Destroy Project', project, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-	  <% if !project.movement_groups.empty? %>
-	  	<tr class="stream">
-		  <td>Movement Take</td>
-		  <td>Description</td>
-		  <td>Keywords</td>
-		  <td colspan="<%= most_data_tracks %>">Data Tracks</td>
-		  <td>Launch in Mova</td>
-		</tr>
-	  <% else %>
-	    <tr class="stream">
-		  <td colspan="<%= most_data_tracks + 4 %>">No associated movement takes yet</td>
-		</tr>
-	  <% end %>
-	  <% project.movement_groups.each do |group| %>
-		<% @group = group %>
-	  	<tr class="stream_list">
-	      <td><%= group.name %></td>
-	      <td><%= group.description %></td>
-	 	  <td><%= group.tag_list %></td>
-	      <% if group.data_tracks.empty? %>
-			<td colspan="<%= most_data_tracks %>">No data tracks attached yet</td>
-	      <% else group.data_tracks.each do |track| %>
-			  <td><%= link_to track.name, track %> <% unless track.asset.nil? %>(<%= track.asset.file_content_type %>)
-			<% end %>
-			</td>			
-	        <% end %>
-
-	      <% end %>
-		  <td>
-		 <% unless group.data_tracks.empty? %>
-		   <%= form_tag(mova_url, :method=>"POST") do -%>
-		      <% @group.data_tracks.each do |track| %>
-		        <% unless track.asset.nil? %>
-				  <% if track.asset.file_content_type =~ /csv/ %>
-		            <%= hidden_field_tag :csvfile, URI.join(request.url, track.asset.file.url(:original, false)) %>
-				  <% end %>
-				  <% if track.asset.file_content_type =~ /mp4/ %>
-		            <%= hidden_field_tag :mp4file, URI.join(request.url, track.asset.file.url(:original, false)) %>
-				  <% end %>
-				  <% if track.asset.file_content_type =~ /mpeg/ %>
-		            <%= hidden_field_tag :mp3file, URI.join(request.url, track.asset.file.url(:original, false)) %>
-				  <% end %>				
-				<% end %>
-			  <% end %>
-			 <%= submit_tag "Launch!" %>
-		   <% end # end form_tag -%>
-	  	 <% end %>	
-		  </td>
-	  	</tr>
-	  <% end %>
-    <% end %>
+		<%= render partial: 'project', collection: @projects %>
   </tbody>
 </table>
 

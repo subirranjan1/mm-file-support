@@ -1,26 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Moving Stories - Movement Database</title>
+  <title><%= full_title(yield(:title)) %></title>
+	<link href="//netdna.bootstrapcdn.com/bootstrap/<%= bootstrap_version %>/css/bootstrap.min.css" rel="stylesheet">
   <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
   <%= csrf_meta_tags %>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<%= render 'layouts/shim' %>
 </head>
 <body>
-<div id="user_nav">
-  <% if current_user %>
-    Logged in as <%= current_user.email %>.
-    <%= link_to "Log out", log_out_path %>
-  <% else %>
-    <%= link_to "Sign up", sign_up_path %> or
-    <%= link_to "log in", log_in_path %>
-  <% end %>
+<%= render 'layouts/header' %>
+<div class="container">
+	<% flash.each do |name, msg| %>
+	  <%= content_tag :div, msg, :id => "flash_#{name}" %>
+	<% end %>	
+	<ol class="breadcrumb">
+	  <li><a href="/">Projects</a></li>
+	  <li><a href="#">Library</a></li>
+	  <li class="active">Data</li>
+	</ol>	
+	<%= yield %>
 </div>
-
-<% flash.each do |name, msg| %>
-  <%= content_tag :div, msg, :id => "flash_#{name}" %>
-<% end %>
-<%= yield %>
-
+<%= render 'layouts/footer' %>
 </body>
 </html>

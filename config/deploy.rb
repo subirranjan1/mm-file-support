@@ -32,13 +32,13 @@ set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public
 
 # Default value for keep_releases is 5
 # set :keep_releases, 5
-
+set :rails_env, "production"
 set :deploy_via, :copy
 
 set :stages, ["staging", "production"]
 set :default_stage, "staging"
 
-
+after "deploy", "deploy:cleanup"
 namespace :deploy do
 
   desc 'Restart application'
@@ -46,6 +46,7 @@ namespace :deploy do
     on roles(:app), in: :sequence, wait: 5 do
       # Your restart mechanism here, for example:
       #execute :touch, release_path.join('tmp/restart.txt')
+      execute :touch, release_path.join('tmp/restart.txt')      
     end
   end
   # desc "Restart Passenger app"

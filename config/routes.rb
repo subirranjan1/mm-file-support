@@ -1,14 +1,9 @@
 FileSupportMovingstories::Application.routes.draw do
   resources :sensor_types
-
   resources :movers
-
   resources :movement_annotations
-
   resources :data_tracks
-
   resources :movement_groups
-
   resources :projects
 
   get "log_out" => "sessions#destroy", :as => "log_out"
@@ -16,7 +11,7 @@ FileSupportMovingstories::Application.routes.draw do
   get "sign_up" => "users#new", :as => "sign_up"
 #  root :to => "users#new"
   resources :users
-  resources :sessions
+  resources :sessions, only: [:new, :create, :destroy]
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

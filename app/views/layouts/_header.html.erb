@@ -1,0 +1,33 @@
+<header class="navbar navbar-default navbar-fixed-top ng-scope">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/" class="navbar-brand">MSDB</a>
+    </div>
+    <div class="collapse navbar-collapse navbar-ex1-collapse">
+      <ul class="nav navbar-nav navbar-right">
+				<% if current_user %>
+        <li class="dropdown">
+          <a href="javascript:void(0);" dropdown="" data-toggle="dropdown">
+            <span class="glyphicon glyphicon-user"></span> <%= current_user.email %> <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="javascript:void(0);">Profile</a></li>
+            <li class="divider"></li>
+            <li><%= link_to "Log out", log_out_path %></li>
+          </ul>
+        </li>
+				<% else %>
+					<li class="dropdown">
+						<%= link_to "log in", log_in_path %>
+					</li>
+				<% end %>
+      </ul>
+    </div>
+  </div>
+</header>
