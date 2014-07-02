@@ -78,7 +78,7 @@ class UsersController < ApplicationController
      random_password += "1$" # stupid kludge to make it accepted by the acceptable password regex
      @user.password = @user.password_confirmation = random_password
      @user.save!
-     Mailer.forgot_password(@user, @user.alias, random_password).deliver
+     Mailer.forgot_password(@user, random_password).deliver
    end
 
   private
