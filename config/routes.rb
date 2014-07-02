@@ -1,11 +1,14 @@
 FileSupportMovingstories::Application.routes.draw do
+  root 'projects#index'
+  get "pages/about"
+  get "pages/contact"
   resources :sensor_types
   resources :movers
   resources :movement_annotations
   resources :data_tracks
   resources :movement_groups
   resources :projects
-
+  get "myprojects" => "projects#mine", :as => "myprojects"
   get "log_out" => "sessions#destroy", :as => "log_out"
   get "log_in" => "sessions#new", :as => "log_in"
   get "sign_up" => "users#new", :as => "sign_up"
@@ -17,7 +20,6 @@ FileSupportMovingstories::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
-  root 'projects#index'
 
   match 'tagged' => 'movement_groups#tagged', :via => [:get], :as => 'tagged'
   # Example of regular route:

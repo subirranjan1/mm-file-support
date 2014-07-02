@@ -1,6 +1,9 @@
 class MovementAnnotationsController < ApplicationController
   before_action :set_movement_annotation, only: [:show, :edit, :update, :destroy]
-  before_filter :logged_in?, except: [:index, :show]
+  before_filter :ensure_logged_in, except: [:index, :show]
+  before_filter :ensure_owner, only: [:destroy]
+  before_filter :ensure_authorized, only: [:edit, :update]
+  before_filter :ensure_public_or_authorized, only: [:show]
   # GET /movement_annotations
   # GET /movement_annotations.json
   def index
@@ -73,5 +76,35 @@ class MovementAnnotationsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def movement_annotation_params
       params.require(:movement_annotation).permit(:name, :description, :format, :data_track_id, :public, :tag_list, :user_id)
+    end
+    
+    def ensure_owner
+      unless current_user and @movement_annotation.owner == current_user
+         flash[:notice] = "You do not have access rights to this annotation."
+         redirect_back_or_default
+         return false
+       else
+         return true
+       end      
+    end
+    
+    def ensure_public_or_authorized
+      unless @movement_annotation.public or (current_user and @movement_annotation.is_accessible_by? current_user)        
+         flash[:notice] = "This annotation is not authorized for public access and you are not its owner."
+         redirect_back_or_default
+         return false
+       else
+         return true
+       end      
+    end    
+    
+    def ensure_authorized
+      unless current_user and @movement_annotation.is_accessible_by? current_user
+         flash[:notice] = "You do not have access rights to this annotation."
+         redirect_back_or_default
+         return false
+       else
+         return true
+       end      
     end
 end

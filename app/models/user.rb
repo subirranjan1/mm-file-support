@@ -5,12 +5,14 @@ class User < ActiveRecord::Base
   PASSWORD_REQUIREMENTS = "must: contain a digit from 0-9, one lowercase character, one uppercase character, one special symbol in the list '@#$%', and have a length of at least 6 characters and a maximum of 20 charaters."
   # users.password_hash in the database is a :string
   include BCrypt
-  # associations to indiate ownership
-  has_many :projects
+  # associations to indicate ownership
+  has_many :owned_projects, class_name: "Project", foreign_key: "user_id"
   has_many :data_tracks
   has_many :movement_groups
   has_many :movement_annotations 
-
+  # associations to indicate access granted
+  has_and_belongs_to_many :projects
+  
   attr_accessor :password # this is needed to use password and password confirmation virtually
   # We need to validate that the user has typed the same password twice
   # but we only want to do the validation if they've opted to change their password.
@@ -23,6 +25,14 @@ class User < ActiveRecord::Base
                     format: { with: VALID_EMAIL_REGEX }, if: :email  
   validates :password, presence: true,
                        format: { with: VALID_PASSWORD_REGEX, message: PASSWORD_REQUIREMENTS }, if: :password_changed?
+  
+  def all_accessible_projects
+    owned_projects + projects
+  end
+  
+  def authorized?(object)
+    object.is_accessible_by? self
+  end
                          
   # As is the 'standard' with rails apps we'll return the user record if the
   # password is correct and nil if it isn't.

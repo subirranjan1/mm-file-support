@@ -1,11 +1,15 @@
+<ol class="breadcrumb">
+  <li><a href="/">Projects</a></li>
+	<li><%= link_to @data_track.movement_group.project.name, project_path(@data_track.movement_group.project) %></li>
+	<li><%= link_to @data_track.movement_group.name, movement_group_path(@data_track.movement_group) %></li>
+  <li class="active"><%= link_to @data_track.name, data_track_path(@data_track) %></li>
+</ol>
 <h1>Data Track Details</h1>
 <p id="notice"><%= notice %></p>
-
 <p>
   <strong>Name:</strong>
   <%= @data_track.name %>
 </p>
-
 <p>
   <strong>Description:</strong>
   <%= @data_track.description %>

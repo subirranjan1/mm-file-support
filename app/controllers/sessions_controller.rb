@@ -9,7 +9,7 @@ class SessionsController < ApplicationController
       redirect_to root_url, :notice => "Logged in!"      
     else
       flash[:alert] = "There was a problem logging you in."
-      redirect_to root_url #, :notice => "Invalid email or password"
+      redirect_to log_in_path, :notice => "Invalid email or password"
     end
   end
     

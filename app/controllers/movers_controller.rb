@@ -1,6 +1,6 @@
 class MoversController < ApplicationController
   before_action :set_mover, only: [:show, :edit, :update, :destroy]
-  before_filter :logged_in?, except: [:index, :show]
+  before_filter :ensure_logged_in, except: [:index, :show]
   # GET /movers
   # GET /movers.json
   def index

@@ -11,23 +11,26 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :email %><br>
-    <%= f.text_field :email %>
+  <div class="field form-group">
+    <%= f.label :email %><br />
+    <%= f.text_field :email, class: "form-control", placeholder: "Email address", required: "required", autofocus: "autofocus" %>
   </div>
-  <div class="field">
-    <%= f.label :alias %><br>
-    <%= f.text_field :alias %> <em>Your alias will be associated with your projects etc. This is your display name</em>
+  <div class="field form-group">
+    <%= f.label :alias %><br />
+    <%= f.text_field :alias, class: "form-control", placeholder: "Name to be displayed" %> <em class="help-block">If you'd prefer something more memorable than your email address, please specify that here.</em>
   </div>
-  <div class="field">
-    <%= f.label :password %><br>
-    <%= f.password_field :password %>
+  <div class="field form-group">
+    <%= f.label :password %><br />
+    <%= f.password_field :password, class: "form-control", placeholder: "Password", required: "required" %>
+		<span class="help-block">The password must: contain a digit from 0-9, one lowercase character, one uppercase character, one special symbol in the list '@#$%', and have a length of at least 6 characters and a maximum of 20 characters.</span>
   </div>
-  <div>
+  <div class="field form-group">
     <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation %>
+    <%= f.password_field :password_confirmation, class: "form-control", placeholder: "Repeat the password", required: "required" %>
   </div>
   <div class="actions">
-    <%= f.submit %>
+    <%= f.submit class: "btn btn-primary" %>
   </div>
 <% end %>
+
+

@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   
   protected
   
-  def logged_in?
+  def ensure_logged_in
     unless session[:user_id]
       flash[:notice] = "You need to log in first."
       redirect_back_or_default

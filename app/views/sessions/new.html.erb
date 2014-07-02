@@ -1,15 +1,17 @@
-<h1>Log in</h1>
-
-<%= form_tag sessions_path do %>
+<%= form_tag sessions_path, class: "form-signin", role: "form" do %>
+  <h2 class="form-signin-heading">Please sign in</h2>
   <p>
     <%= label_tag :email %><br />
-    <%= text_field_tag :email, params[:email] %>
+    <%= text_field_tag :email, params[:email], class: "form-control", placeholder: "Email address", required: "required", autofocus: "autofocus" %>
   </p>
   <p>
     <%= label_tag :password %><br />
-    <%= password_field_tag :password %>
+    <%= password_field_tag :password, nil, class: "form-control", required: "required" %>
   </p>
-  <p class="button"><%= submit_tag "Log in" %></p>
+  <label class="checkbox">
+    <input type="checkbox" value="remember-me"> Remember me
+  </label>
+  <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
 <% end %>
 If you don't have an account, please <%= link_to "sign up first", new_user_path %>.
 

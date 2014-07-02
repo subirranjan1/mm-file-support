@@ -1,18 +1,3 @@
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
+<% provide(:title, 'Main') %>
 
-  <tbody>
-		<%= render partial: 'project', collection: @projects %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Project', new_project_path %>
+<%= render partial: 'project', collection: @projects %>

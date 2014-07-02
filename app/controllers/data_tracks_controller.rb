@@ -1,10 +1,13 @@
 class DataTracksController < ApplicationController
   before_action :set_data_track, only: [:show, :edit, :update, :destroy]
-  before_filter :logged_in?, except: [:index, :show]
+  before_filter :ensure_logged_in, except: [:index, :show]
+  before_filter :ensure_owner, only: [:destroy]
+  before_filter :ensure_authorized, only: [:edit, :update]
+  before_filter :ensure_public_or_authorized, only: [:show]
   # GET /movement_data
   # GET /movement_data.json
   def index
-    @data_tracks = DataTrack.all
+    @data_tracks = DataTrack.where(["public = ?", true])
   end
 
   # GET /movement_data/1
@@ -89,5 +92,35 @@ class DataTracksController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def data_track_params
       params.require(:data_track).permit(:name, :description, :format, :movement_group_id, :tag_list, :technician, :sensor_type_id, :public, :user_id)
+    end
+    
+    def ensure_owner
+      unless current_user and @data_track.owner == current_user
+         flash[:notice] = "You do not have access rights to this data track."
+         redirect_back_or_default
+         return false
+       else
+         return true
+       end      
+    end
+    
+    def ensure_authorized
+      unless current_user and @data_track.is_accessible_by? current_user
+         flash[:notice] = "You do not have access rights to this data track."
+         redirect_back_or_default
+         return false
+       else
+         return true
+       end      
+    end
+        
+    def ensure_public_or_authorized
+      unless @data_track.public or (current_user and @data_track.is_accessible_by? current_user)
+         flash[:notice] = "This data track is not authorized for public access and you are not its owner."
+         redirect_back_or_default
+         return false
+       else
+         return true
+       end      
     end
 end

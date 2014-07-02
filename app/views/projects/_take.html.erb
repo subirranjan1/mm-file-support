@@ -1,0 +1,77 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      <a data-toggle="collapse" data-parent="#accordion<%=project_counter%>" href="#collapse<%=take_counter%>" class="accordian-toggle">
+        <%= take.name %> <i class="glyphicon glyphicon-collapse-down"></i><span class="badge pull-right" style="background-color: #3a87ad;"><%= take.data_tracks.size %></span>
+      </a>
+    </h4>
+  </div>
+  <div id="collapse<%=take_counter%>" class="panel-collapse collapse">
+    <div class="panel-body">
+			<h5>Description</h5>
+    	<p><%= take.description %></p>
+			<% if take.tag_list.empty? %>
+				<p>This item has no tags yet.</p>
+			<% else %>
+				<p>[<%= take.tag_list %>]</p>
+			<% end %>
+			<% if authorized? take %>
+				<p><span class="glyphicon glyphicon-exclamation-sign"></span> <em>Notice to owner: <% if take.public? %>
+					 This take is visible to everyone
+					 <% else %>
+					 This take can only be seen by project owners and its creator
+					 <% end %></em>
+				</p>
+			<% end %>
+			<% if take.data_tracks.empty? %>
+				<p>No movement files attached yet.</p>
+			</div>
+			<% else %>
+					<%= form_tag(mova_url, :method=>"POST") do -%>
+					    <% take.data_tracks.each do |track| %>
+					      <% unless track.asset.nil? %>
+						  		<% if track.asset.file_content_type =~ /csv/ %>
+					          <%= hidden_field_tag :csvfile, URI.join(request.url, track.asset.file.url(:original, false)) %>
+						  		<% end %>
+						  		<% if track.asset.file_content_type =~ /mp4/ %>
+					          <%= hidden_field_tag :mp4file, URI.join(request.url, track.asset.file.url(:original, false)) %>
+						  		<% end %>
+						  		<% if track.asset.file_content_type =~ /mpeg/ %>
+					          <%= hidden_field_tag :mp3file, URI.join(request.url, track.asset.file.url(:original, false)) %>
+						  		<% end %>				
+								<% end %>
+					  	<% end %>
+					 	<%= submit_tag "Launch in MoVa" %>
+					 <% end # end form_tag -%>
+			</div>
+				<table class="table">
+				<caption>Associated Files</caption>
+				<thead>
+					<tr>
+						<th>File name</th>
+						<th>File type</th>
+						<th>Sensor</th>
+						<th>Technician</th>
+						<th>Description</th>
+						<th>Tags</th>
+					</tr>
+				</thead>
+				<tbody>
+				<% take.data_tracks.each do |track| %>
+					<tr>
+						<td><%= link_to track.name, track %> 
+						<% unless track.asset.nil? %>
+							<span class="pull-right"><%= link_to download_link_html("Download"), track.asset.file.url(:original, false)%></span></td>
+						<% end %>
+						<td><% unless track.asset.nil? %><%= track.asset.file_content_type %><% else %>unknown<% end %></td>
+						<td><% unless track.sensor_type.nil?%><%= link_to track.sensor_type.name, track.sensor_type %><% else %>unspecified<% end %></td>
+						<td><%= track.technician %></td>
+						<td><%= track.description %></td>
+						<td><% unless track.tag_list.empty? %><%= track.tag_list %><% end %></td>							
+					</tr>
+				<% end %>
+				</tbody>
+			</table>
+		<% end %>
+  </div>
+</div>

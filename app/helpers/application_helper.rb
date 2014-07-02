@@ -9,12 +9,29 @@ module ApplicationHelper
     end
   end
   
+  def authorized?(object)
+    current_user and current_user_authorized_to_access? object
+  end
+  
+  def current_user_authorized_to_access?(object)
+    object.owner == current_user
+  end
+  
+  def download_link_html(text = '')
+    base_link = raw("<span class='glyphicon glyphicon-download'></span>")
+    if text.empty?
+      base_link
+    else
+      base_link + " #{text}"
+    end    
+  end
+  
   def login_link_html(text = '')
     base_link = raw("<span class='glyphicon glyphicon-log-in'></span>")
     if text.empty?
       base_link
     else
-      "#{base_link} #{text}"
+      base_link + " #{text}"
     end
   end
   
@@ -23,7 +40,7 @@ module ApplicationHelper
     if text.empty?
       base_link
     else
-      "#{base_link} #{text}"
+      base_link + " #{text}"
     end
   end
     
@@ -32,7 +49,7 @@ module ApplicationHelper
     if text.empty?
       base_link
     else
-      "#{base_link} #{text}"
+      base_link + " #{text}"
     end
   end
   
@@ -41,7 +58,7 @@ module ApplicationHelper
     if text.empty?
       base_link
     else
-      "#{base_link} #{text}"
+      base_link + " #{text}"
     end    
   end
   
@@ -50,16 +67,16 @@ module ApplicationHelper
     if text.empty?
       base_link
     else
-      "#{base_link} #{text}"
+      base_link + " #{text}"
     end 
   end
   
   def edit_link_html text = ''
-    base_link = raw("<span class='glyphicon glyphicon-arrow-edit'></span>")
+    base_link = raw("<span class='glyphicon glyphicon-edit'></span>")
     if text.empty?
       base_link
     else
-      "#{base_link} #{text}"
+      base_link + " #{text}"
     end    
   end
 end

@@ -1,6 +1,6 @@
 class SensorTypesController < ApplicationController
   before_action :set_sensor_type, only: [:show, :edit, :update, :destroy]
-  before_filter :logged_in?, except: [:index, :show]
+  before_filter :ensure_logged_in, except: [:index, :show]
   # GET /sensor_types
   # GET /sensor_types.json
   def index
