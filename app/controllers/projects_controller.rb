@@ -11,7 +11,7 @@ class ProjectsController < ApplicationController
   end
 
   def mine
-    @projects = current_user.all_projects.order(:name)
+    @projects = current_user.projects.order(:name)
     render :index
   end
   # GET /projects/1
