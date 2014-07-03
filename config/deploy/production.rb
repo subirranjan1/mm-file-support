@@ -15,7 +15,7 @@
 # used to set extended properties on the server.
 set :stage, :production
 server '209.87.56.87', user: 'deployer', roles: %w{web app}, :primary => true
-set :deploy_to, '/var/www/mnm-files'
+set :deploy_to, '/var/www/mnm-db'
 # set :tmp_dir, "/home/deployer/tmp"
 
 set :user, "deployer"  # The server's user for deploys
