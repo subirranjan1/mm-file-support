@@ -11,33 +11,34 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :name %><br>
-    <%= f.text_field :name, size: 60 %>
+  <div class="field form-group">
+    <%= f.label :name, class: "control-label" %><br>
+    <%= f.text_field :name, size: 60, class: "form-control", required: "required" %>
   </div>
-  <div class="field">
-    <%= f.label :dob %><br>
-    <%= f.date_select :dob, start_year: 1900, end_year: Date.today.year %>
+  <div class="field form-group">
+    <%= f.label :date_of_birth, class: "control-label" %><br>
+    <%= f.date_select :dob, start_year: 1900, end_year: Date.today.year, order: [:month, :day, :year], class: "form-control" %>
   </div>
-  <div class="field">
-    <%= f.label :gender %><br>
-    <%= f.text_field :gender %>
+  <div class="row">
+  <div class="field form-group col-xs-3">
+    <%= f.label :gender, class: "control-label" %><br>
+    <%= f.text_field :gender, class: "form-control", size: 40 %>
   </div>
-  <div class="field">
-    <%= f.label :expertise %><br>
-    <%= f.text_field :expertise %>
+	</div>
+  <div class="field form-group">
+    <%= f.label :expertise, class: "control-label" %><br>
+    <%= f.text_field :expertise, class: "form-control" %>
+		<span class="help-block">(Optional: Add a free-form description of this mover's expertise)</span>
   </div>
-  <div class="field">
-    <%= f.label :cma_like_training %><br>
-    <%= f.check_box :cma_like_training %>
+  <div class="field form-group">
+		<%= f.label :cma_like_training, class: "checkbox" do %>
+			<%= f.check_box :cma_like_training %> CMA or CMA-like training?
+		<% end %>
   </div>
-  <div class="field">
-    <%= f.label :other_training %><br>
-    <%= f.text_field :other_training %>
-  </div>
-  <div class="field">
-	<%= f.label :tags %>
-	<%= f.text_field :tag_list %>	
+  <div class="field form-group">
+    <%= f.label :other_relevant_training, class: "control-label" %><br>
+    <%= f.text_field :other_training, class: "form-control" %>
+		<span class="help-block">(Optional: Add a free-form description of this mover's additional training)</span>
   </div>
   <div class="actions">
     <%= f.submit %>

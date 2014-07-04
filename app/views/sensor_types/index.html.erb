@@ -1,6 +1,7 @@
-<h1>Listing sensor_types</h1>
+<% provide(:title, 'Sensor Types') %>
+<h1>Sensor Types</h1>
 
-<table>
+<table class="table">
   <thead>
     <tr>
       <th>Name</th>
@@ -14,11 +15,10 @@
   <tbody>
     <% @sensor_types.each do |sensor_type| %>
       <tr>
-        <td><%= sensor_type.name %></td>
+        <td><%= link_to edit_link_html, edit_sensor_type_path(sensor_type) if current_user %>
+						<%= link_to remove_link_html, sensor_type, method: :delete, data: { confirm: 'Are you sure?' } if current_user %>
+						<%= sensor_type.name %></td>
         <td><%= sensor_type.description %></td>
-        <td><%= link_to 'Show', sensor_type %></td>
-        <td><%= link_to 'Edit', edit_sensor_type_path(sensor_type) %></td>
-        <td><%= link_to 'Destroy', sensor_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
@@ -26,4 +26,4 @@
 
 <br>
 
-<%= link_to 'New Sensor type', new_sensor_type_path %>
+<%= link_to add_link_html("Create new sensor"), new_sensor_type_path if current_user %>

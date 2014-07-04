@@ -1,5 +1,3 @@
-<p id="notice"><%= notice %></p>
-
 <p>
   <strong>Name:</strong>
   <%= @mover.name %>
@@ -31,5 +29,5 @@
 </p>
 
 
-<%= link_to 'Edit', edit_mover_path(@mover) %> |
-<%= link_to 'Back', movers_path %>
+<%= link_to edit_link_html('Edit'), edit_mover_path(@mover) %> |
+<%= link_to back_link_html('Return to list of movers'), movers_path %>

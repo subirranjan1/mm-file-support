@@ -10,16 +10,15 @@
       </ul>
     </div>
   <% end %>
-
-  <div class="field">
-    <%= f.label :name %><br>
-    <%= f.text_field :name, size: 60 %>
+  <div class="field form-group">
+    <%= f.label :name, class: "control-label" %><br>
+    <%= f.text_field :name, size: 60, class: "form-control" %>
   </div>
-  <div class="field">
-    <%= f.label :description %><br>
-    <%= f.text_field :description, size: 120 %>
+  <div class="field form-group">
+    <%= f.label :description, class: "control-label" %><br>
+    <%= f.text_field :description, size: 120, class: "form-control" %>
   </div>
   <div class="actions">
-    <%= f.submit %>
+    <%= f.submit class: "btn btn-primary" %>
   </div>
 <% end %>

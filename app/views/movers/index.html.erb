@@ -1,33 +1,36 @@
+<% provide(:title, 'Movers') %>
 <h1>Listing movers</h1>
 
-<table>
+<table class="table">
   <thead>
     <tr>
       <th>Name</th>
-      <th>Dob</th>
+      <th>Age</th>
       <th>Gender</th>
       <th>Expertise</th>
-      <th>Cma-like-training</th>
+      <th>CMA(-like) training</th>
       <th>Other training</th>
-      <th>Data track</th>
-      <th></th>
-      <th></th>
-      <th></th>
     </tr>
   </thead>
 
   <tbody>
     <% @movers.each do |mover| %>
       <tr>
-        <td><%= mover.name %></td>
-        <td><%= mover.dob %></td>
+        <td>	<%= link_to edit_link_html, edit_mover_path(mover) if current_user %>
+							<%= link_to remove_link_html, mover, method: :delete, data: { confirm: 'Are you sure?' } if current_user %>
+							<%= mover.name %>
+				</td>
+        <td><%= Time.now.year - mover.dob.year unless mover.dob.nil? %></td>
         <td><%= mover.gender %></td>
         <td><%= mover.expertise %></td>
-        <td><%= mover.cma_like_training %></td>
+        <td>
+				<% if mover.cma_like_training %>
+					<span class="glyphicon glyphicon-ok"></span>
+				<% else %>
+					<span class="glyphicon glyphicon-remove"></span>				
+				<% end %>
+				</td>
         <td><%= mover.other_training %></td>
-        <td><%= link_to 'Show', mover %></td>
-        <td><%= link_to 'Edit', edit_mover_path(mover) %></td>
-        <td><%= link_to 'Destroy', mover, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
@@ -35,4 +38,4 @@
 
 <br>
 
-<%= link_to 'New Mover', new_mover_path %>
+<%= link_to add_link_html('Add a new mover'), new_mover_path %>

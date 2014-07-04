@@ -7,7 +7,6 @@ class Mailer < ActionMailer::Base
   #   en.mailer.forgot_password.subject
   #
   def forgot_password(user, new_password)
-    @greeting = "Hi"
     @email = user.email
     @alias = user.alias
     @new_password = new_password
