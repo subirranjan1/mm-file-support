@@ -21,7 +21,7 @@ class UsersController < ApplicationController
       if @user.save
         format.html { redirect_to root_url, notice: 'User was successfully created and emailed their password.' }
         format.json { head :created, location: edit_user_path(@user) }
-        Mailer.forgot_password(@user, random_password).deliver        
+        Mailer.forgot_password(@user, @user.password).deliver        
       else
         format.html { render action: 'new' }
         format.json { render json: @user.errors, status: :unprocessable_entity }
