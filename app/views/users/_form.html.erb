@@ -21,12 +21,12 @@
   </div>
   <div class="field form-group">
     <%= f.label :password %><br />
-    <%= f.password_field :password, class: "form-control", placeholder: "Password", required: "required" %>
+    <%= f.password_field :password, class: "form-control", placeholder: "Password" %>
 		<span class="help-block">The password must: contain a digit from 0-9, one lowercase character, one uppercase character, one special symbol in the list '@#$%', and have a length of at least 6 characters and a maximum of 20 characters.</span>
   </div>
   <div class="field form-group">
     <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, class: "form-control", placeholder: "Repeat the password", required: "required" %>
+    <%= f.password_field :password_confirmation, class: "form-control", placeholder: "Repeat the password" %>
   </div>
   <div class="actions">
     <%= f.submit class: "btn btn-primary" %>

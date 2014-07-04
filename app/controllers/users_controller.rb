@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy]
-  before_filter :ensure_logged_in, only: [:edit, :update, :destroy]
+  before_filter :ensure_logged_in#, only: [:edit, :update, :destroy]
   before_filter :ensure_owner, only: [:edit, :update, :destroy]
 
   # GET /users/new
@@ -10,22 +10,18 @@ class UsersController < ApplicationController
 
   # GET /users/1/edit
   def edit
-    unless current_user == @user
-      flash[:notice] = "You can only edit yourself!"
-      redirect_back_or_default
-    end
   end
 
   # POST /users
   # POST /users.json
   def create
     @user = User.new(user_params)
-    @user.password = params[:password]
         
     respond_to do |format|
       if @user.save
-        format.html { redirect_to @user, notice: 'User was successfully created.' }
-        format.json { render action: 'show', status: :created, location: @user }
+        format.html { redirect_to root_url, notice: 'User was successfully created and emailed their password.' }
+        format.json { head :created, location: edit_user_path(@user) }
+        Mailer.forgot_password(@user, random_password).deliver        
       else
         format.html { render action: 'new' }
         format.json { render json: @user.errors, status: :unprocessable_entity }
@@ -35,15 +31,11 @@ class UsersController < ApplicationController
 
   # PATCH/PUT /users/1
   # PATCH/PUT /users/1.json
-  def update    
-    unless current_user == @user
-      flash[:notice] = "You can only edit yourself!"
-      redirect_back_or_default
-    end    
+  def update        
     respond_to do |format|
       if @user.update(user_params)
-        format.html { redirect_to @user, notice: 'User was successfully updated.' }
-        format.json { head :no_content }
+        format.html { redirect_to edit_user_path(@user), notice: 'User was successfully updated.' }
+        format.json { head :accepted }
       else
         format.html { render action: 'edit' }
         format.json { render json: @user.errors, status: :unprocessable_entity }
@@ -56,7 +48,7 @@ class UsersController < ApplicationController
   def destroy
     @user.destroy
     respond_to do |format|
-      format.html { redirect_to users_url }
+      format.html { redirect_to root_url }
       format.json { head :no_content }
     end
   end

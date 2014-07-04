@@ -2,7 +2,7 @@ require 'bcrypt'
 class User < ActiveRecord::Base
   VALID_EMAIL_REGEX = /[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9\-.]/    
   VALID_PASSWORD_REGEX = /((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})/
-  PASSWORD_REQUIREMENTS = "must: contain a digit from 0-9, one lowercase character, one uppercase character, one special symbol in the list '@#$%', and have a length of at least 6 characters and a maximum of 20 charaters."
+  PASSWORD_REQUIREMENTS = "must: contain a digit from 0-9, one lowercase character, one uppercase character, one special symbol in the list '@#$%', and have a length of at least 6 characters and a maximum of 20 characters."
   # users.password_hash in the database is a :string
   include BCrypt
   # associations to indicate ownership
@@ -14,17 +14,18 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :projects
   
   attr_accessor :password # this is needed to use password and password confirmation virtually
+  attr_accessor :password_confirmation
   # We need to validate that the user has typed the same password twice
   # but we only want to do the validation if they've opted to change their password.
-  validates_confirmation_of :password, :if=>:password_changed?
-
-  before_save :hash_new_password, :if=>:password_changed?
+  validates_confirmation_of :password, :if=>:should_validate_password?
+  validates_presence_of :password_confirmation, if: :should_validate_password?
+  before_save :hash_new_password, :if=>:should_validate_password?
   before_save { self.email = email.downcase }
   validates :email, presence: true, 
                     uniqueness: { case_sensitive: false },
                     format: { with: VALID_EMAIL_REGEX }, if: :email  
   validates :password, presence: true,
-                       format: { with: VALID_PASSWORD_REGEX, message: PASSWORD_REQUIREMENTS }, if: :password_changed?
+                       format: { with: VALID_PASSWORD_REGEX, message: PASSWORD_REQUIREMENTS }, if: :should_validate_password?
   
   def all_accessible_projects
     owned_projects + projects
@@ -58,6 +59,9 @@ class User < ActiveRecord::Base
     self.hashed_password = BCrypt::Password.create(@password)
   end
   
+  def should_validate_password?
+    password_changed? or new_record?
+  end
   # By default the form_helpers will set new_password to "",
   # we don't want to go saving this as a password
   def password_changed?
