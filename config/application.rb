@@ -23,5 +23,6 @@ module FileSupportMovingstories
     ActsAsTaggableOn.remove_unused_tags = true
     config.assets.paths << Rails.root.join("app", "assets", "fonts")
     config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)    
+    config.exceptions_app = self.routes
   end
 end
