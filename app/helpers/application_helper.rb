@@ -17,6 +17,16 @@ module ApplicationHelper
     object.owner == current_user
   end
   
+  # relies on sending type with a string that matches to a glyphicon class
+  def link_html(type, text = '')
+    base_link = raw("<span class='glyphicon glyphicon-#{type}'></span>")
+    if text.empty?
+      base_link
+    else
+      "#{base_link} #{text}"
+    end
+  end  
+  
   def download_link_html(text = '')
     base_link = raw("<span class='glyphicon glyphicon-download'></span>")
     if text.empty?

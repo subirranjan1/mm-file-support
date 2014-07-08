@@ -18,6 +18,7 @@ class MovementGroupsController < ApplicationController
   # GET /movement_streams/new
   def new
     @movement_group = MovementGroup.new
+    @movement_group.project_id = params[:project_id]
     @projects = Project.all
   end
 
@@ -30,10 +31,11 @@ class MovementGroupsController < ApplicationController
   # POST /movement_streams.json
   def create
     @movement_group = MovementGroup.new(movement_group_params)
-
+    @movement_group.owner = current_user
     respond_to do |format|
       if @movement_group.save
-        format.html { redirect_to @movement_group, notice: 'Movement group was successfully created.' }
+        # format.html { redirect_to @movement_group, notice: 'Movement group was successfully created.' }
+        format.html { redirect_to({controller: 'projects', action: 'mine'}, notice: 'Movement take was successfully created.') }        
         format.json { render action: 'show', status: :created, location: @movement_group }
       else
         format.html { render action: 'new' }
@@ -62,7 +64,7 @@ class MovementGroupsController < ApplicationController
   def destroy
     @movement_group.destroy
     respond_to do |format|
-      format.html { redirect_to movement_groups_url }
+      format.html { redirect_to({controller: 'projects', action: 'mine'}, notice: 'Movement take was successfully destroyed.') }        
       format.json { head :no_content }
     end
   end

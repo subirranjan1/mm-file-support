@@ -4,7 +4,7 @@ class Project < ActiveRecord::Base
   has_and_belongs_to_many :users #represents those with access priviledges
 
   acts_as_taggable # Alias for acts_as_taggable_on :tags
-  validates :name, presence: true
+  validates :name, presence: true, uniqueness: true
   validates :description, presence: true
   
   def is_accessible_by?(user)

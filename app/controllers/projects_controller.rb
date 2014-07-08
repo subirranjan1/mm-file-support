@@ -11,7 +11,7 @@ class ProjectsController < ApplicationController
   end
 
   def mine
-    @projects = current_user.projects.order(:name)
+    @projects = current_user.owned_projects.order(:name)
     render :index
   end
   # GET /projects/1
@@ -32,10 +32,10 @@ class ProjectsController < ApplicationController
   # POST /projects.json
   def create
     @project = Project.new(project_params)
-
+    @project.owner = current_user
     respond_to do |format|
       if @project.save
-        format.html { redirect_to @project, notice: 'Project was successfully created.' }
+        format.html { redirect_to({action: 'mine'}, notice: 'Project was successfully created.') }
         format.json { render action: 'show', status: :created, location: @project }
       else
         format.html { render action: 'new' }
@@ -49,7 +49,7 @@ class ProjectsController < ApplicationController
   def update
     respond_to do |format|
       if @project.update(project_params)
-        format.html { redirect_to @project, notice: 'Project was successfully updated.' }
+        format.html { redirect_to({action: 'mine'}, notice: 'Project was successfully updated.') }
         format.json { head :no_content }
       else
         format.html { render action: 'edit' }
@@ -63,7 +63,7 @@ class ProjectsController < ApplicationController
   def destroy
     @project.destroy
     respond_to do |format|
-      format.html { redirect_to projects_url }
+      format.html { redirect_to({action: 'mine'}, notice: 'Project was successfully deleted.') }
       format.json { head :no_content }
     end
   end

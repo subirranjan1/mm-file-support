@@ -1,7 +1,7 @@
 <%= form_for(@data_track, :html => { :multipart => true }) do |f| %>
   <% if @data_track.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(@data_track.errors.count, "error") %> prohibited this movement_datum from being saved:</h2>
+      <h2><%= pluralize(@data_track.errors.count, "error") %> prohibited this data track from being saved:</h2>
 
       <ul>
       <% @data_track.errors.full_messages.each do |msg| %>
@@ -11,43 +11,45 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :name %><br>
-    <%= f.text_field :name, size: 60 %>
+  <div class="field form-group">
+    <%= f.label :name, class: "control-label" %><br>
+    <%= f.text_field :name, size: 60, class: "form-control", placeholder: "Name the data track", required: "required", autofocus: "autofocus" %>
   </div>
-  <div class="field">
-    <%= f.label :description %><br>
-    <%= f.text_area :description, size: "60x12" %>
+  <div class="field form-group">
+    <%= f.label :description, class: "control-label" %><br>
+    <%= f.text_area :description, size: "60x12", class: "form-control", placeholder: "Data track description", required: "required" %>
   </div>
-  <div class="field">
-    <%= f.label :technician %><br>
-    <%= f.text_field :technician, size: 60 %>
+  <div class="field form-group">
+    <%= f.label :technician, class: "control-label" %><br>
+    <%= f.text_field :technician, size: 60, class: "form-control", placeholder: "Technician name", required: "required" %>
+		<em class="help-block">Provide a free-form name or description of the technician managing this recording</em>
   </div>
-  <div class="field">
-	<%= f.label :movement_group %>
+  <div class="field form-group">
+	<%= f.label :movement_group, class: "control-label" %>
 	<%= f.collection_select :movement_group_id, @movement_groups, :id, :name %>
   </div>
-  <div class="field">
-	<%= f.label :sensor_type %>
+  <div class="field form-group">
+	<%= f.label :sensor_type, class: "control-label" %>
 	<%= f.collection_select :sensor_type_id, @sensor_types, :id, :name %>
   </div>
-  <div class="field">
-	<%= f.label :tags %>
-	<%= f.text_field :tag_list %>	
+  <div class="field form-group">
+		<%= f.label :tags, class: "control-label" %>
+		<%= f.text_field :tag_list, class: "form-control" %>
+	<em class="help-block">Please separate tags with commas</em>
   </div>
-  <div class="field">
-    <%= f.label :public %><br>
+  <div class="field form-group">
+    <%= f.label :public, class: "checkbox" %>
     <%= f.check_box :public %> 
-<em>Public pieces are published for everyone to see</em>
+		<em class="help-block">Public pieces are published for everyone to see</em>
   </div>
-  <div class="field">
-	<%= f.label :asset_file %><br>
+  <div class="field form-group">
+	<%= f.label :asset_file, class: "control-label" %><br>
 	<% unless @data_track.asset.nil? %>
 		Currently: <%= @data_track.asset.file_file_name %><br/>
 	<% end %>
 	<%= f.file_field :asset_file %>
   </div>
   <div class="actions">
-    <%= f.submit %>
+		<%= f.submit class: "btn btn-primary" %>
   </div>
 <% end %>

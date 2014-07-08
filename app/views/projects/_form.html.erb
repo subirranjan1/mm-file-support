@@ -12,15 +12,15 @@
   <% end %>
 
   <div class="field form-group">
-    <%= f.label :name %><br>
+    <%= f.label :name, class: "control-label" %><br>
     <%= f.text_field :name, size: 60, class: "form-control", placeholder: "Name the project", required: "required", autofocus: "autofocus" %>
   </div>
   <div class="field form-group">
-    <%= f.label :description %><br>
+    <%= f.label :description, class: "control-label" %><br>
     <%= f.text_area :description, size: "60x12", class: "form-control", placeholder: "Project description", required: "required" %>
   </div>
   <div class="field form-group">
-		<%= f.label :tags %>
+		<%= f.label :tags, class: "control-label" %>
 		<%= f.text_field :tag_list, class: "form-control" %>	
 		<em class="help-block">Please separate tags with commas</em>
   </div>
@@ -30,6 +30,6 @@
 		<em class="help-block">Public pieces are published for everyone to see</em>
   </div>
   <div class="actions">
-    <%= f.submit class: "btn" %>
+		<%= f.submit class: "btn btn-primary" %>
   </div>
 <% end %>

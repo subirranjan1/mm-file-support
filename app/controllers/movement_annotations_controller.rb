@@ -30,6 +30,7 @@ class MovementAnnotationsController < ApplicationController
   # POST /movement_annotations.json
   def create
     @movement_annotation = MovementAnnotation.new(movement_annotation_params)
+    @movement_annotation.owner = current_user
     @data_tracks = DataTrack.all
     respond_to do |format|
       if @movement_annotation.save

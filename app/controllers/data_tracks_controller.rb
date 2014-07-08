@@ -17,7 +17,8 @@ class DataTracksController < ApplicationController
 
   # GET /movement_data/new
   def new
-    @data_track = DataTrack.new    
+    @data_track = DataTrack.new  
+    @data_track.movement_group_id = params[:movement_group_id]  
     @movement_groups = MovementGroup.all
     @sensor_types = SensorType.all  
   end
@@ -32,6 +33,7 @@ class DataTracksController < ApplicationController
   # POST /movement_data.json
   def create
     @data_track = DataTrack.new(data_track_params)
+    @data_track.owner = current_user    
     unless params[:data_track]['asset_file'].nil? 
       #this params hash is actually an object of type Rack::Multipart::UploadedFile and this way it gets converted with name etc intact
       asset = Asset.new(:file => params[:data_track]['asset_file'])
@@ -42,7 +44,8 @@ class DataTracksController < ApplicationController
     @sensor_types = SensorType.all
     respond_to do |format|
       if @data_track.save
-        format.html { redirect_to @data_track, notice: 'Data track was successfully created.' }
+        # format.html { redirect_to @data_track, notice: 'Data track was successfully created.' }
+        format.html { redirect_to({controller: 'projects', action: 'mine'}, notice: 'Data track was successfully created.') }                
         format.json { render action: 'show', status: :created, location: @data_track }
       else
         format.html { render action: 'new' }
@@ -78,7 +81,7 @@ class DataTracksController < ApplicationController
   def destroy
     @data_track.destroy
     respond_to do |format|
-      format.html { redirect_to data_track_url }
+      format.html { redirect_to({controller: 'projects', action: 'mine'}, notice: 'Data track was successfully created.') }        
       format.json { head :no_content }
     end
   end

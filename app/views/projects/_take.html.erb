@@ -2,8 +2,10 @@
   <div class="panel-heading">
     <h4 class="panel-title">
       <a data-toggle="collapse" data-parent="#accordion<%=project_counter%>" href="#collapse<%=take_counter%>" class="accordian-toggle">
-        <%= take.name %> <i class="glyphicon glyphicon-collapse-down"></i><span class="badge pull-right" style="background-color: #3a87ad;"><%= take.data_tracks.size %></span>
-      </a>
+        <%= take.name %> <i class="glyphicon glyphicon-collapse-down"></i><span class="badge pull-right" style="background-color: #3a87ad;"><%= take.data_tracks.size %></span></a>
+			<% if authorized? take %>
+			<small><%= link_to edit_link_html, edit_movement_group_path(take) %> <%= link_to remove_link_html, take, method: :delete, data: { confirm: 'Are you sure?' } %></small>
+			<% end %>
     </h4>
   </div>
   <div id="collapse<%=take_counter%>" class="panel-collapse collapse">
@@ -19,12 +21,14 @@
 				<p><span class="glyphicon glyphicon-exclamation-sign"></span> <em>Notice to owner: <% if take.public? %>
 					 This take is visible to everyone
 					 <% else %>
-					 This take can only be seen by project owners and its creator
+					 This take can only be seen by take owners and its creator
 					 <% end %></em>
 				</p>
 			<% end %>
 			<% if take.data_tracks.empty? %>
-				<p>No movement files attached yet.</p>
+				<p>No movement files attached yet. <% if authorized? take %>
+					<small><%= link_to add_link_html("Add new data track"), new_data_track_path(movement_group_id: take.id) %></small></p>
+				<% end %></p>
 			</div>
 			<% else %>
 					<%= form_tag(mova_url, :method=>"POST") do -%>
@@ -45,7 +49,10 @@
 					 <% end # end form_tag -%>
 			</div>
 				<table class="table">
-				<caption>Associated Files</caption>
+				<caption>Associated Files
+					<% if authorized? take %>
+						<small><%= link_to add_link_html("Add new data track"), new_data_track_path(movement_group_id: take.id) %></small></p>
+					<% end %></caption>
 				<thead>
 					<tr>
 						<th>File name</th>
@@ -60,8 +67,14 @@
 				<% take.data_tracks.each do |track| %>
 					<tr>
 						<td><%= link_to track.name, track %> 
-						<% unless track.asset.nil? %>
-							<span class="pull-right"><%= link_to download_link_html("Download"), track.asset.file.url(:original, false)%></span></td>
+							<span class="pull-right">
+						<% if authorized? track %>
+							<small><%= link_to edit_link_html, edit_data_track_path(track) %> <%= link_to remove_link_html, track, method: :delete, data: { confirm: 'Are you sure?' } %></small>
+						<% else %>	
+							<% unless track.asset.nil? %>
+								<%= link_to download_link_html("Download"), track.asset.file.url(:original, false)%>
+							<% end %>
+						</span></td>
 						<% end %>
 						<td><% unless track.asset.nil? %><%= track.asset.file_content_type %><% else %>unknown<% end %></td>
 						<td><% unless track.sensor_type.nil?%><%= link_to track.sensor_type.name, track.sensor_type %><% else %>unspecified<% end %></td>
