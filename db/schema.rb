@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140627202525) do
+ActiveRecord::Schema.define(version: 20140801200639) do
 
   create_table "assets", force: true do |t|
     t.integer  "attachable_id"
@@ -34,6 +34,7 @@ ActiveRecord::Schema.define(version: 20140627202525) do
     t.integer  "sensor_type_id"
     t.boolean  "public",                        default: false
     t.integer  "user_id"
+    t.datetime "captured_at"
   end
 
   add_index "data_tracks", ["sensor_type_id"], name: "index_data_tracks_on_sensor_type_id"
