@@ -15,6 +15,7 @@
     <%= f.label :name, class: "control-label" %><br>
     <%= f.text_field :name, size: 60, class: "form-control", placeholder: "Name the data track", required: "required", autofocus: "autofocus" %>
   </div>
+
   <div class="field form-group">
     <%= f.label :description, class: "control-label" %><br>
     <%= f.text_area :description, size: "60x12", class: "form-control", placeholder: "Data track description", required: "required" %>
@@ -24,10 +25,30 @@
     <%= f.text_field :technician, size: 60, class: "form-control", placeholder: "Technician name", required: "required" %>
 		<em class="help-block">Provide a free-form name or description of the technician managing this recording</em>
   </div>
-  <div class="field form-group">
-	<%= f.label :movement_group, class: "control-label" %>
-	<%= f.collection_select :movement_group_id, @movement_groups, :id, :name %>
+
+	<%= f.label :recorded_on, class: "control-label" %>
+  <div class="input-group date" style="width: 200px">
+		<%= f.text_field :recorded_on, class: "form-control" %><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
   </div>
+
+	<script type="text/javascript">
+	  $(document).ready(function(){
+	    $('.input-group.date').datepicker({
+	    format: "yyyy-mm-dd",
+	    todayBtn: "linked",
+	    autoclose: true,
+	    todayHighlight: true
+	    });
+	  })
+	</script>
+	<br/>
+
+  <div class="field form-group">
+		<%= f.label :movers, class: "control-label"%><br/>
+		<%= f.collection_select :mover_ids, Mover.all, :id, :name, {:include_blank => 'None'}, {:multiple => true} %>
+		<em class="help-block">Hold the ctrl/cmd key while selecting names to choose more than one.</em>		
+	</div>
+	
   <div class="field form-group">
 	<%= f.label :sensor_type, class: "control-label" %>
 	<%= f.collection_select :sensor_type_id, @sensor_types, :id, :name %>
@@ -42,6 +63,13 @@
     <%= f.check_box :public %> 
 		<em class="help-block">Public pieces are published for everyone to see</em>
   </div>
+
+	<div class="field form-group">
+		<%= f.label :movement_group, class: "control-label" %>
+		<%= f.collection_select :movement_group_id, @movement_groups, :id, :name %>
+		<em class="help-block">Do not change this from the original unless you're correcting a mistake.</em>
+  </div>
+	
   <div class="field form-group">
 	<%= f.label :asset_file, class: "control-label" %><br>
 	<% unless @data_track.asset.nil? %>

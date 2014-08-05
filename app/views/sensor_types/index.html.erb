@@ -17,7 +17,7 @@
       <tr>
         <td><%= link_to edit_link_html, edit_sensor_type_path(sensor_type) if current_user %>
 						<%= link_to remove_link_html, sensor_type, method: :delete, data: { confirm: 'Are you sure?' } if current_user %>
-						<%= sensor_type.name %></td>
+						<%= link_to sensor_type.name, sensor_type_path(sensor_type) %></td>
         <td><%= sensor_type.description %></td>
       </tr>
     <% end %>

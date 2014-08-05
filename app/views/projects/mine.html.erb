@@ -1,0 +1,30 @@
+<h1>Projects you've created</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+	  	<th># Takes</th>
+	  	<th>Public?</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @projects.each do |project| %>
+      <tr>
+        <td><%= link_to project.name, project_path(project) %> <small class="pull-right"><%= link_to edit_link_html("Edit"), edit_project_path(project) %>
+				  <%= link_to remove_link_html("Delete"), project, method: :delete, data: { confirm: 'Are you sure?' } %>
+					</small>
+				</td>
+        <td><%= truncate(project.description, length: 40) %></td>
+				<td><%= project.movement_groups.size %></td>
+				<td><% if project.public %>Public <% else %> Private <% end %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to add_link_html('Create new Project'), new_project_path %>

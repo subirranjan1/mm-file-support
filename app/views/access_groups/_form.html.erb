@@ -1,0 +1,35 @@
+<%= form_for(@access_group) do |f| %>
+  <% if @access_group.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@access_group.errors.count, "error") %> prohibited this access_group from being saved:</h2>
+
+      <ul>
+      <% @access_group.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field form-group">
+		<%= f.label :name, class: "control-label"%><br/>
+		<%= f.text_field :name, size: 60, class: "form-control", placeholder: "Name the access group", required: "required", autofocus: "autofocus" %>
+	</div>
+
+  <div class="field form-group">
+		<%= f.label :users, class: "control-label"%><br/>
+		<%= f.collection_select :user_ids, User.all, :id, :display_name, {:include_blank => 'None'}, {:multiple => true, :size => User.count+1} %>
+		<em class="help-block">Hold the ctrl/cmd key while selecting names to choose more than one.</em>		
+	</div>
+
+  <div class="field form-group">
+		<%= f.label :projects, class: "control-label"%><br/>
+		<%= f.collection_select :project_ids, @projects, :id, :name, {:include_blank => 'None'}, {:multiple => true, :size => @projects.size+1} %>
+		<em class="help-block">Hold the ctrl/cmd key while selecting names to choose more than one.</em>		
+	</div>
+	
+  <div class="actions">
+    <%= f.submit class: "btn btn-primary" %>
+  </div>
+<% end %>
+<p class="help-block">Remember! Any users that you attach to a project have the ability to edit it or its subsidiaries.</p>

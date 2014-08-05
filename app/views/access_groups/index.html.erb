@@ -1,0 +1,30 @@
+<h1>Your access groups</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Group name</th>
+      <th>Users</th>
+      <th>Permitted Projects</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @access_groups.each do |access_group| %>
+      <tr>
+	      <td>	<%= link_to edit_link_html, edit_access_group_path(access_group) %>
+							<%= link_to remove_link_html, access_group, method: :delete, data: { confirm: 'Are you sure?' } %>
+							<%= link_to access_group.name, access_group_url(access_group) %>
+				</td>
+				<td><%= access_group.users.map { |user| user.display_name }.to_sentence %></td>
+				<td><%= access_group.projects.map { |user| user.name }.to_sentence %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+
+
+<br>
+
+<%= link_to add_link_html('New Access group'), new_access_group_path %>

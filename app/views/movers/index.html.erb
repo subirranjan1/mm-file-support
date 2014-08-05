@@ -18,7 +18,7 @@
       <tr>
         <td>	<%= link_to edit_link_html, edit_mover_path(mover) if current_user %>
 							<%= link_to remove_link_html, mover, method: :delete, data: { confirm: 'Are you sure?' } if current_user %>
-							<%= mover.name %>
+							<%= link_to mover.name, mover_url(mover) %>
 				</td>
         <td><%= Time.now.year - mover.dob.year unless mover.dob.nil? %></td>
         <td><%= mover.gender %></td>

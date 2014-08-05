@@ -11,7 +11,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140801200639) do
+ActiveRecord::Schema.define(version: 20140804193126) do
+
+  create_table "access_groups", force: true do |t|
+    t.string   "name"
+    t.integer  "creator_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "access_groups_projects", id: false, force: true do |t|
+    t.integer "access_group_id", null: false
+    t.integer "project_id",      null: false
+  end
+
+  create_table "access_groups_users", id: false, force: true do |t|
+    t.integer "access_group_id", null: false
+    t.integer "user_id",         null: false
+  end
 
   create_table "assets", force: true do |t|
     t.integer  "attachable_id"
@@ -34,7 +51,7 @@ ActiveRecord::Schema.define(version: 20140801200639) do
     t.integer  "sensor_type_id"
     t.boolean  "public",                        default: false
     t.integer  "user_id"
-    t.datetime "captured_at"
+    t.date     "recorded_on"
   end
 
   add_index "data_tracks", ["sensor_type_id"], name: "index_data_tracks_on_sensor_type_id"
@@ -70,6 +87,11 @@ ActiveRecord::Schema.define(version: 20140801200639) do
 
   add_index "movement_groups", ["user_id"], name: "index_movement_groups_on_user_id"
 
+  create_table "movement_groups_movers", id: false, force: true do |t|
+    t.integer "movement_group_id"
+    t.integer "mover_id"
+  end
+
   create_table "movers", force: true do |t|
     t.string   "name"
     t.date     "dob"
@@ -79,6 +101,11 @@ ActiveRecord::Schema.define(version: 20140801200639) do
     t.string   "other_training"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "movers_projects", id: false, force: true do |t|
+    t.integer "mover_id",   null: false
+    t.integer "project_id", null: false
   end
 
   create_table "projects", force: true do |t|
@@ -91,11 +118,6 @@ ActiveRecord::Schema.define(version: 20140801200639) do
   end
 
   add_index "projects", ["user_id"], name: "index_projects_on_user_id"
-
-  create_table "projects_users", id: false, force: true do |t|
-    t.integer "user_id",    null: false
-    t.integer "project_id", null: false
-  end
 
   create_table "sensor_types", force: true do |t|
     t.string   "name"

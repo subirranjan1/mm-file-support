@@ -1,10 +1,11 @@
+<% project_counter ||= 1 %>
 <div class="panel panel-default">
   <div class="panel-heading">
     <h4 class="panel-title">
-      <a data-toggle="collapse" data-parent="#accordion<%=project_counter%>" href="#collapse<%=take_counter%>" class="accordian-toggle">
-        <%= take.name %> <i class="glyphicon glyphicon-collapse-down"></i><span class="badge pull-right" style="background-color: #3a87ad;"><%= take.data_tracks.size %></span></a>
+      <a data-toggle="collapse" data-parent="#accordion<%= project_counter  %>" href="#collapse<%=take_counter%>" class="accordian-toggle">
+        <%= take.name %> <span class="badge" style="background-color: #3a87ad;"><%= take.data_tracks.size %></span> <i class="glyphicon glyphicon-collapse-down"></i></a>
 			<% if authorized? take %>
-			<small><%= link_to edit_link_html, edit_movement_group_path(take) %> <%= link_to remove_link_html, take, method: :delete, data: { confirm: 'Are you sure?' } %></small>
+			<small class="pull-right"><%= link_to edit_link_html("Edit"), edit_movement_group_path(take) %> <%= link_to remove_link_html("Delete"), take, method: :delete, data: { confirm: 'Are you sure?' } %></small>
 			<% end %>
     </h4>
   </div>
@@ -60,7 +61,7 @@
 						<th>Sensor</th>
 						<th>Technician</th>
 						<th>Description</th>
-						<th>Tags</th>
+						<th>Recorded on</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -80,7 +81,7 @@
 						<td><% unless track.sensor_type.nil?%><%= link_to track.sensor_type.name, track.sensor_type %><% else %>unspecified<% end %></td>
 						<td><%= track.technician %></td>
 						<td><%= track.description %></td>
-						<td><% unless track.tag_list.empty? %><%= track.tag_list %><% end %></td>							
+						<td><% unless track.recorded_on.nil? %><%= track.recorded_on %><% end %></td>							
 					</tr>
 				<% end %>
 				</tbody>

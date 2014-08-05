@@ -20,6 +20,11 @@
     <%= f.text_area :description, size: "60x12", class: "form-control", placeholder: "Project description", required: "required" %>
   </div>
   <div class="field form-group">
+		<%= f.label :movers, class: "control-label"%><br/>
+		<%= f.collection_select :mover_ids, Mover.all, :id, :name, {:include_blank => 'None'}, {:multiple => true} %>
+		<em class="help-block">Hold the ctrl/cmd key while selecting names to choose more than one. These will be the default for any takes added to this take.</em>		
+	</div>
+  <div class="field form-group">
 		<%= f.label :tags, class: "control-label" %>
 		<%= f.text_field :tag_list, class: "form-control" %>	
 		<em class="help-block">Please separate tags with commas</em>

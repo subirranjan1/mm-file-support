@@ -11,6 +11,6 @@ class DataTrack < ActiveRecord::Base
   validates :sensor_type_id, presence: true
   
   def is_accessible_by?(user)
-    owner == user or movement_group.project.users.include? user
+    owner == user or movement_group.is_accessible_by? user
   end
 end

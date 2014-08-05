@@ -29,5 +29,5 @@
 </p>
 
 
-<%= link_to edit_link_html('Edit'), edit_mover_path(@mover) %> |
+<% if current_user %> <%= link_to edit_link_html('Edit'), edit_mover_path(@mover) %> | <% end %>
 <%= link_to back_link_html('Return to list of movers'), movers_path %>

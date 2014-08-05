@@ -12,7 +12,6 @@ class ProjectsController < ApplicationController
 
   def mine
     @projects = current_user.owned_projects.order(:name)
-    render :index
   end
   # GET /projects/1
   # GET /projects/1.json
@@ -76,7 +75,7 @@ class ProjectsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def project_params
-      params.require(:project).permit(:name, :description, :tag_list, :public)
+      params.require(:project).permit(:name, :description, :tag_list, :public, :mover_ids => [])
     end
     
     def ensure_owner

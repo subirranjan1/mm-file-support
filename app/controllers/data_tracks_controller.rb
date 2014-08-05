@@ -19,6 +19,7 @@ class DataTracksController < ApplicationController
   def new
     @data_track = DataTrack.new  
     @data_track.movement_group_id = params[:movement_group_id]  
+    @data_track.movers = @data_track.movement_group.movers
     @movement_groups = MovementGroup.all
     @sensor_types = SensorType.all  
   end
@@ -94,7 +95,7 @@ class DataTracksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def data_track_params
-      params.require(:data_track).permit(:name, :description, :format, :movement_group_id, :tag_list, :technician, :sensor_type_id, :public, :user_id)
+      params.require(:data_track).permit(:name, :description, :format, :movement_group_id, :tag_list, :technician, :recorded_on, :sensor_type_id, :public, :user_id, :mover_ids => [])
     end
     
     def ensure_owner

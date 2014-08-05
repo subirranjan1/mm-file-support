@@ -38,3 +38,7 @@ footer ul li {
 			 font-url('glyphicons-halflings-regular.ttf') format('truetype'), 
 			 font-url('glyphicons-halflings-regular.svg#glyphicons-halflingsregular') format('svg');
 }
+
+span.input-group-addon {
+	cursor: arrow;
+}

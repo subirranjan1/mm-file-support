@@ -1,19 +1,27 @@
+<ol class="breadcrumb">
+  <li><a href="/">Projects</a></li>
+	<li><%= link_to @movement_group.project.name, project_path(@movement_group.project) %></li>
+	<li><%= link_to @movement_group.name, movement_group_path(@movement_group) %></li>
+</ol>
 <p id="notice"><%= notice %></p>
-
 <p>
   <strong>Name:</strong>
   <%= @movement_group.name %>
 </p>
-
+<h5>Description</h5>
 <p>
-  <strong>Description:</strong>
   <%= @movement_group.description %>
 </p>
-
-<p>
-  <strong>Project:</strong>
-  <%= link_to @movement_group.project.name, project_path(@movement_group.project) %>
-</p>
+<% unless @movement_group.movers.empty? %>
+<h5>Default Movers</h5>
+<ul>
+	<% @movement_group.movers.each do |mover| %>
+		<li><%= link_to mover.name, mover_url(mover) %></li>
+	<% end %>
+</ul>
+<% else %>
+No default movers set.
+<% end %>
 
 <% if ! @movement_group.tags.empty? -%>
   <p>
@@ -23,11 +31,17 @@
 	<% end %>
   </p>
 <% else -%>
- <p>No tags yet</p>
+ <p>No tags set.</p>
 <% end -%>
-<p>
-  <strong>Public? </strong>
-  <%= @movement_group.public %>
-</p>
-<%= link_to 'Edit', edit_movement_group_path(@movement_group) %> |
-<%= link_to 'Back', movement_groups_path %>
+
+<% if authorized? @movement_group %>
+	<p><span class="glyphicon glyphicon-exclamation-sign"></span> <em>Notice to owner: <% if @movement_group.public? %>
+		 This take is visible to everyone.
+		 <% else %>
+		 This take can only be seen by its creator and approved access groups.
+		 <% end %></em>
+	</p>
+<% end %>
+
+<% if authorized? @movement_group %> <%= link_to edit_link_html('Edit'), edit_movement_group_path(@movement_group) %><% end %>
+	<br/><%= link_to back_link_html('Return to project details'), project_path(@movement_group.project) %>

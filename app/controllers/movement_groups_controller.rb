@@ -19,6 +19,7 @@ class MovementGroupsController < ApplicationController
   def new
     @movement_group = MovementGroup.new
     @movement_group.project_id = params[:project_id]
+    @movement_group.movers = @movement_group.project.movers
     @projects = Project.all
   end
 
@@ -85,7 +86,7 @@ class MovementGroupsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def movement_group_params
-      params.require(:movement_group).permit(:name, :description, :project_id, :tag_list, :public, :user_id)
+      params.require(:movement_group).permit(:name, :description, :project_id, :tag_list, :public, :user_id, :mover_ids => [])
     end
     
     def ensure_owner

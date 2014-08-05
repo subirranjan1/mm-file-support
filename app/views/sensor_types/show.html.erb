@@ -11,5 +11,5 @@
   <%= @sensor_type.description %>
 </p>
 
-<%= link_to edit_link_html('Edit'), edit_sensor_type_path(@sensor_type) %> |
+<% if current_user %><%= link_to edit_link_html('Edit'), edit_sensor_type_path(@sensor_type) %> |<% end %>
 <%= link_to back_link_html('Return to sensor listing'), sensor_types_path %>

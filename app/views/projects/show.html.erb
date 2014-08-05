@@ -1,5 +1,8 @@
+<ol class="breadcrumb">
+  <li><a href="/">Projects</a></li>
+	<li><%= link_to @project.name, project_path(@project) %></li>
+</ol>
 <p id="notice"><%= notice %></p>
-
 <p>
   <strong>Name:</strong>
   <%= @project.name %>
@@ -8,10 +11,24 @@
   <strong>Description:</strong>
   <%= @project.description %>
 </p>
-<p>
-  <strong>Public? </strong>
-  <%= @project.public %>
-</p>
+<% if authorized? @project %>
+	<p><span class="glyphicon glyphicon-exclamation-sign"></span> <em>Notice to owner: <% if @project.public? %>
+		 This project is visible to everyone.
+		 <% else %>
+		 This project can only be seen by its creator and approved access groups.
+		 <% end %></em>
+	</p>
+<% end %>
+<% unless @project.movers.empty? %>
+<h5>Default Movers</h5>
+<ul>
+	<% @project.movers.each do |mover| %>
+		<li><%= link_to mover.name, mover_url(mover) %></li>
+	<% end %>
+</ul>
+<% else %>
+No default movers set.
+<% end %>
 <% if ! @project.tags.empty? -%>
   <p>
     <strong>Tags:</strong>
@@ -23,5 +40,18 @@
  <p>No tags yet</p>
 <% end -%>
 
-<%= link_to 'Edit', edit_project_path(@project) %> |
-<%= link_to 'Back', projects_path %>
+<% if @project.movement_groups.empty? %>
+	<p>No associated movement takes yet. 
+		<% if authorized? @project %>
+			<small><%= link_to add_link_html("Add new take"), new_movement_group_path(project_id: @project.id) %></small></p>
+		<% end %>
+<% else %>
+	<% project_counter ||= 1%>
+	<h5>Movement Takes <small><%= link_to add_link_html("Add new take"), new_movement_group_path(project_id: @project.id) %></small></h5>
+	<div class="panel-group" id="accordion<%=project_counter%>">
+		<%= render partial: 'take', collection: @project.movement_groups %>
+	</div>
+<% end %>
+
+<% if authorized? @project %> <%= link_to edit_link_html('Edit'), edit_project_path(@project) %><% end %>
+	<br/><%= link_to back_link_html('Return to list of projects'), projects_path %>

@@ -11,7 +11,8 @@ class User < ActiveRecord::Base
   has_many :movement_groups
   has_many :movement_annotations 
   # associations to indicate access granted
-  has_and_belongs_to_many :projects
+  has_many :owned_groups, class_name: "AccessGroup", foreign_key: "creator_id"
+  has_and_belongs_to_many :access_groups
   
   attr_accessor :password # this is needed to use password and password confirmation virtually
   attr_accessor :password_confirmation
@@ -28,11 +29,19 @@ class User < ActiveRecord::Base
                        format: { with: VALID_PASSWORD_REGEX, message: PASSWORD_REQUIREMENTS }, if: :should_validate_password?
   
   def all_accessible_projects
-    owned_projects + projects
+    owned_projects + accessible_projects
   end
   
   def authorized?(object)
     object.is_accessible_by? self
+  end
+  
+  def display_name
+    if self.alias.blank?
+      return self.email
+    else
+      return self.alias
+    end
   end
                          
   # As is the 'standard' with rails apps we'll return the user record if the
@@ -55,6 +64,11 @@ class User < ActiveRecord::Base
   private
   # This is where the real work is done, store the BCrypt has in the
   # database
+  
+  def accessible_projects
+    access_groups.projects
+  end
+  
   def hash_new_password
     self.hashed_password = BCrypt::Password.create(@password)
   end

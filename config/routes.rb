@@ -4,6 +4,7 @@ FileSupportMovingstories::Application.routes.draw do
   get "pages/contact"
   resources :sensor_types
   resources :movers
+  resources :access_groups
   resources :movement_annotations
   resources :data_tracks
   resources :movement_groups
