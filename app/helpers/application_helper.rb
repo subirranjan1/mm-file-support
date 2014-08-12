@@ -23,70 +23,35 @@ module ApplicationHelper
     if text.empty?
       base_link
     else
-      "#{base_link} #{text}"
+      raw("#{base_link} #{text}")
     end
-  end  
+  end
   
   def download_link_html(text = '')
-    base_link = raw("<span class='glyphicon glyphicon-download'></span>")
-    if text.empty?
-      base_link
-    else
-      base_link + " #{text}"
-    end    
-  end
-  
+    link_html("download", text)    
+  end  
+    
   def login_link_html(text = '')
-    base_link = raw("<span class='glyphicon glyphicon-log-in'></span>")
-    if text.empty?
-      base_link
-    else
-      base_link + " #{text}"
-    end
-  end
-  
+    link_html("log-in", text)
+  end  
+
   def logout_link_html(text = '')
-    base_link = raw("<span class='glyphicon glyphicon-log-out'></span>")
-    if text.empty?
-      base_link
-    else
-      base_link + " #{text}"
-    end
+    link_html("log-out", text)
   end
     
   def remove_link_html(text = '')
-    base_link = raw("<span class='glyphicon glyphicon-trash'></span>")
-    if text.empty?
-      base_link
-    else
-      base_link + " #{text}"
-    end
+    link_html("trash", text)
   end
   
   def add_link_html text = ''
-    base_link = raw("<span class='glyphicon glyphicon-plus-sign'></span>")
-    if text.empty?
-      base_link
-    else
-      base_link + " #{text}"
-    end    
+    link_html("plus-sign", text) 
   end
   
   def back_link_html text = ''
-    base_link = raw("<span class='glyphicon glyphicon-arrow-left'></span>")
-    if text.empty?
-      base_link
-    else
-      base_link + " #{text}"
-    end 
+    link_html("arrow-left", text)
   end
   
   def edit_link_html text = ''
-    base_link = raw("<span class='glyphicon glyphicon-edit'></span>")
-    if text.empty?
-      base_link
-    else
-      base_link + " #{text}"
-    end    
+    link_html("edit", text)
   end
 end

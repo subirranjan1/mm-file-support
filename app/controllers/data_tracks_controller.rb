@@ -86,6 +86,14 @@ class DataTracksController < ApplicationController
       format.json { head :no_content }
     end
   end
+  
+  # def provide
+  #   
+  # end
+  # def import
+  #   DataTrack.import(params[:file])
+  #   redirect_to myprojects_path, notice: "Tracks imported."
+  # end
 
   private
     # Use callbacks to share common setup or constraints between actions.

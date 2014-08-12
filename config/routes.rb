@@ -6,6 +6,8 @@ FileSupportMovingstories::Application.routes.draw do
   resources :movers
   resources :access_groups
   resources :movement_annotations
+  get '/data_tracks/provide', to: 'data_tracks#provide'
+  post '/data_tracks/import', to: 'data_tracks#import'
   resources :data_tracks
   resources :movement_groups
   resources :projects

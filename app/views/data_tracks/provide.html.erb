@@ -1,0 +1,10 @@
+<h3>Import files via CSV</h3>
+<%= form_tag({action: :import}, multipart: true) do %>
+	<div class="field form-group">
+	<%= label_tag(:file, nil, class: "control-label") %><br/>
+	<%= file_field_tag :file, required: "required" %>
+	</div>
+	<div class="actions">
+		<%= submit_tag("Import", class: "btn btn-primary") %>
+	</div>
+<% end %>
