@@ -14,7 +14,8 @@ module ProjectsHelper
   def mova_url
     #"http://www.sfu.ca/~oalemi/movan/"
     #"http://142.58.181.193:8080/index.php"
-    "http://142.58.181.193/MovAn/movan/index.php"
+    #"http://142.58.181.193/MovAn/movan/index.php"
+    "http://209.87.56.87:81/MoVan/movan/index.php"
   end
   
 end
