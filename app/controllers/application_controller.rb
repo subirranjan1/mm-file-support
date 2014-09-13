@@ -7,12 +7,19 @@ class ApplicationController < ActionController::Base
   protected
   
   def ensure_logged_in
-    unless session[:user_id]
-      flash[:notice] = "You need to log in first."
-      redirect_back_or_default
-      return false
+    if request.format === :json
+      if user = authenticate_or_request_with_http_basic{ |u, p| User.authenticate(u, p) }
+        p 'setting current user'
+        @current_user = user
+      end
     else
-      return true
+      unless session[:user_id]
+        flash[:notice] = "You need to log in first."
+        redirect_back_or_default
+        return false
+      else
+        return true
+      end
     end
   end
   
@@ -25,9 +32,14 @@ class ApplicationController < ActionController::Base
   end
   
   private
-
+  
+  # return the current user object if someone is authenticated properly otherwise return false
   def current_user
-    @current_user ||= User.find(session[:user_id]) if session[:user_id]
+    if request.format === :json
+      return @current_user
+    else    
+     return @current_user ||= User.find(session[:user_id]) if session[:user_id]
+    end
   end
 end
 
