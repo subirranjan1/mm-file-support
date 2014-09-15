@@ -1,14 +1,26 @@
 class AccessGroupsController < ApplicationController
   before_action :set_access_group, only: [:show, :edit, :update, :destroy]
   before_filter :ensure_logged_in
+  
+  def_param_group :access_group do
+    param :access_group, Hash, :required => true, :action_aware => true do
+      param :name, String, "Name of the Access Group", :required => true
+      param :user_ids, Array, :required => true
+      param :project_ids, Array, :required => true
+    end
+  end
+  
+  
   # GET /access_groups
   # GET /access_groups.json
+  api :GET, "/access_groups.json", "List Access Groups"
   def index
     @access_groups = current_user.owned_groups
   end
 
   # GET /access_groups/1
   # GET /access_groups/1.json
+  api :GET, "/access_groups/:id.json", "Show an Access Group"
   def show
   end
 
@@ -25,6 +37,8 @@ class AccessGroupsController < ApplicationController
 
   # POST /access_groups
   # POST /access_groups.json
+  api :POST, "/access_groups.json", "Create an Access Group"
+  param_group :access_group
   def create
     @access_group = AccessGroup.new(access_group_params)
     @access_group.creator_id = current_user.id
@@ -42,6 +56,8 @@ class AccessGroupsController < ApplicationController
 
   # PATCH/PUT /access_groups/1
   # PATCH/PUT /access_groups/1.json
+  api :PUT, "/access_groups/:id.json", "Update an Access Group"
+  param_group :access_group
   def update
     @projects = current_user.owned_projects.order(:name)    
     respond_to do |format|
@@ -57,6 +73,7 @@ class AccessGroupsController < ApplicationController
 
   # DELETE /access_groups/1
   # DELETE /access_groups/1.json
+  api :DELETE, "/access_groups/:id.json", "Destroy an Access Group"
   def destroy
     @access_group.destroy
     respond_to do |format|
@@ -64,7 +81,7 @@ class AccessGroupsController < ApplicationController
       format.json { head :no_content }
     end
   end
-
+  
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_access_group

@@ -40,3 +40,4 @@ gem 'mysql', group: [:staging, :production]
 gem 'i18n', '0.6.9'
 
 gem 'bootstrap-datepicker-rails'
+gem 'apipie-rails'

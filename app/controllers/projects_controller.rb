@@ -1,9 +1,9 @@
 class ProjectsController < ApplicationController
   before_action :set_project, only: [:show, :edit, :update, :destroy]
   before_filter :ensure_logged_in, except: [:index, :show]
-  before_filter :ensure_owner, only: [:destroy]
-  before_filter :ensure_authorized, only: [:edit, :update]
-  before_filter :ensure_public_or_authorized, only: [:show]
+  before_filter ->(param=@project) { ensure_owner param }, only: %w{destroy}
+  before_filter ->(param=@project) { ensure_authorized param }, only: %w{edit update}
+  before_filter ->(param=@project) { ensure_public_or_authorized param }, only: %w{show}
   # GET /projects
   # GET /projects.json
   def index
@@ -77,34 +77,5 @@ class ProjectsController < ApplicationController
     def project_params
       params.require(:project).permit(:name, :description, :tag_list, :public, :mover_ids => [])
     end
-    
-    def ensure_owner
-      unless current_user and @project.owner == current_user
-         flash[:notice] = "You do not have access rights to this project."
-         redirect_back_or_default
-         return false
-       else
-         return true
-       end      
-    end
-    
-    def ensure_public_or_authorized
-      unless @project.public or (current_user and @project.is_accessible_by? current_user)        
-         flash[:notice] = "This project is not authorized for public access and you are not its owner."
-         redirect_back_or_default
-         return false
-       else
-         return true
-       end      
-    end    
-    
-    def ensure_authorized
-      unless current_user and @project.is_accessible_by? current_user
-         flash[:notice] = "You do not have access rights to this project."
-         redirect_back_or_default
-         return false
-       else
-         return true
-       end      
-    end    
+      
 end

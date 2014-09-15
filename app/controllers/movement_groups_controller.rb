@@ -1,9 +1,9 @@
 class MovementGroupsController < ApplicationController
   before_action :set_movement_group, only: [:show, :edit, :update, :destroy]
   before_filter :ensure_logged_in, except: [:index, :show]
-  before_filter :ensure_owner, only: [:destroy]
-  before_filter :ensure_authorized, only: [:edit, :update]
-  before_filter :ensure_public_or_authorized, only: [:show]
+  before_filter ->(param=@movement_group) { ensure_owner param }, only: %w{destroy}
+  before_filter ->(param=@movement_group) { ensure_authorized param }, only: %w{edit update}
+  before_filter ->(param=@movement_group) { ensure_public_or_authorized param }, only: %w{show}
   # GET /movement_streams
   # GET /movement_streams.json
   def index
@@ -88,34 +88,5 @@ class MovementGroupsController < ApplicationController
     def movement_group_params
       params.require(:movement_group).permit(:name, :description, :project_id, :tag_list, :public, :user_id, :mover_ids => [])
     end
-    
-    def ensure_owner
-      unless current_user and @movement_group.owner == current_user
-         flash[:notice] = "You do not have access rights to this take."
-         redirect_back_or_default
-         return false
-       else
-         return true
-       end      
-    end
-    
-    def ensure_public_or_authorized
-      unless @movement_group.public or (current_user and @movement_group.is_accessible_by? current_user)        
-         flash[:notice] = "This take is not authorized for public access and you are not its owner."
-         redirect_back_or_default
-         return false
-       else
-         return true
-       end      
-    end    
-    
-    def ensure_authorized
-      unless current_user and @movement_group.is_accessible_by? current_user
-         flash[:notice] = "You do not have access rights to this take."
-         redirect_back_or_default
-         return false
-       else
-         return true
-       end      
-    end    
+      
 end

@@ -1,4 +1,5 @@
 FileSupportMovingstories::Application.routes.draw do
+  apipie
   root 'projects#index'
   get "pages/about"
   get "pages/contact"

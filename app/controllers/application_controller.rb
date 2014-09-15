@@ -41,6 +41,37 @@ class ApplicationController < ActionController::Base
      return @current_user ||= User.find(session[:user_id]) if session[:user_id]
     end
   end
+  
+  def ensure_owner obj
+    unless current_user and obj.owner == current_user
+       flash[:notice] = "You do not have access rights to this project."
+       redirect_back_or_default
+       return false
+     else
+       return true
+     end      
+  end
+  
+  def ensure_public_or_authorized obj
+    unless obj.public or (current_user and obj.is_accessible_by? current_user)        
+       flash[:notice] = "This project is not authorized for public access and you are not its owner."
+       redirect_back_or_default
+       return false
+     else
+       return true
+     end      
+  end    
+  
+  def ensure_authorized obj
+    unless current_user and obj.is_accessible_by? current_user
+       flash[:notice] = "You do not have access rights to this project."
+       redirect_back_or_default
+       return false
+     else
+       return true
+     end      
+  end
+  
 end
 
 
