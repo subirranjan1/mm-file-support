@@ -3,13 +3,15 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
   helper_method :current_user
-  
+  before_filter :set_user_with_http_auth, if: :is_json_request?
   protected
   
   def ensure_logged_in
     if request.format === :json
-      if user = authenticate_or_request_with_http_basic{ |u, p| User.authenticate(u, p) }
-        p 'setting current user'
+      user = authenticate_or_request_with_http_basic{ |u, p| User.authenticate(u, p) }
+      if user.nil?
+        render nothing: true, status: :unauthorized       
+      else
         @current_user = user
       end
     else
@@ -44,34 +46,60 @@ class ApplicationController < ActionController::Base
   
   def ensure_owner obj
     unless current_user and obj.owner == current_user
-       flash[:notice] = "You do not have access rights to this project."
-       redirect_back_or_default
-       return false
-     else
-       return true
-     end      
+      if request.format === :json
+        render nothing: true, status: :unauthorized
+      else
+        flash[:notice] = "You do not have access rights to this project."
+        redirect_back_or_default
+        return false
+      end
+    else
+      return true
+    end      
   end
   
   def ensure_public_or_authorized obj
-    unless obj.public or (current_user and obj.is_accessible_by? current_user)        
-       flash[:notice] = "This project is not authorized for public access and you are not its owner."
-       redirect_back_or_default
-       return false
-     else
-       return true
-     end      
+    p obj
+    unless obj.public or (current_user and obj.is_accessible_by? current_user)      
+      if request.format === :json
+        render nothing: true, status: :unauthorized
+      else  
+        flash[:notice] = "This project is not authorized for public access and you are not its owner."
+        redirect_back_or_default
+        return false
+      end
+    else
+      return true
+    end      
   end    
   
   def ensure_authorized obj
     unless current_user and obj.is_accessible_by? current_user
-       flash[:notice] = "You do not have access rights to this project."
-       redirect_back_or_default
-       return false
-     else
-       return true
-     end      
+      if request.format === :json
+        render nothing: true, status: :unauthorized
+      else      
+        flash[:notice] = "You do not have access rights to this project."
+        redirect_back_or_default
+        return false
+      end
+    else
+      return true
+    end      
   end
   
+  def set_user_with_http_auth
+    if user = authenticate_or_request_with_http_basic{ |u, p| User.authenticate(u, p) }
+      @current_user = user
+    else
+      render nothing: true, status: :unauthorized   
+    end
+  end  
+  
+  private
+  
+  def is_json_request?
+    request.format === :json
+  end
 end
 
 

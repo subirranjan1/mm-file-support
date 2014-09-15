@@ -1,15 +1,15 @@
 class AccessGroupsController < ApplicationController
   before_action :set_access_group, only: [:show, :edit, :update, :destroy]
+  before_filter ->(param=@access_group) { ensure_owner param }, only: %w{edit update destroy}
   before_filter :ensure_logged_in
   
   def_param_group :access_group do
     param :access_group, Hash, :required => true, :action_aware => true do
       param :name, String, "Name of the Access Group", :required => true
-      param :user_ids, Array, :required => true
-      param :project_ids, Array, :required => true
+      param :user_ids, Array, "IDs of users", :required => true
+      param :project_ids, Array, "IDs of projects", :required => true
     end
   end
-  
   
   # GET /access_groups
   # GET /access_groups.json
@@ -21,6 +21,7 @@ class AccessGroupsController < ApplicationController
   # GET /access_groups/1
   # GET /access_groups/1.json
   api :GET, "/access_groups/:id.json", "Show an Access Group"
+  error 404, "An access group could not be found with the requested id."    
   def show
   end
 
@@ -39,6 +40,7 @@ class AccessGroupsController < ApplicationController
   # POST /access_groups.json
   api :POST, "/access_groups.json", "Create an Access Group"
   param_group :access_group
+  error 401, "The user you attempted authentication with cannot be authenticated"  
   def create
     @access_group = AccessGroup.new(access_group_params)
     @access_group.creator_id = current_user.id
@@ -58,6 +60,7 @@ class AccessGroupsController < ApplicationController
   # PATCH/PUT /access_groups/1.json
   api :PUT, "/access_groups/:id.json", "Update an Access Group"
   param_group :access_group
+  error 401, "The user you attempted authentication with cannot be authenticated or is not the owner of the project"  
   def update
     @projects = current_user.owned_projects.order(:name)    
     respond_to do |format|
@@ -74,6 +77,7 @@ class AccessGroupsController < ApplicationController
   # DELETE /access_groups/1
   # DELETE /access_groups/1.json
   api :DELETE, "/access_groups/:id.json", "Destroy an Access Group"
+  error 401, "The user you attempted authentication with cannot be authenticated or is not the owner of the project"
   def destroy
     @access_group.destroy
     respond_to do |format|

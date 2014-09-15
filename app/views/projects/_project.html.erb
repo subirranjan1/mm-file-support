@@ -28,7 +28,8 @@
 					<small><%= link_to add_link_html("Add new take"), new_movement_group_path(project_id: project.id) %></small></p>
 				<% end %>
 		<% else %>
-			<h5>Movement Takes <small><%= link_to add_link_html("Add new take"), new_movement_group_path(project_id: project.id) %></small></h5>
+			<h5>Movement Takes <% if authorized? project %>
+				<small><%= link_to add_link_html("Add new take"), new_movement_group_path(project_id: project.id) %></small><% end %></h5>
 			<div class="panel-group" id="accordion<%=project_counter%>">
 				<%= render partial: 'take', collection: project.movement_groups, locals: {project_counter: project_counter} %>
 			</div>

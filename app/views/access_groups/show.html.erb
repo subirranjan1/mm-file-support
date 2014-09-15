@@ -1,4 +1,11 @@
 <p id="notice"><%= notice %></p>
+<h2><%= @access_group.name %></h2>
 
-<%= link_to 'Edit', edit_access_group_path(@access_group) %> |
-<%= link_to 'Back', access_groups_path %>
+<h3>Users</h3>
+<%= @access_group.users.map { |user| user.display_name }.to_sentence %>
+<h3>Permitted Projects</h3>
+<%= @access_group.projects.map { |user| user.name }.to_sentence %>
+<br/>
+
+<% if current_user %> <%= link_to edit_link_html('Edit'), edit_access_group_path(@access_group) %> | <% end %>
+<%= link_to back_link_html('Return to list of movers'), access_groups_path %>

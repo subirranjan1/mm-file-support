@@ -1,9 +1,9 @@
 class DataTracksController < ApplicationController
   before_action :set_data_track, only: [:show, :edit, :update, :destroy]
   before_filter :ensure_logged_in, except: [:index, :show]
-  before_filter ->(param=@project) { ensure_owner param }, only: %w{destroy}
-  before_filter ->(param=@project) { ensure_authorized param }, only: %w{edit update}
-  before_filter ->(param=@project) { ensure_public_or_authorized param }, only: %w{show}
+  before_filter ->(param=@data_track) { ensure_owner param }, only: %w{destroy}
+  before_filter ->(param=@data_track) { ensure_authorized param }, only: %w{edit update}
+  before_filter ->(param=@data_track) { ensure_public_or_authorized param }, only: %w{show}
   # GET /movement_data
   # GET /movement_data.json
   def index
