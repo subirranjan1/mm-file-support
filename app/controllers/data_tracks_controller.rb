@@ -34,6 +34,7 @@ class DataTracksController < ApplicationController
   # GET /data_tracks/1
   # GET /data_tracks/1.json
   api :GET, "/data_tracks/:id.json", "Show a Data Track"
+  param :id, String, "Primary key ID of the data_track in question", :required => true
   error 404, "A data track could not be found with the requested id."  
   error 401, "The user you attempted authentication with cannot be authenticated or is not set to have access to the data track and it is not public."  
   def show

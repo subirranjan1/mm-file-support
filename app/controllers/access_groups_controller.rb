@@ -21,6 +21,7 @@ class AccessGroupsController < ApplicationController
   # GET /access_groups/1
   # GET /access_groups/1.json
   api :GET, "/access_groups/:id.json", "Show an Access Group"
+  param :id, String, "Primary key ID of the access_group in question", :required => true
   error 404, "An access group could not be found with the requested id."    
   def show
   end
