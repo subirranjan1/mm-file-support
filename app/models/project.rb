@@ -15,9 +15,9 @@ class Project < ActiveRecord::Base
   # uses SQL like to determine if the name or preview text matches the search term
   def self.search(search)
     if search
-      where("name like ? or description like ? and public = ?", "%#{search}%", "%#{search}%", true) 
+      where("name like ? or description like ?", "%#{search}%", "%#{search}%") 
     else
-      where(["public = ?", true])
+      all
     end
   end
   

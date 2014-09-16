@@ -1,21 +1,45 @@
+# require 'tempfile'
 class DataTracksController < ApplicationController
   before_action :set_data_track, only: [:show, :edit, :update, :destroy]
   before_filter :ensure_logged_in, except: [:index, :show]
   before_filter ->(param=@data_track) { ensure_owner param }, only: %w{destroy}
   before_filter ->(param=@data_track) { ensure_authorized param }, only: %w{edit update}
   before_filter ->(param=@data_track) { ensure_public_or_authorized param }, only: %w{show}
-  # GET /movement_data
-  # GET /movement_data.json
-  def index
-    @data_tracks = DataTrack.where(["public = ?", true])
+  before_filter :process_attached_file, only: [:create, :update], if: Proc.new { |c| c.request.format.json? }
+
+  def_param_group :data_track do
+    param :data_track, Hash, :required => true, :action_aware => true do
+      param :name, String, "Name of the Data Track", :required => true
+      param :description, String, "Description of the Data Track", :required => true      
+      param :movement_group_id, String, "Foreign key ID of the containing Movement Group", :required => true
+      param :sensor_type_id, String, "Foreign key ID of the associated sensor type"      
+      param :technician, String, "Description of the Technician or associated technical support"
+      param :public, ["0", "1"], "Should this data track be accessible to the public? (Default: false)"
+      param :recorded_on, String, "Date the data track was recorded (yyyy-mm-dd)"
+      param :mover_ids, Array, "Foreign key IDs of related Movers"    
+      param :asset_file, Hash, "Remember to set your header to include 'Content-Type: multipart/form-data'", :required => true do
+        param :original_filename, String, "filename", :required => true
+        param :file, String, "Base64 encoded file", :required => true
+      end     
+    end
   end
 
-  # GET /movement_data/1
-  # GET /movement_data/1.json
+  # GET /data_tracks
+  # GET /data_tracks.json
+  api :GET, "/data_tracks.json", "List data tracks"
+  def index
+    @data_tracks = DataTrack.all.select { |track| track.is_accessible_by?(current_user) }
+  end
+
+  # GET /data_tracks/1
+  # GET /data_tracks/1.json
+  api :GET, "/data_tracks/:id.json", "Show a Data Track"
+  error 404, "A data track could not be found with the requested id."  
+  error 401, "The user you attempted authentication with cannot be authenticated or is not set to have access to the data track and it is not public."  
   def show
   end
 
-  # GET /movement_data/new
+  # GET /data_tracks/new
   def new
     @data_track = DataTrack.new  
     @data_track.movement_group_id = params[:movement_group_id]  
@@ -24,23 +48,28 @@ class DataTracksController < ApplicationController
     @sensor_types = SensorType.all  
   end
 
-  # GET /movement_data/1/edit
+  # GET /data_tracks/1/edit
   def edit
     @movement_groups = MovementGroup.all
     @sensor_types = SensorType.all    
   end
 
-  # POST /movement_data
-  # POST /movement_data.json
+  # POST /data_tracks
+  # POST /data_tracks.json
+  api :POST, "/data_tracks.json", "Create a data track"
+  param_group :data_track
+  error 401, "The user you attempted authentication with cannot be authenticated"  
+  error 422, "The parameters you passed were invalid and rendered the create attempt unprocessable"
   def create
-    @data_track = DataTrack.new(data_track_params)
-    @data_track.owner = current_user    
-    unless params[:data_track]['asset_file'].nil? 
+    unless params[:data_track][:asset_file].nil? 
       #this params hash is actually an object of type Rack::Multipart::UploadedFile and this way it gets converted with name etc intact
-      asset = Asset.new(:file => params[:data_track]['asset_file'])
+      p params[:data_track][:asset_file]
+      asset = Asset.new(:file => params[:data_track][:asset_file])
       asset.save!
-      @data_track.asset = asset
     end    
+    @data_track = DataTrack.new(data_track_params)
+    @data_track.owner = current_user   
+    @data_track.asset = asset   
     @movement_groups = MovementGroup.all
     @sensor_types = SensorType.all
     respond_to do |format|
@@ -55,14 +84,17 @@ class DataTracksController < ApplicationController
     end
   end
 
-  # PATCH/PUT /movement_data/1
-  # PATCH/PUT /movement_data/1.json
+  # PATCH/PUT /data_tracks/1
+  # PATCH/PUT /data_tracks/1.json
+  api :PUT, "/data_tracks/:id.json", "Update a data track"
+  param_group :data_track
+  error 401, "The user you attempted authentication with cannot be authenticated or is not set to have access to the data track"  
   def update
     @movement_groups = MovementGroup.all
-    @sensor_types = SensorType.all    
-    unless params[:data_track]['asset_file'].nil? 
+    @sensor_types = SensorType.all        
+    unless params[:data_track][:asset_file].nil? 
       #this params hash is actually an object of type Rack::Multipart::UploadedFile and this way it gets converted with name etc intact
-      asset = Asset.new(:file => params[:data_track]['asset_file'])
+      asset = Asset.new(:file => params[:data_track][:asset_file])
       asset.save!
       @data_track.asset = asset
     end
@@ -77,8 +109,10 @@ class DataTracksController < ApplicationController
     end
   end
 
-  # DELETE /movement_data/1
-  # DELETE /movement_data/1.json
+  # DELETE /data_tracks/1
+  # DELETE /data_tracks/1.json
+  api :DELETE, "/data_tracks/:id.json", "Destroy a data track"
+  error 401, "The user you attempted authentication with cannot be authenticated or is not the owner of the project"  
   def destroy
     @data_track.destroy
     respond_to do |format|
@@ -104,6 +138,35 @@ class DataTracksController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def data_track_params
       params.require(:data_track).permit(:name, :description, :format, :movement_group_id, :tag_list, :technician, :recorded_on, :sensor_type_id, :public, :user_id, :mover_ids => [])
+    end
+    
+    def process_attached_file
+      if params[:data_track][:asset_file]
+        # create a new tempfile named fileupload
+        tempfile = Tempfile.new("fileupload")
+        tempfile.binmode
+        # get the file nad decode it with base64, then write it to the tempfile
+        tempfile.write(Base64.decode64(params[:data_track][:asset_file][:file]))
+        # create a new uploaded file
+        uploaded_file = ActionDispatch::Http::UploadedFile.new(:tempfile => tempfile, :filename => params[:data_track][:asset_file][:original_filename], :original_filename => params[:data_track][:asset_file][:original_filename]) 
+        # uploaded_file.content_type = "image/jpeg"
+        # data = StringIO.new(Base64.decode64(params[:data_track][:asset_file][:file]))
+        # data.class.class_eval { attr_accessor :original_filename, :content_type }
+        # 
+        # tmp = Tempfile.new("base64")
+        # tmp.binmode
+        # tmp.write(data.read)
+        # tmp.close
+
+        # only on *nix
+        # uploaded_file.content_type = IO.popen(["file", "--brief", "--mime-type",uploaded_file.path], 
+        #     in: :close, err: :close).read.chomp
+        # data.original_filename = params[:data_track][:asset_file][:original_filename]
+
+
+        #replace the exisiting params with the new uploaded file
+        params[:data_track][:asset_file] = uploaded_file
+      end
     end
   
 end

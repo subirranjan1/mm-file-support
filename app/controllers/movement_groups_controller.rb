@@ -7,7 +7,7 @@ class MovementGroupsController < ApplicationController
   # GET /movement_streams
   # GET /movement_streams.json
   def index
-    @movement_groups = MovementGroup.all
+    @movement_groups = MovementGroup.select { |group| group.is_accessible_by?(current_user) }
   end
 
   # GET /movement_streams/1

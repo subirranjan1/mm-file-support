@@ -8,6 +8,11 @@ class ProjectsController < ApplicationController
   # GET /projects.json
   def index
     @projects = Project.search(params[:search]).order(:name)
+    if current_user
+      @projects.select { |project| project.is_accessible_by?(current_user) }
+    else
+      @projects.select { |project| project.public? }
+    end
   end
 
   def mine
