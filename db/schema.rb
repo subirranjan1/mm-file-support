@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140804193126) do
+ActiveRecord::Schema.define(version: 20140916211254) do
 
   create_table "access_groups", force: true do |t|
     t.string   "name"
@@ -66,13 +66,15 @@ ActiveRecord::Schema.define(version: 20140804193126) do
     t.string   "name"
     t.text     "description",   limit: 255
     t.string   "format"
-    t.integer  "data_track_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "public",                    default: false
     t.integer  "user_id"
+    t.integer  "attached_id"
+    t.string   "attached_type"
   end
 
+  add_index "movement_annotations", ["attached_id", "attached_type"], name: "index_movement_annotations_on_attached_id_and_attached_type"
   add_index "movement_annotations", ["user_id"], name: "index_movement_annotations_on_user_id"
 
   create_table "movement_groups", force: true do |t|

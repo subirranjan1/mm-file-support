@@ -4,18 +4,34 @@ class MovementGroupsController < ApplicationController
   before_filter ->(param=@movement_group) { ensure_owner param }, only: %w{destroy}
   before_filter ->(param=@movement_group) { ensure_authorized param }, only: %w{edit update}
   before_filter ->(param=@movement_group) { ensure_public_or_authorized param }, only: %w{show}
-  # GET /movement_streams
-  # GET /movement_streams.json
+
+  def_param_group :movement_group do
+    param :movement_group, Hash, :required => true, :action_aware => true do
+      param :name, String, "Name of the movement group (take)", :required => true
+      param :project_id, String, "Foreign key ID of the containing Project", :required => true      
+      param :description, String, "Description of the movement group (take)"
+      param :public, ["0", "1"], "Should this data track be accessible to the public? (Default: false)"  
+      param :mover_ids, Array, "Foreign key IDs of related Movers"          
+    end
+  end
+  # GET /movement_groups
+  # GET /movement_groups.json
+  api :GET, "/movement_groups.json", "List movement groups that are accessible by the current user or are marked public"
+  error 401, "The user you attempted authentication with cannot be authenticated"  
   def index
     @movement_groups = MovementGroup.select { |group| group.is_accessible_by?(current_user) }
   end
 
-  # GET /movement_streams/1
-  # GET /movement_streams/1.json
+  # GET /movement_groups/1
+  # GET /movement_groups/1.json
+  api :GET, "/movement_groups/:id.json", "Show a movement group that the user has access to or is marked public"
+  param :id, String, "Primary key ID of the movement group in question", :required => true
+  error 404, "A movement group could not be found with the requested id."  
+  error 401, "The user you attempted authentication with cannot be authenticated or is not set to have access to the movement group and it is not public."  
   def show
   end
 
-  # GET /movement_streams/new
+  # GET /movement_groups/new
   def new
     @movement_group = MovementGroup.new
     @movement_group.project_id = params[:project_id]
@@ -23,13 +39,17 @@ class MovementGroupsController < ApplicationController
     @projects = Project.all
   end
 
-  # GET /movement_streams/1/edit
+  # GET /movement_groups/1/edit
   def edit
     @projects = Project.all
   end
 
-  # POST /movement_streams
-  # POST /movement_streams.json
+  # POST /movement_groups
+  # POST /movement_groups.json
+  api :POST, "/movement_groups.json", "Create a movement group"
+  param_group :movement_group
+  error 401, "The user you attempted authentication with cannot be authenticated"  
+  error 422, "The parameters you passed were invalid and rendered the create attempt unprocessable"  
   def create
     @movement_group = MovementGroup.new(movement_group_params)
     @movement_group.owner = current_user
@@ -45,8 +65,12 @@ class MovementGroupsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /movement_streams/1
-  # PATCH/PUT /movement_streams/1.json
+  # PATCH/PUT /movement_groups/1
+  # PATCH/PUT /movement_groups/1.json
+  api :PUT, "/movement_groups/:id.json", "Update a movement group"
+  param_group :movement_group
+  error 401, "The user you attempted authentication with cannot be authenticated or is not set to have access to the movement group"  
+  error 404, "A movement group could not be found with the requested id."  
   def update
     @projects = Project.all
     respond_to do |format|
@@ -60,8 +84,11 @@ class MovementGroupsController < ApplicationController
     end
   end
 
-  # DELETE /movement_streams/1
-  # DELETE /movement_streams/1.json
+  # DELETE /movement_groups/1
+  # DELETE /movement_groups/1.json
+  api :DELETE, "/movement_groups/:id.json", "Destroy a movement group that you are the owner of"
+  error 401, "The user you attempted authentication with cannot be authenticated or is not the owner of the movement group"  
+  error 404, "A movement group could not be found with the requested id."  
   def destroy
     @movement_group.destroy
     respond_to do |format|

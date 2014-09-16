@@ -1,4 +1,3 @@
-# require 'tempfile'
 class DataTracksController < ApplicationController
   before_action :set_data_track, only: [:show, :edit, :update, :destroy]
   before_filter :ensure_logged_in, except: [:index, :show]
@@ -28,6 +27,7 @@ class DataTracksController < ApplicationController
   # GET /data_tracks.json
   api :GET, "/data_tracks.json", "List data tracks that are accessible by the current user or are marked public"
   param :search, String, "A search parameter to refine terms"
+  error 401, "The user you attempted authentication with cannot be authenticated"    
   def index
     @data_tracks = DataTrack.search(params[:search]).order(:name)
     if current_user
@@ -70,7 +70,6 @@ class DataTracksController < ApplicationController
   def create
     unless params[:data_track][:asset_file].nil? 
       #this params hash is actually an object of type Rack::Multipart::UploadedFile and this way it gets converted with name etc intact
-      p params[:data_track][:asset_file]
       asset = Asset.new(:file => params[:data_track][:asset_file])
       asset.save!
     end    
@@ -96,6 +95,7 @@ class DataTracksController < ApplicationController
   api :PUT, "/data_tracks/:id.json", "Update a data track"
   param_group :data_track
   error 401, "The user you attempted authentication with cannot be authenticated or is not set to have access to the data track"  
+  error 404, "A data track could not be found with the requested id."      
   def update
     @movement_groups = MovementGroup.all
     @sensor_types = SensorType.all        
@@ -119,7 +119,8 @@ class DataTracksController < ApplicationController
   # DELETE /data_tracks/1
   # DELETE /data_tracks/1.json
   api :DELETE, "/data_tracks/:id.json", "Destroy a data track that you are the owner of"
-  error 401, "The user you attempted authentication with cannot be authenticated or is not the owner of the project"  
+  error 401, "The user you attempted authentication with cannot be authenticated or is not the owner of the data track"  
+  error 404, "A data track could not be found with the requested id."    
   def destroy
     @data_track.destroy
     respond_to do |format|

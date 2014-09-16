@@ -2,6 +2,7 @@ class MovementGroup < ActiveRecord::Base
   belongs_to :project
   has_many :data_tracks, dependent: :destroy
   has_and_belongs_to_many :movers
+  has_many :movement_annotations, as: :attached  
   acts_as_taggable # Alias for acts_as_taggable_on :tags
   belongs_to :owner, class_name: "User", foreign_key: "user_id"
   validates :name, presence: true

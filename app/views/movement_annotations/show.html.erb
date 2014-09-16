@@ -13,10 +13,6 @@
   <strong>Format:</strong>
   <%= @movement_annotation.format %>
 </p>
-<p>
-	<strong>Data Track:</strong>
-	<%= link_to @movement_annotation.data_track.name, data_track_path(@movement_annotation.data_track) %>
-</p>
 <% if ! @movement_annotation.tags.empty? -%>
   <p>
     <strong>Tags:</strong>

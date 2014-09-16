@@ -51,7 +51,7 @@ class ApplicationController < ActionController::Base
       if request.format === :json
         render nothing: true, status: :unauthorized
       else
-        flash[:notice] = "You do not have access rights to this project."
+        flash[:notice] = "You do not have access rights to this item."
         redirect_back_or_default
         return false
       end
@@ -66,7 +66,7 @@ class ApplicationController < ActionController::Base
       if request.format === :json
         render nothing: true, status: :unauthorized
       else  
-        flash[:notice] = "This project is not authorized for public access and you are not its owner."
+        flash[:notice] = "This item is not authorized for public access and you are not its owner."
         redirect_back_or_default
         return false
       end
@@ -80,7 +80,7 @@ class ApplicationController < ActionController::Base
       if request.format === :json
         render nothing: true, status: :unauthorized
       else      
-        flash[:notice] = "You do not have access rights to this project."
+        flash[:notice] = "You do not have access rights to this item."
         redirect_back_or_default
         return false
       end
