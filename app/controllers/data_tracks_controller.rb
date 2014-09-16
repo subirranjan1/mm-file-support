@@ -26,14 +26,20 @@ class DataTracksController < ApplicationController
 
   # GET /data_tracks
   # GET /data_tracks.json
-  api :GET, "/data_tracks.json", "List data tracks"
+  api :GET, "/data_tracks.json", "List data tracks that are accessible by the current user or are marked public"
+  param :search, String, "A search parameter to refine terms"
   def index
-    @data_tracks = DataTrack.all.select { |track| track.is_accessible_by?(current_user) }
+    @data_tracks = DataTrack.search(params[:search]).order(:name)
+    if current_user
+      @data_tracks.select { |data_track| data_track.is_accessible_by?(current_user) }
+    else
+      @data_tracks.select { |data_track| data_track.public? }
+    end    
   end
 
   # GET /data_tracks/1
   # GET /data_tracks/1.json
-  api :GET, "/data_tracks/:id.json", "Show a Data Track"
+  api :GET, "/data_tracks/:id.json", "Show a Data Track that the user has access to or is marked public"
   param :id, String, "Primary key ID of the data_track in question", :required => true
   error 404, "A data track could not be found with the requested id."  
   error 401, "The user you attempted authentication with cannot be authenticated or is not set to have access to the data track and it is not public."  
@@ -112,7 +118,7 @@ class DataTracksController < ApplicationController
 
   # DELETE /data_tracks/1
   # DELETE /data_tracks/1.json
-  api :DELETE, "/data_tracks/:id.json", "Destroy a data track"
+  api :DELETE, "/data_tracks/:id.json", "Destroy a data track that you are the owner of"
   error 401, "The user you attempted authentication with cannot be authenticated or is not the owner of the project"  
   def destroy
     @data_track.destroy

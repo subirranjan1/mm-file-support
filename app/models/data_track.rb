@@ -11,6 +11,15 @@ class DataTrack < ActiveRecord::Base
   validates :movement_group_id, presence: true
   validates :sensor_type_id, presence: true
   
+  # uses SQL like to determine if the name or preview text matches the search term
+  def self.search(search)
+    if search
+      where("name like ? or description like ?", "%#{search}%", "%#{search}%") 
+    else
+      all
+    end
+  end
+    
   def is_accessible_by?(user)
     owner == user or movement_group.is_accessible_by? user
   end
