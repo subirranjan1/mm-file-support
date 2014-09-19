@@ -25,6 +25,12 @@
 		<em class="help-block">Hold the ctrl/cmd key while selecting names to choose more than one. These will be the default for any takes added to this take.</em>		
 	</div>
   <div class="field form-group">
+    <%= f.label :license, class: "control-label" %><br>
+    <%= f.text_area :license, size: "60x12", class: "form-control", placeholder: "Project licensing info" %>
+		<em class="help-block">This indicates with which license you're releasing this project's files under. Ranges from strict copyright to
+			public domain to more open kinds of access. I recommend creating a <a href="https://creativecommons.org/choose/">Creative Commons</a> license if you are uncertain how to proceed. At minimum, indicate who should be credited when referencing this project.</em>
+  </div>	
+  <div class="field form-group">
 		<%= f.label :tags, class: "control-label" %>
 		<%= f.text_field :tag_list, class: "form-control" %>	
 		<em class="help-block">Please separate tags with commas</em>

@@ -10,7 +10,8 @@ class ProjectsController < ApplicationController
       param :name, String, "Name of the Data Track", :required => true
       param :description, String, "Description of the Data Track", :required => true      
       param :public, ["0", "1"], "Should this project be accessible to the public? (Default: false)"
-      param :mover_ids, Array, "Foreign key IDs of related Movers"          
+      param :mover_ids, Array, "Foreign key IDs of related Movers"     
+      param :license, String, "Relevant licensing information including a link if possible"     
     end
   end
 
@@ -111,7 +112,7 @@ class ProjectsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def project_params
-      params.require(:project).permit(:name, :description, :tag_list, :public, :mover_ids => [])
+      params.require(:project).permit(:name, :description, :tag_list, :public, :license, :mover_ids => [])
     end
       
 end

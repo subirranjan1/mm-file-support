@@ -157,24 +157,8 @@ class DataTracksController < ApplicationController
         tempfile.write(Base64.decode64(params[:data_track][:asset_file][:file]))
         # create a new uploaded file
         uploaded_file = ActionDispatch::Http::UploadedFile.new(:tempfile => tempfile, :filename => params[:data_track][:asset_file][:original_filename], :original_filename => params[:data_track][:asset_file][:original_filename]) 
-        # uploaded_file.content_type = "image/jpeg"
-        # data = StringIO.new(Base64.decode64(params[:data_track][:asset_file][:file]))
-        # data.class.class_eval { attr_accessor :original_filename, :content_type }
-        # 
-        # tmp = Tempfile.new("base64")
-        # tmp.binmode
-        # tmp.write(data.read)
-        # tmp.close
-
-        # only on *nix
-        # uploaded_file.content_type = IO.popen(["file", "--brief", "--mime-type",uploaded_file.path], 
-        #     in: :close, err: :close).read.chomp
-        # data.original_filename = params[:data_track][:asset_file][:original_filename]
-
-
         #replace the exisiting params with the new uploaded file
         params[:data_track][:asset_file] = uploaded_file
       end
     end
-  
 end

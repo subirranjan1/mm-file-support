@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140916211254) do
+ActiveRecord::Schema.define(version: 20140916231319) do
 
   create_table "access_groups", force: true do |t|
     t.string   "name"
@@ -117,6 +117,7 @@ ActiveRecord::Schema.define(version: 20140916211254) do
     t.text     "description", limit: 255
     t.boolean  "public",                  default: false
     t.integer  "user_id"
+    t.text     "license"
   end
 
   add_index "projects", ["user_id"], name: "index_projects_on_user_id"
