@@ -29,7 +29,7 @@ class User < ActiveRecord::Base
                        format: { with: VALID_PASSWORD_REGEX, message: PASSWORD_REQUIREMENTS }, if: :should_validate_password?
   
   def all_accessible_projects
-    owned_projects + accessible_projects
+    (owned_projects + accessible_projects).uniq
   end
   
   def authorized?(object)
@@ -66,7 +66,14 @@ class User < ActiveRecord::Base
   # database
   
   def accessible_projects
-    access_groups.projects
+    # access_groups.collect(&:projects).compact
+    t = []
+    access_groups.each do |group|
+      group.projects.each do |project|
+        t << project
+      end
+    end
+    t
   end
   
   def hash_new_password

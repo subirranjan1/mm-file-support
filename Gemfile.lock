@@ -1,3 +1,11 @@
+GIT
+  remote: git://github.com/rweng/jquery-datatables-rails.git
+  revision: 37349993fb40fae4fa079729a25dc99d5ef3c416
+  specs:
+    jquery-datatables-rails (2.2.3)
+      jquery-rails
+      sass-rails
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -154,6 +162,7 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   i18n (= 0.6.9)
   jbuilder (~> 1.2)
+  jquery-datatables-rails!
   jquery-rails
   mysql
   paperclip (~> 4.1.1)

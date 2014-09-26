@@ -1,47 +1,29 @@
-<h1>All data tracks</h1>
+<h1>Accessible Tracks</h1>
 
-<table class="table">
+<table class="table table-striped table-bordered" id="mytracks">
   <thead>
     <tr>
       <th>Name</th>
-      <th>Description</th>
-	  <th>Sensor Type</th>
-      <th>Format</th>
+	  	<th>Sensor Type</th>
       <th>Movement Take</th>
-	  <th>Technician</th>
-	  <th>Owner</th>
-	  <th>Public</th>
-	  <th>Tags</th>
-      <th></th>
-      <th></th>
-      <th></th>
+			<th>Project</th>
+	  	<th>Technician</th>
+			<th>Recording Date</th>
+	  	<th>Tags</th>
     </tr>
   </thead>
 
   <tbody>
-    <% @data_tracks.each do |data_track| %>
+    <% @data_tracks.each do |track| %>
       <tr>
-        <td><%= data_track.name %></td>
-        <td><%= data_track.description %></td>
-		<td><% unless data_track.sensor_type.nil? %>
-			<%= data_track.sensor_type.name %> <% else %>
-			<%= "Sensor Undefined" %>
-			<% end %>
-		</td>
-		<td>TBD</td>
-		<td><%= data_track.movement_group.name %></td>
-		<td><%= data_track.technician %></td>
-		<td>TBD</td>
-		<td><%= data_track.public %></td>
-		<td><%= data_track.tag_list %></td>				
-        <td><%= link_to 'Show', data_track %></td>
-        <td><%= link_to 'Edit', edit_data_track_path(data_track) %></td>
-        <td><%= link_to 'Destroy', data_track, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to truncate(track.name, length: 40), data_track_path(track) %> <%= render partial: "owner_options", locals: { track: track} if current_user.authorized?(track)%></td>
+				<td><%= link_to truncate(track.sensor_type.name, length: 25), sensor_type_path(track.sensor_type) rescue "Unknown"%>
+				<td><%= link_to truncate(track.movement_group.name, length: 25), movement_group_path(track.movement_group) %><span style="float:right">//MoVa//</span></td>
+				<td><%= link_to truncate(track.movement_group.project.name, length: 25), project_path(track.movement_group.project) %></td>
+				<td><%= truncate(track.technician, length: 20) %></td>
+				<td><%= track.recorded_on %></td>
+				<td><%= track.tag_list %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
-
-<br>
-
-<%= link_to 'New data track', new_data_track_path %>

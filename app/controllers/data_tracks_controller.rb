@@ -124,7 +124,7 @@ class DataTracksController < ApplicationController
   def destroy
     @data_track.destroy
     respond_to do |format|
-      format.html { redirect_to({controller: 'projects', action: 'mine'}, notice: 'Data track was successfully created.') }        
+      format.html { redirect_to({controller: 'projects', action: 'mine'}, notice: 'Data track was successfully deleted.') }        
       format.json { head :no_content }
     end
   end

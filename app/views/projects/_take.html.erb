@@ -1,15 +1,16 @@
+<% uniq_id = rand(36**8).to_s(36) %>
 <% project_counter ||= 1 %>
 <div class="panel panel-default">
   <div class="panel-heading">
     <h4 class="panel-title">
-      <a data-toggle="collapse" data-parent="#accordion<%= project_counter  %>" href="#collapse<%=take_counter%>" class="accordian-toggle">
+      <a data-toggle="collapse" data-parent="#accordion<%= project_counter  %>" href="#collapse<%=uniq_id%>" class="accordian-toggle">
         <%= take.name %> <span class="badge" style="background-color: #3a87ad;"><%= take.data_tracks.size %></span> <i class="glyphicon glyphicon-collapse-down"></i></a>
 			<% if authorized? take %>
 			<small class="pull-right"><%= link_to edit_link_html("Edit"), edit_movement_group_path(take) %> <%= link_to remove_link_html("Delete"), take, method: :delete, data: { confirm: 'Are you sure?' } %></small>
 			<% end %>
     </h4>
   </div>
-  <div id="collapse<%=take_counter%>" class="panel-collapse collapse">
+  <div id="collapse<%=uniq_id%>" class="panel-collapse collapse">
     <div class="panel-body">
 			<h5>Description</h5>
     	<p><%= take.description %></p>

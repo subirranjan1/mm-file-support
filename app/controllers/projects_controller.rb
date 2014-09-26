@@ -26,13 +26,14 @@ class ProjectsController < ApplicationController
       @projects.select { |project| project.is_accessible_by?(current_user) }
     else
       @projects.select { |project| project.public? }
-    end
+    end    
   end
 
   api :GET, "/myprojects.json", "List projects that belong to the current user"
   error 401, "The user you attempted authentication with cannot be authenticated"    
   def mine
-    @projects = current_user.owned_projects.order(:name)
+    @projects = current_user.owned_projects
+    render :index
   end
   
   # GET /projects/1
