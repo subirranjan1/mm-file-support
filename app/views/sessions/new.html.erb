@@ -9,9 +9,9 @@
     <%= password_field_tag :password, nil, class: "form-control", required: "required" %>
   </p>
   <label class="checkbox">
-    <input type="checkbox" value="remember-me"> Remember me
+    <input type="checkbox" value="remember_me" name="remember_me"> Remember me
   </label>
   <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+	<p><%= link_to "forgotten password?", new_password_reset_path %> <br/>Accounts can only be created by existing users, so please <a href="/pages/contact">contact us</a>.</p>
 <% end %>
-If you don't have an account, please <%= link_to "sign up first", new_user_path %>.
 

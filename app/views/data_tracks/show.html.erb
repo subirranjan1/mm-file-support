@@ -62,6 +62,5 @@ No default movers set.
 		<% end -%>
 </p>
 <% end %>
-
-<%= link_to 'Edit', edit_data_track_path(@data_track) %> |
-<%= link_to 'Back', data_tracks_path %>
+<% if authorized?(@data_track) %> <%= link_to edit_link_html('Edit'), edit_data_track_path(@data_track) %> | <% end %>
+<%= link_to back_link_html('Return to take details'), movement_group_path(@data_track.movement_group) %>

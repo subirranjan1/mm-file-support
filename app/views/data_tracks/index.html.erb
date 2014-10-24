@@ -16,7 +16,7 @@
   <tbody>
     <% @data_tracks.each do |track| %>
       <tr>
-        <td><%= link_to truncate(track.name, length: 40), data_track_path(track) %> <%= render partial: "owner_options", locals: { track: track} if current_user.authorized?(track)%></td>
+        <td><%= link_to truncate(track.name, length: 40), data_track_path(track) %> <%= render partial: "owner_options", locals: { track: track} if authorized?(track)%></td>
 				<td><%= link_to truncate(track.sensor_type.name, length: 25), sensor_type_path(track.sensor_type) rescue "Unknown"%>
 				<td><%= link_to truncate(track.movement_group.name, length: 25), movement_group_path(track.movement_group) %><span style="float:right">//MoVa//</span></td>
 				<td><%= link_to truncate(track.movement_group.project.name, length: 25), project_path(track.movement_group.project) %></td>

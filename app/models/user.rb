@@ -27,6 +27,7 @@ class User < ActiveRecord::Base
                     format: { with: VALID_EMAIL_REGEX }, if: :email  
   validates :password, presence: true,
                        format: { with: VALID_PASSWORD_REGEX, message: PASSWORD_REQUIREMENTS }, if: :should_validate_password?
+  before_create { generate_token(:auth_token) }
   
   def all_accessible_projects
     (owned_projects + accessible_projects).uniq
@@ -44,23 +45,37 @@ class User < ActiveRecord::Base
     end
   end
                          
-  # As is the 'standard' with rails apps we'll return the user record if the
-  # password is correct and nil if it isn't.
-  def self.authenticate(email, password)
-    # Because we use bcrypt we can't do this query in one part, first
-    # we need to fetch the potential user
-    if user = find_by_email(email)
-    # Then compare the provided password against the hashed one in the db.
-      if BCrypt::Password.new(user.hashed_password).is_password? password
-        # If they match we return the user 
-        return user
-      end
+  def authenticate(password)
+    if BCrypt::Password.new(hashed_password).is_password? password
+      return true
     end
     # If we get here it means either there's no user with that email, or the wrong
     # password was provided.  But we don't want to let an attacker know which. 
     return nil
   end
   
+  def self.authenticate(email, password)
+    user = find_by_email(email)
+    if user && user.authenticate(password)
+      user
+    else
+      nil
+    end
+  end
+  
+  def generate_token(column)
+    begin
+      self[column] = SecureRandom.urlsafe_base64
+    end while User.exists?(column => self[column])
+  end  
+  
+  def send_password_reset
+    generate_token(:password_reset_token)
+    self.password_reset_sent_at = Time.zone.now
+    save!
+    UserMailer.password_reset(self).deliver
+  end
+    
   private
   # This is where the real work is done, store the BCrypt has in the
   # database

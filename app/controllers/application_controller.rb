@@ -39,16 +39,15 @@ class ApplicationController < ActionController::Base
   
   # return the current user object if someone is authenticated properly otherwise return false
   def current_user
-    if request.format === :json
-      return @current_user
-    else    
-     return @current_user ||= User.find(session[:user_id]) if session[:user_id]
+    unless request.format.json?
+      @current_user ||= User.find_by_auth_token(cookies[:auth_token]) if cookies[:auth_token]
     end
+    return @current_user
   end
   
   def ensure_owner obj
     unless current_user and obj.owner == current_user
-      if request.format === :json
+      if request.format.json?
         render nothing: true, status: :unauthorized
       else
         flash[:notice] = "You do not have access rights to this item."
@@ -61,9 +60,8 @@ class ApplicationController < ActionController::Base
   end
   
   def ensure_public_or_authorized obj
-    p obj
     unless obj.public or (current_user and obj.is_accessible_by? current_user)      
-      if request.format === :json
+      if request.format.json?
         render nothing: true, status: :unauthorized
       else  
         flash[:notice] = "This item is not authorized for public access and you are not its owner."
@@ -77,7 +75,7 @@ class ApplicationController < ActionController::Base
   
   def ensure_authorized obj
     unless current_user and obj.is_accessible_by? current_user
-      if request.format === :json
+      if request.format.json?
         render nothing: true, status: :unauthorized
       else      
         flash[:notice] = "You do not have access rights to this item."
@@ -99,9 +97,6 @@ class ApplicationController < ActionController::Base
   
   private
   
-  def is_json_request?
-    request.format === :json
-  end
 end
 
 

@@ -4,20 +4,23 @@ class SessionsController < ApplicationController
   end
 
   def create
-    # reset_session
-    if User.authenticate(params[:email], params[:password])
-      session[:user_id] = User.find_by_email(params[:email]).id  
-      redirect_to root_url, :notice => "Logged in!"      
+    user = User.find_by_email(params[:email])
+    if user && user.authenticate(params[:password])
+      if params[:remember_me]
+        cookies.permanent[:auth_token] = user.auth_token
+      else
+        cookies[:auth_token] = user.auth_token
+      end
+      redirect_to root_url, :notice => "Logged in!"
     else
-      flash[:alert] = "There was a problem logging you in."
-      redirect_to log_in_path, :notice => "Invalid email or password"
+      flash.now.alert = "Invalid email or password"
+      render "new"
     end
   end
     
   def destroy    
-    session[:user_id] = nil
+    cookies.delete(:auth_token)
     redirect_to root_url, :notice => "Logged out!"
   end
   
 end
-

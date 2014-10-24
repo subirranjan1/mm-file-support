@@ -1,4 +1,5 @@
 FileSupportMovingstories::Application.routes.draw do
+  get "password_resets/new"
   apipie
   root 'projects#index'
   get "pages/about"
@@ -19,6 +20,7 @@ FileSupportMovingstories::Application.routes.draw do
 #  root :to => "users#new"
   resources :users, except: [:index]
   resources :sessions, only: [:new, :create, :destroy]
+  resources :password_resets  
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
