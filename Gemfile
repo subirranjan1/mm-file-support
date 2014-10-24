@@ -41,4 +41,4 @@ gem 'i18n', '0.6.9'
 
 gem 'bootstrap-datepicker-rails'
 gem 'apipie-rails'
-gem 'jquery-datatables-rails', github: 'rweng/jquery-datatables-rails'  
+gem 'jquery-datatables-rails' #, github: 'rweng/jquery-datatables-rails'  

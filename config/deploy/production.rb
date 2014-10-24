@@ -14,7 +14,7 @@
 # server list. The second argument is a, or duck-types, Hash and is
 # used to set extended properties on the server.
 set :stage, :production
-server '209.87.56.87', user: 'deployer', roles: %w{web app}, :primary => true
+server '209.87.60.87', user: 'deployer', roles: %w{web app}, :primary => true
 set :deploy_to, '/var/www/mnm-db'
 # set :tmp_dir, "/home/deployer/tmp"
 
