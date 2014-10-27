@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
         @current_user = user
       end
     else
-      unless session[:user_id]
+      unless cookies[:auth_token]
         flash[:notice] = "You need to log in first."
         redirect_back_or_default
         return false
@@ -72,7 +72,7 @@ class ApplicationController < ActionController::Base
       return true
     end      
   end    
-  
+
   def ensure_authorized obj
     unless current_user and obj.is_accessible_by? current_user
       if request.format.json?

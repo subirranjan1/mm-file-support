@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140926062044) do
+ActiveRecord::Schema.define(version: 20141025024643) do
 
   create_table "access_groups", force: true do |t|
     t.string   "name"
@@ -48,18 +48,21 @@ ActiveRecord::Schema.define(version: 20140926062044) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "technician"
-    t.integer  "sensor_type_id"
     t.boolean  "public",                        default: false
     t.integer  "user_id"
     t.date     "recorded_on"
   end
 
-  add_index "data_tracks", ["sensor_type_id"], name: "index_data_tracks_on_sensor_type_id"
   add_index "data_tracks", ["user_id"], name: "index_data_tracks_on_user_id"
 
   create_table "data_tracks_movers", id: false, force: true do |t|
     t.integer "data_track_id"
     t.integer "mover_id"
+  end
+
+  create_table "data_tracks_sensor_types", id: false, force: true do |t|
+    t.integer "sensor_type_id", null: false
+    t.integer "data_track_id",  null: false
   end
 
   create_table "movement_annotations", force: true do |t|
@@ -94,6 +97,11 @@ ActiveRecord::Schema.define(version: 20140926062044) do
     t.integer "mover_id"
   end
 
+  create_table "movement_groups_sensor_types", id: false, force: true do |t|
+    t.integer "sensor_type_id",    null: false
+    t.integer "movement_group_id", null: false
+  end
+
   create_table "movers", force: true do |t|
     t.string   "name"
     t.date     "dob"
@@ -121,6 +129,11 @@ ActiveRecord::Schema.define(version: 20140926062044) do
   end
 
   add_index "projects", ["user_id"], name: "index_projects_on_user_id"
+
+  create_table "projects_sensor_types", id: false, force: true do |t|
+    t.integer "sensor_type_id", null: false
+    t.integer "project_id",     null: false
+  end
 
   create_table "sensor_types", force: true do |t|
     t.string   "name"
@@ -155,6 +168,10 @@ ActiveRecord::Schema.define(version: 20140926062044) do
     t.string   "auth_token"
     t.string   "password_reset_token"
     t.datetime "password_reset_sent_at"
+    t.string   "avatar_file_name"
+    t.string   "avatar_content_type"
+    t.integer  "avatar_file_size"
+    t.datetime "avatar_updated_at"
   end
 
 end

@@ -4,6 +4,7 @@ class Project < ActiveRecord::Base
   has_many :movement_annotations, as: :attached
   has_and_belongs_to_many :access_groups #represents those with access priviledges
   has_and_belongs_to_many :movers
+  has_and_belongs_to_many :sensors  
   acts_as_taggable # Alias for acts_as_taggable_on :tags
   validates :name, presence: true, uniqueness: true
   validates :description, presence: true

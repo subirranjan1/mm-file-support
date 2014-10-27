@@ -13,6 +13,9 @@ class User < ActiveRecord::Base
   # associations to indicate access granted
   has_many :owned_groups, class_name: "AccessGroup", foreign_key: "creator_id"
   has_and_belongs_to_many :access_groups
+  has_attached_file :avatar, :styles => { :medium => "300x300>", :thumb => "150x150>" }
+  validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/  
+  
   
   attr_accessor :password # this is needed to use password and password confirmation virtually
   attr_accessor :password_confirmation

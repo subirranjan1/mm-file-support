@@ -50,9 +50,12 @@
 	</div>
 	
   <div class="field form-group">
-	<%= f.label :sensor_type, class: "control-label" %>
-	<%= f.collection_select :sensor_type_id, @sensor_types, :id, :name %>
+	<%= f.label :sensor_types, class: "control-label"%><br/>
+	<%= f.collection_select :sensor_type_ids, @sensor_types, :id, :name, {:include_blank => 'None'}, {:multiple => true} %>
+	<em class="help-block">Hold the ctrl/cmd key while selecting names to choose more than one.</em>
+
   </div>
+
   <div class="field form-group">
 		<%= f.label :tags, class: "control-label" %>
 		<%= f.text_field :tag_list, class: "form-control" %>

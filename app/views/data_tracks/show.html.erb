@@ -29,10 +29,7 @@ No default movers set.
 <% end %>
 <p>
 	<strong>Sensor Type:</strong>
-	<td><% unless @data_track.sensor_type.nil? %>
-		<%= @data_track.sensor_type.name %> <% else %>
-		<%= "Sensor Undefined" %>
-		<% end %>
+	<td>
 	</td>
 </p>
 <% if ! @data_track.tags.empty? -%>
@@ -53,9 +50,8 @@ No default movers set.
 		 <% end %></em>
 	</p>
 <% end %>
-
 <% unless @data_track.asset.nil? %>
-<p>Linked asset: <%= @data_track.asset.file_file_name %> - <%= @data_track.asset.file_content_type %>
+<p>Asset: <%= link_to @data_track.asset.file_file_name, @data_track.asset.file.url(:original, false) %> - <%= @data_track.asset.file_content_type %>
 		<%= form_tag(mova_url, :method=>"POST") do -%>
 			<%= hidden_field_tag :csvfile, URI.join(request.url, @data_track.asset.file.url(:original, false)) %>
 			<%= submit_tag "View in MoVa" %>

@@ -53,7 +53,7 @@ class UsersController < ApplicationController
     end
   end
       
-  # assign them a random one and mail it to them, asking them to change it -- only used by rake service - others use password_resets_controller
+  # assign them a random one and mail it to them, asking them to change it -- normally use password_resets_controller
    def forgot_password
      @user = User.find_by_email(params[:email])
      random_password = Array.new(10).map { (65 + rand(58)).chr }.join
@@ -71,7 +71,7 @@ class UsersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
-      params.require(:user).permit(:email, :password, :alias, :password_confirmation)
+      params.require(:user).permit(:email, :password, :alias, :password_confirmation, :avatar)
     end
     
     def ensure_owner

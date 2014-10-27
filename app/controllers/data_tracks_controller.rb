@@ -11,7 +11,7 @@ class DataTracksController < ApplicationController
       param :name, String, "Name of the Data Track", :required => true
       param :description, String, "Description of the Data Track", :required => true      
       param :movement_group_id, String, "Foreign key ID of the containing Movement Group", :required => true
-      param :sensor_type_id, String, "Foreign key ID of the associated sensor type"      
+      param :sensor_type_ids, Array, "Foreign key IDs of the associated sensor types"      
       param :technician, String, "Description of the Technician or associated technical support"
       param :public, ["0", "1"], "Should this data track be accessible to the public? (Default: false)"
       param :recorded_on, String, "Date the data track was recorded (yyyy-mm-dd)"
@@ -145,7 +145,7 @@ class DataTracksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def data_track_params
-      params.require(:data_track).permit(:name, :description, :format, :movement_group_id, :tag_list, :technician, :recorded_on, :sensor_type_id, :public, :user_id, :mover_ids => [])
+      params.require(:data_track).permit(:name, :description, :format, :movement_group_id, :tag_list, :technician, :recorded_on, :public, :user_id, :sensor_type_ids => [], :mover_ids => [])
     end
     
     def process_attached_file

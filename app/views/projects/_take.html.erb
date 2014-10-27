@@ -79,7 +79,7 @@
 						</span></td>
 						<% end %>
 						<td><% unless track.asset.nil? %><%= track.asset.file_content_type %><% else %>unknown<% end %></td>
-						<td><% unless track.sensor_type.nil?%><%= link_to track.sensor_type.name, track.sensor_type %><% else %>unspecified<% end %></td>
+
 						<td><%= track.technician %></td>
 						<td><%= track.description %></td>
 						<td><% unless track.recorded_on.nil? %><%= track.recorded_on %><% end %></td>							

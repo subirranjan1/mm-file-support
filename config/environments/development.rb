@@ -29,5 +29,6 @@ FileSupportMovingstories::Application.configure do
   
   #indicate where imageMagic is, not that I'm using it yet
   Paperclip.options[:command_path] = "/usr/local/bin/"
-  config.action_mailer.default_url_options = { :host => "localhost" }
+  config.action_mailer.default_url_options = { :host => "localhost:3000" }
+  
 end
