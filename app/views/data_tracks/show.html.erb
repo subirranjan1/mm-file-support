@@ -4,14 +4,22 @@
 	<li><%= link_to @data_track.movement_group.name, movement_group_path(@data_track.movement_group) %></li>
   <li class="active"><%= link_to @data_track.name, data_track_path(@data_track) %></li>
 </ol>
-<h1>Data Track Details</h1>
-<p>
-  <strong>Name:</strong>
-  <%= @data_track.name %>
-</p>
-<h5>Description:</h5>
+<h2><%= @data_track.name %> <% if authorized?(@data_track) %><small><%= link_to edit_link_html('Edit'), edit_data_track_path(@data_track) %></small><% end %></h2>
 <p>
   <%= @data_track.description %>
+</p>
+<h5>License terms</h5>
+<p>
+	<%= @data_track.movement_group.project.license %>
+	<% if @data_track.movement_group.project.license.blank? %>
+	No terms specified. Assume regular copyright terms.
+	<% end %>
+</p>
+<p><strong>Asset</strong>: <%= link_to @data_track.asset.file_file_name, @data_track.asset.file.url(:original, false) %> - <%= @data_track.asset.file_content_type %>
+		<%= form_tag(mova_url, :method=>"POST") do -%>
+			<%= hidden_field_tag :csvfile, URI.join(request.url, @data_track.asset.file.url(:original, false)) %>
+			<%= submit_tag "View in MoVa" %>
+		<% end -%>
 </p>
 <p>
   <strong>Technician:</strong>
@@ -19,19 +27,22 @@
 </p>
 <% unless @data_track.movers.empty? %>
 <h5>Movers</h5>
-<ul>
+<ul class="horizontal-wrapped">
 	<% @data_track.movers.each do |mover| %>
-		<li><%= link_to mover.name, mover_url %></li>
+		<li><p>
+		<a href="<%= mover_url(mover) %>"><%= image_tag(mover.avatar.url(:thumb)) if mover.avatar? %><%= mover.name%></a>
+		</p></li>
 	<% end %>
 </ul>
 <% else %>
-No default movers set.
+No movers assigned.
 <% end %>
-<p>
-	<strong>Sensor Type:</strong>
-	<td>
-	</td>
-</p>
+<h5>Sensors used:</h5>	
+	<ul>
+	<% @data_track.sensor_types.each do |sensor| %>
+		<li><%= link_to sensor.name, sensor_type_url(sensor)%></li>
+	<% end %>
+	</ul>
 <% if ! @data_track.tags.empty? -%>
   <p>
     <strong>Tags:</strong>
@@ -51,12 +62,5 @@ No default movers set.
 	</p>
 <% end %>
 <% unless @data_track.asset.nil? %>
-<p>Asset: <%= link_to @data_track.asset.file_file_name, @data_track.asset.file.url(:original, false) %> - <%= @data_track.asset.file_content_type %>
-		<%= form_tag(mova_url, :method=>"POST") do -%>
-			<%= hidden_field_tag :csvfile, URI.join(request.url, @data_track.asset.file.url(:original, false)) %>
-			<%= submit_tag "View in MoVa" %>
-		<% end -%>
-</p>
 <% end %>
-<% if authorized?(@data_track) %> <%= link_to edit_link_html('Edit'), edit_data_track_path(@data_track) %> | <% end %>
 <%= link_to back_link_html('Return to take details'), movement_group_path(@data_track.movement_group) %>

@@ -42,3 +42,24 @@ footer ul li {
 span.input-group-addon {
 	cursor: arrow;
 }
+
+ul.horizontal-wrapped {
+	margin: 0; 
+	padding: 0; 
+  list-style-type: none; 
+	list-style-image: none;
+}
+
+ul.horizontal-wrapped li {
+	display: -moz-inline-box;
+	display:inline-block;
+	text-align: center;	
+}
+ul.horizontal-wrapped li p {
+	width: 150px;
+}
+
+ul.horizontal-wrapped li img {
+display: block;
+margin: 0 auto;
+}

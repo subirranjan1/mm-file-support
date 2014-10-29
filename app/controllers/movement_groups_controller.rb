@@ -19,7 +19,11 @@ class MovementGroupsController < ApplicationController
   api :GET, "/movement_groups.json", "List movement groups that are accessible by the current user or are marked public"
   error 401, "The user you attempted authentication with cannot be authenticated"  
   def index
-    @movement_groups = MovementGroup.select { |group| group.is_accessible_by?(current_user) }
+    if @current_user
+      @movement_groups = MovementGroup.select { |group| group.is_accessible_by?(current_user) }
+    else
+      @movement_groups = MovementGroup.select { |group| group.public? }
+    end    
   end
 
   # GET /movement_groups/1

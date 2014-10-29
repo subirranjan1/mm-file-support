@@ -30,7 +30,7 @@ class DataTracksController < ApplicationController
   error 401, "The user you attempted authentication with cannot be authenticated"    
   def index
     @data_tracks = DataTrack.search(params[:search]).order(:name)
-    if current_user
+    if @current_user
       @data_tracks.select { |data_track| data_track.is_accessible_by?(current_user) }
     else
       @data_tracks.select { |data_track| data_track.public? }

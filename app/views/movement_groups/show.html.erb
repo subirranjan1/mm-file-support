@@ -4,19 +4,24 @@
 	<li><%= link_to @movement_group.name, movement_group_path(@movement_group) %></li>
 </ol>
 <p id="notice"><%= notice %></p>
-<p>
-  <strong>Name:</strong>
-  <%= @movement_group.name %>
-</p>
-<h5>Description</h5>
+<h2><%= @movement_group.name %> <% if authorized? @movement_group %><small><%= link_to edit_link_html('Edit'), edit_movement_group_path(@movement_group) %><% end %></small></h2>
 <p>
   <%= @movement_group.description %>
 </p>
+<h5>License terms</h5>
+<p>
+	<%= @movement_group.project.license %>
+	<% if @movement_group.project.license.blank? %>
+	No terms specified. Assume regular copyright in effect.
+	<% end %>
+</p>
 <% unless @movement_group.movers.empty? %>
 <h5>Default Movers</h5>
-<ul>
+<ul class="horizontal-wrapped">
 	<% @movement_group.movers.each do |mover| %>
-		<li><%= link_to mover.name, mover_url(mover) %></li>
+		<li><p>
+		<a href="<%= mover_url(mover) %>"><%= image_tag(mover.avatar.url(:thumb)) if mover.avatar? %><%= mover.name%></a>
+		</p></li>
 	<% end %>
 </ul>
 <% else %>
@@ -33,7 +38,6 @@ No default movers set.
 <% else -%>
  <p>No tags set.</p>
 <% end -%>
-
 <% if authorized? @movement_group %>
 	<p><span class="glyphicon glyphicon-exclamation-sign"></span> <em>Notice to owner: <% if @movement_group.public? %>
 		 This take is visible to everyone.
@@ -42,6 +46,49 @@ No default movers set.
 		 <% end %></em>
 	</p>
 <% end %>
+<% if @movement_group.data_tracks.empty? %>
+	<p>No associated data tracks yet. 
+		<% if authorized? @movement_group %>
+			<small><%= link_to add_link_html("Add new track"), new_data_track_path(movement_group_id: @movement_group.id) %></small></p>
+		<% end %>
+<% else %>
+	<% data_track_counter ||= 1%>
+	<h5>Data Tracks <small><% if authorized? @movement_group %><%= link_to add_link_html("Add new take"), new_data_track_path(movement_group_id: @movement_group.id) %></small><% end %></h5>
+	<div class="panel-group" id="accordion<%=data_track_counter%>">
+		<table class="table">
+		<thead>
+			<tr>
+				<th>File name</th>
+				<th>File type</th>
+				<th>Sensor</th>
+				<th>Technician</th>
+				<th>Movers</th>
+				<th>Recorded on</th>
+			</tr>
+		</thead>
+		<tbody>
+		<% @movement_group.data_tracks.each do |track| %>
+			<tr>
+				<td><%= link_to truncate(track.name, length: 50), track %> 
+					<span class="pull-right">
+				<% if authorized? track %>
+					<small><%= link_to edit_link_html, edit_data_track_path(track) %> <%= link_to remove_link_html, track, method: :delete, data: { confirm: 'Are you sure?' } %></small>
+				<% else %>	
+					<% unless track.asset.nil? %>
+						<%= link_to download_link_html("Download"), track.asset.file.url(:original, false)%>
+					<% end %>
+				</span></td>
+				<% end %>
+				<td><% unless track.asset.nil? %><%= track.asset.file_content_type %><% else %>unknown<% end %></td>
+				<td><%= raw(track.sensor_types.map{|type| link_to(type.name, sensor_type_path(type)) }.join(", "))%></td>
+				<td><%= track.technician %></td>
+				<td><%= raw(track.movers.map{|m| link_to(m.name, mover_path(m)) }.join(", "))%></td>
+				<td><% unless track.recorded_on.nil? %><%= track.recorded_on %><% end %></td>							
+			</tr>
+		<% end %>
+		</tbody>
+	</table>
+	</div>
+<% end %>
 
-<% if authorized? @movement_group %> <%= link_to edit_link_html('Edit'), edit_movement_group_path(@movement_group) %><% end %>
-	<br/><%= link_to back_link_html('Return to project details'), project_path(@movement_group.project) %>
+<%= link_to back_link_html('Return to project details'), project_path(@movement_group.project) %>

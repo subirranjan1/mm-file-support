@@ -1,8 +1,5 @@
-<p>
-  <strong>Name:</strong>
-  <%= @mover.name %>
-</p>
-
+<h2><%= @mover.name %></h2>
+<%= image_tag(@mover.avatar.url(:medium)) if @mover.avatar? %>
 <p>
   <strong>Dob:</strong>
   <%= @mover.dob %>
@@ -19,8 +16,7 @@
 </p>
 
 <p>
-  <strong>Cma_like_training:</strong>
-  <%= @mover.cma_like_training %>
+This mover IS <%= 'NOT' unless @mover.cma_like_training? %> trained in CMA or an equivalent.
 </p>
 
 <p>

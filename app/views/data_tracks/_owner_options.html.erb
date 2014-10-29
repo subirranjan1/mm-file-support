@@ -1,3 +1,8 @@
 <small class="pull-right"><%= link_to edit_link_html("Edit"), edit_data_track_path(track) %>
-  <%= link_to remove_link_html("Delete"), track, method: :delete, data: { confirm: 'Are you sure?' } %>
+  <%= link_to remove_link_html("Delete"), track, method: :delete, data: { confirm: 'Are you sure?' } %> 
+	<% if track.public? %>
+		<span class='glyphicon glyphicon-eye-open'></span>
+	<% else %>
+		<span class='glyphicon glyphicon-eye-close'></span>	
+	<% end %>
 	</small>

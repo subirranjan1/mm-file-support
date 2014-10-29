@@ -98,6 +98,6 @@ class MoversController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def mover_params
-      params.require(:mover).permit(:name, :dob, :gender, :expertise, :cma_like_training, :other_training)
+      params.require(:mover).permit(:name, :dob, :gender, :expertise, :cma_like_training, :other_training, :avatar)
     end
 end

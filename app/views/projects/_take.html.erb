@@ -12,7 +12,6 @@
   </div>
   <div id="collapse<%=uniq_id%>" class="panel-collapse collapse">
     <div class="panel-body">
-			<h5>Description</h5>
     	<p><%= take.description %></p>
 			<% if take.tag_list.empty? %>
 				<p>This item has no tags yet.</p>
@@ -61,14 +60,14 @@
 						<th>File type</th>
 						<th>Sensor</th>
 						<th>Technician</th>
-						<th>Description</th>
+						<th>Movers</th>
 						<th>Recorded on</th>
 					</tr>
 				</thead>
 				<tbody>
 				<% take.data_tracks.each do |track| %>
 					<tr>
-						<td><%= link_to track.name, track %> 
+						<td><%= link_to truncate(track.name, length: 50), track %> 
 							<span class="pull-right">
 						<% if authorized? track %>
 							<small><%= link_to edit_link_html, edit_data_track_path(track) %> <%= link_to remove_link_html, track, method: :delete, data: { confirm: 'Are you sure?' } %></small>
@@ -79,9 +78,9 @@
 						</span></td>
 						<% end %>
 						<td><% unless track.asset.nil? %><%= track.asset.file_content_type %><% else %>unknown<% end %></td>
-
+						<td><%= raw(track.sensor_types.map{|type| link_to(type.name, sensor_type_path(type)) }.join(", "))%></td>
 						<td><%= track.technician %></td>
-						<td><%= track.description %></td>
+						<td><%= raw(track.movers.map{|m| link_to(m.name, mover_path(m)) }.join(", "))%></td>
 						<td><% unless track.recorded_on.nil? %><%= track.recorded_on %><% end %></td>							
 					</tr>
 				<% end %>

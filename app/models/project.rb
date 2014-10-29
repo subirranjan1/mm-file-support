@@ -4,7 +4,7 @@ class Project < ActiveRecord::Base
   has_many :movement_annotations, as: :attached
   has_and_belongs_to_many :access_groups #represents those with access priviledges
   has_and_belongs_to_many :movers
-  has_and_belongs_to_many :sensors  
+  has_and_belongs_to_many :sensor_types  
   acts_as_taggable # Alias for acts_as_taggable_on :tags
   validates :name, presence: true, uniqueness: true
   validates :description, presence: true
@@ -20,6 +20,19 @@ class Project < ActiveRecord::Base
     else
       all
     end
+  end
+  
+  # the superset of all data_tracks movers -- this is different from the projects' movers which are the defaults for new groups
+  def all_movers
+    m = []
+    movement_groups.each do |group|
+      group.data_tracks.each do |track|
+        track.movers.each do |mover|
+        m << mover
+        end
+      end
+    end
+    m.uniq
   end
   
   private

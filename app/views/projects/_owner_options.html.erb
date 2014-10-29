@@ -1,0 +1,9 @@
+<small class="pull-right">
+	<%= link_to edit_link_html("Edit"), edit_project_path(project) %> 
+	<%= link_to remove_link_html("Delete"), project, method: :delete, data: { confirm: 'Are you sure?' } %> 
+	<% if project.public? %>
+		<span class='glyphicon glyphicon-eye-open'></span>
+	<% else %>
+		<span class='glyphicon glyphicon-eye-close'></span>	
+	<% end %>
+	</small>

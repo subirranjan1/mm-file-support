@@ -3,27 +3,24 @@
 	<li><%= link_to @project.name, project_path(@project) %></li>
 </ol>
 <p id="notice"><%= notice %></p>
+<h2><%= @project.name %><% if authorized? @project %> <small><%= link_to edit_link_html('Edit'), edit_project_path(@project) %></small><% end %></h2>
 <p>
-  <strong>Name:</strong>
-  <%= @project.name %>
-</p>
-<p>
-  <strong>Description:</strong>
   <%= @project.description %>
 </p>
-<% if authorized? @project %>
-	<p><span class="glyphicon glyphicon-exclamation-sign"></span> <em>Notice to owner: <% if @project.public? %>
-		 This project is visible to everyone.
-		 <% else %>
-		 This project can only be seen by its creator and approved access groups.
-		 <% end %></em>
-	</p>
-<% end %>
+<h5>License terms</h5>
+<p>
+	<%= @project.license %>
+	<% if @project.license.blank? %>
+	No terms specified. Assume regular copyright in effect.
+	<% end %>
+</p>
 <% unless @project.movers.empty? %>
 <h5>Default Movers</h5>
-<ul>
+<ul class="horizontal-wrapped">
 	<% @project.movers.each do |mover| %>
-		<li><%= link_to mover.name, mover_url(mover) %></li>
+		<li><p>
+		<a href="<%= mover_url(mover) %>"><%= image_tag(mover.avatar.url(:thumb)) if mover.avatar? %><%= mover.name%></a>
+		</p></li>
 	<% end %>
 </ul>
 <% else %>
@@ -39,7 +36,14 @@ No default movers set.
 <% else -%>
  <p>No tags yet</p>
 <% end -%>
-
+<% if authorized? @project %>
+	<p><span class="glyphicon glyphicon-exclamation-sign"></span> <em>Notice to owner: <% if @project.public? %>
+		 This project is visible to everyone.
+		 <% else %>
+		 This project can only be seen by its creator and approved access groups.
+		 <% end %></em>
+	</p>
+<% end %>
 <% if @project.movement_groups.empty? %>
 	<p>No associated movement takes yet. 
 		<% if authorized? @project %>
@@ -53,5 +57,4 @@ No default movers set.
 	</div>
 <% end %>
 
-<% if authorized? @project %> <%= link_to edit_link_html('Edit'), edit_project_path(@project) %><% end %>
-	<br/><%= link_to back_link_html('Return to list of projects'), projects_path %>
+<%= link_to back_link_html('Return to list of projects'), projects_path %>
