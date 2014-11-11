@@ -12,7 +12,7 @@
 <p>
 	<%= @data_track.movement_group.project.license %>
 	<% if @data_track.movement_group.project.license.blank? %>
-	No terms specified. Assume regular copyright terms.
+	No terms specified. Assume regular copyright in effect.
 	<% end %>
 </p>
 <p><strong>Asset</strong>: <%= link_to @data_track.asset.file_file_name, @data_track.asset.file.url(:original, false) %> - <%= @data_track.asset.file_content_type %>
