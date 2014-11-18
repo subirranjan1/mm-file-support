@@ -53,7 +53,6 @@
 	<%= f.label :sensor_types, class: "control-label"%><br/>
 	<%= f.collection_select :sensor_type_ids, @sensor_types, :id, :name, {:include_blank => 'None'}, {:multiple => true} %>
 	<em class="help-block">Hold the ctrl/cmd key while selecting names to choose more than one.</em>
-
   </div>
 
   <div class="field form-group">
