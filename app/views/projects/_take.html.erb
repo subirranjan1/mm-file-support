@@ -32,22 +32,7 @@
 				<% end %></p>
 			</div>
 			<% else %>
-					<%= form_tag(mova_url, :method=>"POST") do -%>
-					    <% take.data_tracks.each do |track| %>
-					      <% unless track.asset.nil? %>
-						  		<% if track.asset.file_content_type =~ /csv/ %>
-					          <%= hidden_field_tag :csvfile, URI.join(request.url, track.asset.file.url(:original, false)) %>
-						  		<% end %>
-						  		<% if track.asset.file_content_type =~ /mp4/ %>
-					          <%= hidden_field_tag :mp4file, URI.join(request.url, track.asset.file.url(:original, false)) %>
-						  		<% end %>
-						  		<% if track.asset.file_content_type =~ /mpeg/ %>
-					          <%= hidden_field_tag :mp3file, URI.join(request.url, track.asset.file.url(:original, false)) %>
-						  		<% end %>				
-								<% end %>
-					  	<% end %>
-					 	<%= submit_tag "Launch in MoVa" %>
-					 <% end # end form_tag -%>
+				<%= link_to 'Mova!', mova_url + "group_id=#{take.id}"%>
 			</div>
 				<table class="table">
 				<caption>Associated Files
