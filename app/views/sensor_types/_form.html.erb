@@ -12,11 +12,11 @@
   <% end %>
   <div class="field form-group">
     <%= f.label :name, class: "control-label" %><br>
-    <%= f.text_field :name, size: 60, class: "form-control", required: "required", autofocus: "autofocus" %>
+    <%= f.text_field :name, size: 60, class: "form-control", required: "required", placeholder: "Sensor name", autofocus: "autofocus" %>
   </div>
   <div class="field form-group">
     <%= f.label :description, class: "control-label" %><br>
-    <%= f.text_field :description, size: 120, class: "form-control" %>
+    <%= f.text_area :description, size: "60x12", class: "form-control", placeholder: "Sensor description", required: "required" %>
   </div>
   <div class="actions">
     <%= f.submit class: "btn btn-primary" %>

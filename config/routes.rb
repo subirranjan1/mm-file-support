@@ -7,6 +7,7 @@ FileSupportMovingstories::Application.routes.draw do
   get "password_resets/new"
   get "pages/about"
   get "pages/contact"
+  get "pages/howto"  
   get '/data_tracks/provide', to: 'data_tracks#provide'
   post '/data_tracks/import', to: 'data_tracks#import'
   get "myprojects" => "projects#mine", :as => "myprojects"

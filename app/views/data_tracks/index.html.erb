@@ -6,7 +6,7 @@
     <tr>
       <th>Name</th>
       <th>Movement Take</th>
-	  	<th>Sensor Types</th>
+	  	<th>Sensors</th>
 			<th>Movers</th>
 	  	<th>Technician</th>
 			<th>Recording Date</th>
@@ -19,7 +19,7 @@
       <tr>
         <td><%= link_to truncate(track.name, length: 40), data_track_path(track) %> <%= render partial: "owner_options", locals: { track: track} if authorized?(track)%></td>
 				<td><%= link_to truncate(track.movement_group.name, length: 25), movement_group_path(track.movement_group) %><span style="float:right">
-				<%= button_to 'view in Mova', mova_url, method: :get, :id => track.movement_group.id %>
+				<%= link_to 'Mova!', mova_url + "group_id=#{track.movement_group.id}"%>
 				</span></td>
 				<td><%= raw(track.sensor_types.map{|type| link_to(type.name, sensor_type_path(type)) }.join(", "))%></td>
 				<td><%= raw(track.movers.map{|mover| link_to(mover.name, mover_path(mover)) }.join(", ")) %></td>

@@ -15,7 +15,7 @@ module ProjectsHelper
     #"http://www.sfu.ca/~oalemi/movan/"
     #"http://142.58.181.193:8080/index.php"
     #"http://142.58.181.193/MovAn/movan/index.php"
-    "http://209.87.60.87/Mova/index.php"
+    "http://209.87.60.87/Mova/index.php?"
   end
   
 end
