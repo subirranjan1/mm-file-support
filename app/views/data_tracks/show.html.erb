@@ -15,11 +15,8 @@
 	No terms specified. Assume regular copyright in effect.
 	<% end %>
 </p>
-<p><strong>Asset</strong>: <%= link_to @data_track.asset.file_file_name, @data_track.asset.file.url(:original, false) %> - <%= @data_track.asset.file_content_type %>
-		<%= form_tag(mova_url, :method=>"POST") do -%>
-			<%= hidden_field_tag :csvfile, URI.join(request.url, @data_track.asset.file.url(:original, false)) %>
-			<%= submit_tag "View in MoVa" %>
-		<% end -%>
+<p><strong>Asset</strong>: <%= link_to @data_track.asset.file_file_name, @data_track.asset.file.url(:original, false) %> - <%= @data_track.asset.file_content_type %><br/>
+		<%= link_to 'Mova!', mova_url + "id=#{@data_track.movement_group.id}"%>
 </p>
 <p>
   <strong>Technician:</strong>
@@ -63,4 +60,19 @@ No movers assigned.
 <% end %>
 <% unless @data_track.asset.nil? %>
 <% end %>
+<h5>Annotations</h5>
+<% unless @data_track.movement_annotations.empty? %>
+	<ul>
+	<% @data_track.movement_annotations.each do |annotation| %>
+		<li><%= link_to annotation.name, movement_annotation_path(annotation)%></li>
+	<% end %>
+	</ul>
+<% else %>
+<p>No annotations attached!</p>
+<% end %>
+<% if current_user %>
+<%= link_to link_html("glyphicon glyphicon-paperclip", "Attach a file"), new_movement_annotation_path(id: @data_track.id, annotated: DataTrack) %>
+<% end %>
+
+<br/>
 <%= link_to back_link_html('Return to take details'), movement_group_path(@data_track.movement_group) %>

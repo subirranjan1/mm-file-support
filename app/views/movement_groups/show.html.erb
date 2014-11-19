@@ -46,6 +46,19 @@ No default movers set.
 		 <% end %></em>
 	</p>
 <% end %>
+<h5>Annotations</h5>
+<% unless @movement_group.movement_annotations.empty? %>
+	<ul>
+	<% @movement_group.movement_annotations.each do |annotation| %>
+		<li><%= link_to annotation.name, movement_annotation_path(annotation)%></li>
+	<% end %>
+	</ul>
+<% else %>
+<p>No annotations attached!</p>
+<% end %>
+<% if current_user %>
+<%= link_to link_html("glyphicon glyphicon-paperclip", "Attach a file"), new_movement_annotation_path(id: @movement_group.id, annotated: MovementGroup) %>
+<% end %>
 <% if @movement_group.data_tracks.empty? %>
 	<p>No associated data tracks yet. 
 		<% if authorized? @movement_group %>
@@ -90,5 +103,4 @@ No default movers set.
 	</table>
 	</div>
 <% end %>
-
 <%= link_to back_link_html('Return to project details'), project_path(@movement_group.project) %>
