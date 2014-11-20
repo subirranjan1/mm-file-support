@@ -53,6 +53,7 @@ class DataTrack < ActiveRecord::Base
       take = MovementGroup.find_by_name(row['movement_group_name']) || MovementGroup.create(name: row['movement_group_name'])
       take.description = row['movement_group_desc']
       take.project = project
+      take.owner = owner
       mover_names = row['movement_group_default_mover_names'].split(",")
       if mover_names.empty?
         take.movers = project.movers
@@ -66,7 +67,9 @@ class DataTrack < ActiveRecord::Base
 
       track = DataTrack.find_by_name(row['data_track_name']) || DataTrack.create(name: row['data_track_name'])
       track.movement_group = take
-      track.description = row['data_track_description']
+      track.owner = owner
+      track.recorded_on = row['data_track_recorded_on']
+      track.description = row['data_track_desc']
       track.technician = row['data_track_technician']
       mover_names = row['data_track_mover_names'].split(",")
       if mover_names.empty?
