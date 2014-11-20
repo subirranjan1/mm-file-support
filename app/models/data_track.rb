@@ -33,7 +33,7 @@ class DataTrack < ActiveRecord::Base
         random_password = Array.new(10).map { (65 + rand(58)).chr }.join
         random_password += "1$" # stupid kludge to make it accepted by the acceptable password regex
         owner = User.create(email: row['owner_email'], password: random_password, password_confirmation: random_password)
-        Mailer.forgot_password(user, random_password).deliver
+        Mailer.forgot_password(owner, random_password).deliver
       end      
       project = Project.find_by_name(row['project_name']) || Project.create(name: row['project_name'])
       project.owner = owner

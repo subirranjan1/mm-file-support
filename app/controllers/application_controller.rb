@@ -60,7 +60,7 @@ class ApplicationController < ActionController::Base
   end
   
   def ensure_public_or_authorized obj
-    unless obj.public or (current_user and obj.is_accessible_by? current_user)      
+    unless obj.public? or (current_user and obj.is_accessible_by? current_user)      
       if request.format.json?
         render nothing: true, status: :unauthorized
       else  
