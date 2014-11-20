@@ -3,9 +3,9 @@ class DataTrack < ActiveRecord::Base
   belongs_to :movement_group
   has_one :asset, as: :attachable, dependent: :destroy
   has_many :movement_annotations, as: :attached
-  has_and_belongs_to_many :movers
+  has_and_belongs_to_many :movers, -> { distinct }
   acts_as_taggable # Alias for acts_as_taggable_on :tags
-  has_and_belongs_to_many :sensor_types
+  has_and_belongs_to_many :sensor_types, -> { distinct }
   belongs_to :owner, class_name: "User", foreign_key: "user_id"
   validates :name, presence: true
   validates :movement_group_id, presence: true
@@ -42,13 +42,17 @@ class DataTrack < ActiveRecord::Base
       project.save!      
       mover_names.each do |name|
         mover = Mover.find_by_name(name.strip) || Mover.new(name: name.strip)
-        project.movers << mover
+        unless project.movers.include?(mover)
+           project.movers << mover
+        end
       end
-      # sensor_names = row['project_default_sensor_names'].split(",")
-      # sensor_names.each do |name|
-      #   sensor = SensorType.find_by_name(name.strip) || Mover.new(name: name.strip)
-      #   project.sensor_types << sensor
-      # end
+      sensor_names = row['project_default_sensor_names'].split(",")
+      sensor_names.each do |name|
+        sensor = SensorType.find_by_name(name.strip) || Mover.new(name: name.strip)
+        unless project.sensor_types.include?(sensor)
+          project.sensor_types << sensor
+        end        
+      end
 
       take = MovementGroup.find_by_name(row['movement_group_name']) || MovementGroup.create(name: row['movement_group_name'])
       take.description = row['movement_group_desc']
@@ -61,7 +65,9 @@ class DataTrack < ActiveRecord::Base
       else
         mover_names.each do |name|
           mover = Mover.find_by_name(name.strip) || Mover.new(name: name.strip)
-          take.movers << mover
+          unless take.movers.include?(mover)
+             take.movers << mover
+          end          
         end
       end
       take.save!
@@ -79,13 +85,17 @@ class DataTrack < ActiveRecord::Base
       else
         mover_names.each do |name|
           mover = Mover.find_by_name(name.strip) || Mover.new(name: name.strip)
-          track.movers << mover
+          unless track.movers.include?(mover)
+             track.movers << mover
+          end          
         end
       end
       sensor_names = row['data_track_sensor_names'].split(",")
       sensor_names.each do |name|
         sensor = SensorType.find_by_name(name.strip) || SensorType.new(name: name.strip)
-        track.sensor_types << sensor
+        unless track.sensor_types.include?(sensor)
+          track.sensor_types << sensor
+        end        
       end
       
       unless row['data_track_filename'].blank? 

@@ -3,8 +3,8 @@ class Project < ActiveRecord::Base
   belongs_to :owner, class_name: "User", foreign_key: "user_id"
   has_many :movement_annotations, as: :attached
   has_and_belongs_to_many :access_groups #represents those with access priviledges
-  has_and_belongs_to_many :movers
-  has_and_belongs_to_many :sensor_types  
+  has_and_belongs_to_many :movers, -> { distinct }
+  has_and_belongs_to_many :sensor_types, -> { distinct } 
   acts_as_taggable # Alias for acts_as_taggable_on :tags
   validates :name, presence: true, uniqueness: true
   validates :description, presence: true
