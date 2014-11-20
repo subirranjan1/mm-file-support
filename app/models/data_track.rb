@@ -87,8 +87,12 @@ class DataTrack < ActiveRecord::Base
       end
       
       unless row['data_track_filename'].blank? 
-        asset = Asset.new(:file => File.open(row['data_track_filename']))
-        asset.save!
+        begin
+          asset = Asset.new(:file => File.open(row['data_track_filename']))
+          asset.save!
+        rescue
+          puts row['data_track_filename']
+        end
         track.asset = asset
       end
             
