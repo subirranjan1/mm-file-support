@@ -91,6 +91,7 @@ class DataTrack < ActiveRecord::Base
       unless row['data_track_filename'].blank? 
         begin
           asset = Asset.new(:file => File.open(row['data_track_filename']))
+          asset.attachable = track
           asset.save!
           track.asset = asset
         rescue
