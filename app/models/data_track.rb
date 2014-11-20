@@ -39,6 +39,7 @@ class DataTrack < ActiveRecord::Base
       project.owner = owner
       project.description = row['project_description']
       mover_names = row['project_default_mover_names'].split(",") 
+      project.save!      
       mover_names.each do |name|
         mover = Mover.find_by_name(name.strip) || Mover.new(name: name.strip)
         project.movers << mover
@@ -48,12 +49,12 @@ class DataTrack < ActiveRecord::Base
       #   sensor = SensorType.find_by_name(name.strip) || Mover.new(name: name.strip)
       #   project.sensor_types << sensor
       # end
-      project.save!
 
       take = MovementGroup.find_by_name(row['movement_group_name']) || MovementGroup.create(name: row['movement_group_name'])
       take.description = row['movement_group_desc']
       take.project = project
       take.owner = owner
+      take.save!      
       mover_names = row['movement_group_default_mover_names'].split(",")
       if mover_names.empty?
         take.movers = project.movers
@@ -63,7 +64,6 @@ class DataTrack < ActiveRecord::Base
           take.movers << mover
         end
       end
-      take.save!
 
       track = DataTrack.find_by_name(row['data_track_name']) || DataTrack.create(name: row['data_track_name'])
       track.movement_group = take
@@ -71,6 +71,7 @@ class DataTrack < ActiveRecord::Base
       track.recorded_on = row['data_track_recorded_on']
       track.description = row['data_track_desc']
       track.technician = row['data_track_technician']
+      track.save!       
       mover_names = row['data_track_mover_names'].split(",")
       if mover_names.empty?
         track.movers = take.movers
@@ -91,8 +92,7 @@ class DataTrack < ActiveRecord::Base
         asset.save!
         track.asset = asset
       end
-            
-      track.save!       
+          
 
     end
   end
