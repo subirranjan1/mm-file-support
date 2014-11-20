@@ -1,3 +1,4 @@
+<% provide(:title, "Mover: #{@mover.name}") %>
 <h2><%= @mover.name %><% if current_user %> <small><%= link_to edit_link_html('Edit'), edit_mover_path(@mover) %></small><% end %></h2>
 <%= image_tag(@mover.avatar.url(:medium)) if @mover.avatar? %>
 <p>

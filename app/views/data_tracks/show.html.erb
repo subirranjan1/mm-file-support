@@ -16,7 +16,7 @@
 	<% end %>
 </p>
 <p><strong>Asset</strong>: <%= link_to @data_track.asset.file_file_name, @data_track.asset.file.url(:original, false) %> - <%= @data_track.asset.file_content_type %><br/>
-		<%= link_to 'Mova!', mova_url + "id=#{@data_track.movement_group.id}"%>
+		<%= link_to 'Mova!', mova_url + "group_id=#{@data_track.movement_group.id}"%>
 </p>
 <p>
   <strong>Technician:</strong>
