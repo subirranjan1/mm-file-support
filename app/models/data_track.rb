@@ -64,7 +64,8 @@ class DataTrack < ActiveRecord::Base
           take.movers << mover
         end
       end
-
+      take.save!
+      
       track = DataTrack.find_by_name(row['data_track_name']) || DataTrack.create(name: row['data_track_name'])
       track.movement_group = take
       track.owner = owner
@@ -91,8 +92,9 @@ class DataTrack < ActiveRecord::Base
         asset = Asset.new(:file => File.open(row['data_track_filename']))
         asset.save!
         track.asset = asset
+        puts "saving #{row['data_track_filename']}"
       end
-          
+      track.save!
 
     end
   end
