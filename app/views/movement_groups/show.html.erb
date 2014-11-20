@@ -5,60 +5,67 @@
 </ol>
 <p id="notice"><%= notice %></p>
 <h2><%= @movement_group.name %> <% if authorized? @movement_group %><small><%= link_to edit_link_html('Edit'), edit_movement_group_path(@movement_group) %><% end %></small></h2>
-<p>
-  <%= @movement_group.description %>
-</p>
-<h5>License terms</h5>
-<p>
-	<%= @movement_group.project.license %>
-	<% if @movement_group.project.license.blank? %>
-	No terms specified. Assume regular copyright in effect.
-	<% end %>
-</p>
-<% unless @movement_group.movers.empty? %>
-<h5>Default Movers</h5>
-<ul class="horizontal-wrapped">
-	<% @movement_group.movers.each do |mover| %>
-		<li><p>
-		<a href="<%= mover_url(mover) %>"><%= image_tag(mover.avatar.url(:thumb)) if mover.avatar? %><%= mover.name%></a>
-		</p></li>
-	<% end %>
-</ul>
-<% else %>
-No default movers set.
-<% end %>
-
-<% if ! @movement_group.tags.empty? -%>
-  <p>
-    <strong>Tags:</strong>
-    <% @movement_group.tags.each do |tag| %>
-    	<%= link_to tag.name, tagged_url(:tag => tag.name) %>
-	<% end %>
-  </p>
-<% else -%>
- <p>No tags set.</p>
-<% end -%>
-<% if authorized? @movement_group %>
-	<p><span class="glyphicon glyphicon-exclamation-sign"></span> <em>Notice to owner: <% if @movement_group.public? %>
-		 This take is visible to everyone.
-		 <% else %>
-		 This take can only be seen by its creator and approved access groups.
-		 <% end %></em>
-	</p>
-<% end %>
-<h5>Annotations</h5>
-<% unless @movement_group.movement_annotations.empty? %>
-	<ul>
-	<% @movement_group.movement_annotations.each do |annotation| %>
-		<li><%= link_to annotation.name, movement_annotation_path(annotation)%></li>
-	<% end %>
-	</ul>
-<% else %>
-<p>No annotations attached!</p>
-<% end %>
-<% if current_user %>
-<%= link_to link_html("glyphicon glyphicon-paperclip", "Attach a file"), new_movement_annotation_path(id: @movement_group.id, annotated: MovementGroup) %>
-<% end %>
+<div class="row">
+  <div class="col-xs-6">
+		<p>
+		  <%= @movement_group.description %><br/>
+			Download zip of this take (not functioning yet)<br/>
+			<%= link_to link_html("picture", "View take in Mova"), mova_url + "group_id=#{@movement_group.id}"%>
+		</p>	
+		<h5>License terms</h5>
+		<p>
+			<%= @movement_group.project.license %>
+			<% if @movement_group.project.license.blank? %>
+			No terms specified. Assume regular copyright in effect.
+			<% end %>
+		</p>		
+		<% if ! @movement_group.tags.empty? -%>
+		  <p>
+		    <strong>Tags:</strong>
+		    <% @movement_group.tags.each do |tag| %>
+		    	<%= link_to tag.name, tagged_url(:tag => tag.name) %>
+			<% end %>
+		  </p>
+		<% else -%>
+		 <p>No tags set.</p>
+		<% end -%>
+		<% if authorized? @movement_group %>
+			<p><span class="glyphicon glyphicon-exclamation-sign"></span> <em>Notice to owner: <% if @movement_group.public? %>
+				 This take is visible to everyone.
+				 <% else %>
+				 This take can only be seen by its creator and approved access groups.
+				 <% end %></em>
+			</p>
+		<% end %>		
+	</div>
+  <div class="col-xs-6">
+		<% unless @movement_group.movers.empty? %>
+		<h5>Default Movers</h5>
+		<ul class="horizontal-wrapped">
+			<% @movement_group.movers.each do |mover| %>
+				<li><p>
+				<a href="<%= mover_url(mover) %>"><%= image_tag(mover.avatar.url(:thumb)) if mover.avatar? %><%= mover.name%></a>
+				</p></li>
+			<% end %>
+		</ul>
+		<% else %>
+		No default movers set.
+		<% end %>
+		<h5>Annotations</h5>
+		<% unless @movement_group.movement_annotations.empty? %>
+			<ul>
+			<% @movement_group.movement_annotations.each do |annotation| %>
+				<li><%= link_to annotation.name, movement_annotation_path(annotation)%></li>
+			<% end %>
+			</ul>
+		<% else %>
+		<p>No annotations yet.</p>
+		<% end %>
+		<% if current_user %>
+		<%= link_to link_html("glyphicon glyphicon-paperclip", "Attach a file"), new_movement_annotation_path(id: @movement_group.id, annotated: MovementGroup) %>
+		<% end %>		
+	</div>	
+</div>
 <% if @movement_group.data_tracks.empty? %>
 	<p>No associated data tracks yet. 
 		<% if authorized? @movement_group %>
