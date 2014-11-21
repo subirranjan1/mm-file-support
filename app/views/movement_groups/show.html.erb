@@ -75,7 +75,7 @@
 	<% data_track_counter ||= 1%>
 	<h5>Data Tracks <small><% if authorized? @movement_group %><%= link_to add_link_html("Add new take"), new_data_track_path(movement_group_id: @movement_group.id) %></small><% end %></h5>
 	<div class="panel-group" id="accordion<%=data_track_counter%>">
-		<table class="table">
+		<table class="table table-striped table-bordered" id="mytracks">
 		<thead>
 			<tr>
 				<th>File name</th>
