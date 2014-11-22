@@ -1,10 +1,15 @@
+require 'rubygems'
+require 'zip'
 class MovementGroupsController < ApplicationController
-  before_action :set_movement_group, only: [:show, :edit, :update, :destroy]
+  before_action :set_movement_group, only: [:show, :edit, :update, :destroy, :export]
   before_filter :ensure_logged_in, except: [:index, :show]
   before_filter ->(param=@movement_group) { ensure_owner param }, only: %w{destroy}
   before_filter ->(param=@movement_group) { ensure_authorized param }, only: %w{edit update}
   before_filter ->(param=@movement_group) { ensure_public_or_authorized param }, only: %w{show}
-
+  # require 'rubyzip'
+  # require 'zip'
+  # require "open-uri"
+  
   def_param_group :movement_group do
     param :movement_group, Hash, :required => true, :action_aware => true do
       param :name, String, "Name of the movement group (take)", :required => true
@@ -99,6 +104,30 @@ class MovementGroupsController < ApplicationController
       format.html { redirect_to({controller: 'projects', action: 'mine'}, notice: 'Movement take was successfully destroyed.') }        
       format.json { head :no_content }
     end
+  end
+    
+  def export
+    t = Tempfile.new("temp-group-package-#{Time.now}")
+    Zip::OutputStream.open(t.path) do |z|
+      #TODO: add license and readme with some meta info
+      license = Tempfile.new("license-#{Time.now}")
+      preamble = "Thanks for downloading from the m+m movement database at http://db.mplusm.ca. Here are the licensing terms.\n"
+      license.write(preamble+@movement_group.project.license)
+      z.put_next_entry("license.txt")
+      z.print IO.read(open(license))
+      @movement_group.data_tracks.each do |track|
+        title = track.asset.file_file_name
+        z.put_next_entry("tracks/#{title}")
+        url = track.asset.file.path
+        url_data = open(url)
+        z.print IO.read(url_data)
+      end
+    end
+
+    send_file t.path, :type => 'application/zip',
+      :disposition => 'attachment',
+      :filename => "mnm-db-movement-group-#{@movement_group.id}.zip"
+      t.close
   end
   
   def tagged
