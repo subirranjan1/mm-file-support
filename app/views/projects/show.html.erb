@@ -3,10 +3,17 @@
   <li><a href="/">Projects</a></li>
 	<li><%= link_to @project.name, project_path(@project) %></li>
 </ol>
-<p id="notice"><%= notice %></p>
 <h2><%= @project.name %><% if authorized? @project %> <small><%= link_to edit_link_html('Edit'), edit_project_path(@project) %></small><% end %></h2>
 <div class="row">
   <div class="col-xs-6">
+		<% if authorized? @project %>
+			<p><span class="glyphicon glyphicon-exclamation-sign"></span> <em>Notice to owner: <% if @project.public? %>
+				 This project is visible to everyone.
+				 <% else %>
+				 This project can only be seen by its creator and approved access groups.
+				 <% end %></em>
+			</p>
+		<% end %>
 		<p>
 		  <%= @project.description %>
 		</p>
@@ -26,15 +33,7 @@
 		  </p>
 		<% else -%>
 		 <p>No tags yet</p>
-		<% end -%>
-		<% if authorized? @project %>
-			<p><span class="glyphicon glyphicon-exclamation-sign"></span> <em>Notice to owner: <% if @project.public? %>
-				 This project is visible to everyone.
-				 <% else %>
-				 This project can only be seen by its creator and approved access groups.
-				 <% end %></em>
-			</p>
-		<% end %>		
+		<% end -%>	
 	</div>
 	<div class="col-xs-6">
 		<% unless @project.movers.empty? %>
@@ -48,23 +47,45 @@
 		</ul>
 		<% else %>
 		No default movers set.
-		<% end %>		
-		<h5>Annotations</h5>
-		<% unless @project.movement_annotations.empty? %>
-			<ul>
-			<% @project.movement_annotations.each do |annotation| %>
-				<li><%= link_to annotation.name, movement_annotation_path(annotation)%></li>
-			<% end %>
-			</ul>
-		<% else %>
-		<p>No annotations yet.</p>
-		<% end %>
-		<% if current_user %>
-		<%= link_to link_html("glyphicon glyphicon-paperclip", "Attach a file"), new_movement_annotation_path(id: @project.id, annotated: Project) %>
-		<% end %>		
+		<% end %>			
 	</div>
 </div>		
-
+<div class="row">
+  <div class="col-xs-6">
+	View project in Mova (Coming Soon)<br/>
+	Download zip of project (Coming Soon)
+	</div>
+	<div class="col-xs-6">
+		<h5>Attached Files</h5>
+		<% unless @project.movement_annotations.empty? %>
+			<ul>
+				<% @project.movement_annotations.where(public: true).each do |annotation| %>
+					<li><%= link_to link_html("Download", annotation.asset.file_file_name), annotation.asset.file.url(:original, false) %> (<%= annotation.asset.file_content_type %>)
+						<% if authorized?(annotation) %>
+							<small><%= link_to edit_link_html("Edit"), edit_movement_annotation_path(annotation) %> 
+							<%= link_to remove_link_html("Delete"), annotation, method: :delete, data: { confirm: 'Are you sure?' } %></small>
+						<% end %>						
+						</li>
+				<% end %>
+				<% @project.movement_annotations.where(public:false ).each do |annotation| %>
+					<% if authorized?(annotation) %>
+						<li>
+							<%= link_to link_html("Download", annotation.asset.file_file_name), annotation.asset.file.url(:original, false) %> (<%= 		annotation.asset.file_content_type %>)						
+							<small><%= link_to edit_link_html("Edit"), edit_movement_annotation_path(annotation) %> 
+							<%= link_to remove_link_html("Delete"), annotation, method: :delete, data: { confirm: 'Are you sure?' } %></small>
+						</li>
+					<% end%>
+				<% end %>			
+			</ul>
+		<% end %>
+		<% if @project.movement_annotations.where(public: true).empty? %>
+			<p>No annotations available.</p>
+		<% end %>
+		<% if current_user %>
+		<%= link_to link_html("glyphicon glyphicon-paperclip", "Attach a file"), new_movement_annotation_path(attached_id: @project.id, annotated: Project) %>
+		<% end %>
+	</div>
+</div>
 <% if @project.movement_groups.empty? %>
 	<p>No associated movement takes yet. 
 		<% if authorized? @project %>

@@ -10,16 +10,21 @@
       </ul>
     </div>
   <% end %>
-  <%= f.hidden_field :attached_type, :value => params[:annotated]%>
-  <%= f.hidden_field :attached_id, :value => params[:id]%>
+  <%= f.hidden_field :attached_type, :value => @movement_annotation.attached_type%>
+  <%= f.hidden_field :attached_id, :value => @movement_annotation.attached_id %>
 
   <div class="field form-group">
     <%= f.label :name, class: "control-label" %><br>
-    <%= f.text_field :name, size: 60, class: "form-control", placeholder: "Name the project", required: "required", autofocus: "autofocus" %>
+    <%= f.text_field :name, size: 60, class: "form-control", placeholder: "Name the annotation record", required: "required", autofocus: "autofocus" %>
   </div>
   <div class="field form-group">
     <%= f.label :description, class: "control-label" %><br>
-    <%= f.text_area :description, size: "60x12", class: "form-control", placeholder: "Project description", required: "required" %>
+    <%= f.text_area :description, size: "60x12", class: "form-control", placeholder: "Annotation description", required: "required" %>
+  </div>
+  <div class="field form-group">
+    <%= f.label :format, class: "control-label" %><br>
+    <%= f.text_field :format, size: 60, class: "form-control", placeholder: "Extra details regarding annotation format"%>
+		<em class="help-block">e.g. Laban Notation, Standards Document, or other descriptive info</em>
   </div>
   <div class="field form-group">
 		<%= f.label :tags, class: "control-label" %>

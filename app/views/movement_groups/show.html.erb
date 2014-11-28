@@ -1,17 +1,21 @@
+<% provide(:title, "Movement Take: #{@movement_group.name}") %>
 <ol class="breadcrumb">
   <li><a href="/">Projects</a></li>
 	<li><%= link_to @movement_group.project.name, project_path(@movement_group.project) %></li>
 	<li><%= link_to @movement_group.name, movement_group_path(@movement_group) %></li>
 </ol>
-<p id="notice"><%= notice %></p>
 <h2><%= @movement_group.name %> <% if authorized? @movement_group %><small><%= link_to edit_link_html('Edit'), edit_movement_group_path(@movement_group) %><% end %></small></h2>
 <div class="row">
   <div class="col-xs-6">
-		<p>
-		  <%= @movement_group.description %><br/>
-			Download zip of this take (not functioning yet)<br/>
-			<%= link_to link_html("picture", "View take in Mova"), mova_url + "group_id=#{@movement_group.id}"%>
-		</p>	
+		<% if authorized? @movement_group %>
+			<p><span class="glyphicon glyphicon-exclamation-sign"></span> <em>Notice to owner: <% if @movement_group.public? %>
+				 This take is visible to everyone.
+				 <% else %>
+				 This take can only be accessed by its creator and approved access groups.
+				 <% end %></em>
+			</p>
+		<% end %>	
+		<p><%= @movement_group.description %></p>
 		<h5>License terms</h5>
 		<p>
 			<%= @movement_group.project.license %>
@@ -29,14 +33,7 @@
 		<% else -%>
 		 <p>No tags set.</p>
 		<% end -%>
-		<% if authorized? @movement_group %>
-			<p><span class="glyphicon glyphicon-exclamation-sign"></span> <em>Notice to owner: <% if @movement_group.public? %>
-				 This take is visible to everyone.
-				 <% else %>
-				 This take can only be seen by its creator and approved access groups.
-				 <% end %></em>
-			</p>
-		<% end %>		
+	
 	</div>
   <div class="col-xs-6">
 		<% unless @movement_group.movers.empty? %>
@@ -51,20 +48,48 @@
 		<% else %>
 		No default movers set.
 		<% end %>
-		<h5>Annotations</h5>
+
+	</div>	
+</div>
+<div class="row">
+  <div class="col-xs-6">
+		<p>
+			<%= link_to link_html("picture", "View take in Mova"), mova_url + "group_id=#{@movement_group.id}"%><br/>
+			<%= link_to link_html("download-alt", "Download this take"), controller: "movement_groups", action: "export", id: @movement_group.id unless @movement_group.data_tracks.where(public: true).empty? %>			
+		</p>
+	</div>
+	<div class="col-xs-6">
+		<h5>Attached Files</h5>
 		<% unless @movement_group.movement_annotations.empty? %>
 			<ul>
-			<% @movement_group.movement_annotations.each do |annotation| %>
-				<li><%= link_to annotation.name, movement_annotation_path(annotation)%></li>
+			<% @movement_group.movement_annotations.where(public: true).each do |annotation| %>
+				<li><%= link_to link_html("Download", annotation.asset.file_file_name), annotation.asset.file.url(:original, false) %> (<%= annotation.asset.file_content_type %>) 
+						<% if authorized?(annotation) %>
+							<small><%= link_to edit_link_html("Edit"), edit_movement_annotation_path(annotation) %> 
+							<%= link_to remove_link_html("Delete"), annotation, method: :delete, data: { confirm: 'Are you sure?' } %></small>
+						<% end %>
+					</li>
+			<% end %>
+			<% @movement_group.movement_annotations.where(public:false ).each do |annotation| %>
+				<% if authorized?(annotation) %>
+					<li>
+						<%= link_to link_html("Download", annotation.asset.file_file_name), annotation.asset.file.url(:original, false) %> (<%= 		annotation.asset.file_content_type %>)						
+						<small><%= link_to edit_link_html("Edit"), edit_movement_annotation_path(annotation) %> 
+						<%= link_to remove_link_html("Delete"), annotation, method: :delete, data: { confirm: 'Are you sure?' } %></small>
+					</li>
+				<% end%>
 			<% end %>
 			</ul>
-		<% else %>
-		<p>No annotations yet.</p>
 		<% end %>
+		<% if @movement_group.movement_annotations.where(public: true).empty? %>
+			<p>No annotations available.</p>
+		<% end %>
+		
+
 		<% if current_user %>
-		<%= link_to link_html("glyphicon glyphicon-paperclip", "Attach a file"), new_movement_annotation_path(id: @movement_group.id, annotated: MovementGroup) %>
+		<%= link_to link_html("paperclip", "Attach a file"), new_movement_annotation_path(attached_id: @movement_group.id, annotated: MovementGroup) %>
 		<% end %>		
-	</div>	
+	</div>
 </div>
 <% if @movement_group.data_tracks.empty? %>
 	<p>No associated data tracks yet. 
@@ -74,7 +99,7 @@
 <% else %>
 	<% data_track_counter ||= 1%>
 	<h5>Data Tracks <small><% if authorized? @movement_group %><%= link_to add_link_html("Add new take"), new_data_track_path(movement_group_id: @movement_group.id) %></small><% end %></h5>
-	<%= link_to "Download this take", controller: "movement_groups", action: "export", id: @movement_group.id %>
+
 	<div class="panel-group" id="accordion<%=data_track_counter%>">
 		<table class="table table-striped table-bordered" id="mytracks">
 		<thead>

@@ -8,11 +8,16 @@
 <h2><%= @data_track.name %> <% if authorized?(@data_track) %><small><%= link_to edit_link_html('Edit'), edit_data_track_path(@data_track) %></small><% end %></h2>
 <div class="row">
   <div class="col-xs-6">
+		<% if authorized? @data_track %>
+			<p><span class="glyphicon glyphicon-exclamation-sign"></span> <em>Notice to owner: <% if @data_track.public? %>
+				 This track is visible to everyone.
+				 <% else %>
+				 This track can only be seen by its creator and approved access groups.
+				 <% end %></em>
+			</p>
+		<% end %>	
 		<p>
 		  <%= @data_track.description %>
-		</p>
-		<p><%= link_to link_html("download-alt", @data_track.asset.file_file_name), @data_track.asset.file.url(:original, false) %> - <%= @data_track.asset.file_content_type %><br/>
-				<%= link_to link_html("picture", "View in Mova"), mova_url + "group_id=#{@data_track.movement_group.id}"%>
 		</p>
 		<h5>License terms</h5>
 		<p>
@@ -20,6 +25,9 @@
 			<% if @data_track.movement_group.project.license.blank? %>
 			No terms specified. Assume regular copyright in effect.
 			<% end %>
+		</p>
+		<h5>Recording Date</h5>
+		<p><%= @data_track.recorded_on %>
 		</p>
 		<h5>Technician</h5>
 		<p>
@@ -36,16 +44,6 @@
 		<% else -%>
 		 <p>No tags set.</p>
 		<% end -%>
-		<% if authorized? @data_track %>
-			<p><span class="glyphicon glyphicon-exclamation-sign"></span> <em>Notice to owner: <% if @data_track.public? %>
-				 This track is visible to everyone.
-				 <% else %>
-				 This track can only be seen by its creator and approved access groups.
-				 <% end %></em>
-			</p>
-		<% end %>
-		<% unless @data_track.asset.nil? %>
-		<% end %>
 	</div>
   <div class="col-xs-6">
 		<% unless @data_track.movers.empty? %>
@@ -66,20 +64,45 @@
 				<li><%= link_to sensor.name, sensor_type_url(sensor)%></li>
 			<% end %>
 			</ul>
-  	<h5>Annotations</h5>
-		<% unless @data_track.movement_annotations.empty? %>
-			<ul>
-			<% @data_track.movement_annotations.each do |annotation| %>
-				<li><%= link_to annotation.name, movement_annotation_path(annotation)%></li>
-			<% end %>
-			</ul>
-		<% else %>
-		<p>No annotations yet.</p>
-		<% end %>
-		<% if current_user %>
-		<%= link_to link_html("glyphicon glyphicon-paperclip", "Attach a file"), new_movement_annotation_path(id: @data_track.id, annotated: DataTrack) %>
-		<% end %>
-		<br/>
   </div>
+</div>
+<div class="row">
+  <div class="col-xs-6">
+		<% unless @data_track.asset.nil? %>
+		<p><%= link_to link_html("download", @data_track.asset.file_file_name), @data_track.asset.file.url(:original, false) %> (<%= @data_track.asset.file_content_type %>)<br/>
+				<%= link_to link_html("picture", "View in Mova"), mova_url + "group_id=#{@data_track.movement_group.id}"%>
+		</p>		
+		<% end %>	
+	</div>
+  <div class="col-xs-6">
+  	<h5>Attached Files</h5>
+		<% if current_user %>
+			<%= link_to link_html("paperclip", "Attach a file"), new_movement_annotation_path(attached_id: @data_track.id, annotated: DataTrack) %>
+		<% end %>
+			<% unless @data_track.movement_annotations.empty? %>
+				<ul>
+					<% @data_track.movement_annotations.where(public: true).each do |annotation| %>
+						<li><%= link_to link_html("Download", annotation.asset.file_file_name), annotation.asset.file.url(:original, false) %> (<%= annotation.asset.file_content_type %>)
+							<% if authorized?(annotation) %>
+								<small><%= link_to edit_link_html("Edit"), edit_movement_annotation_path(annotation) %> 
+								<%= link_to remove_link_html("Delete"), annotation, method: :delete, data: { confirm: 'Are you sure?' } %></small>
+							<% end %>
+							</li>
+					<% end %>
+					<% @data_track.movement_annotations.where(public:false ).each do |annotation| %>
+						<% if authorized?(annotation) %>
+							<li>
+								<%= link_to link_html("Download", annotation.asset.file_file_name), annotation.asset.file.url(:original, false) %> (<%= 		annotation.asset.file_content_type %>)						
+								<small><%= link_to edit_link_html("Edit"), edit_movement_annotation_path(annotation) %> 
+								<%= link_to remove_link_html("Delete"), annotation, method: :delete, data: { confirm: 'Are you sure?' } %></small>
+							</li>
+						<% end%>
+					<% end %>
+				</ul>
+				<% end %>
+				<% if @data_track.movement_annotations.where(public: true).empty? %>
+					<p>No annotations available.</p>
+				<% end %>
+	</div>
 </div>
 <%= link_to back_link_html('Return to take details'), movement_group_path(@data_track.movement_group) %>

@@ -41,6 +41,8 @@ class MovementAnnotationsController < ApplicationController
   def new
     @movement_annotation = MovementAnnotation.new
     @data_tracks = DataTrack.all
+    @movement_annotation.attached_type = params[:annotated]
+    @movement_annotation.attached_id = params[:attached_id]
   end
 
   # GET /movement_annotations/1/edit
@@ -108,7 +110,7 @@ class MovementAnnotationsController < ApplicationController
   def destroy
     @movement_annotation.destroy
     respond_to do |format|
-      format.html { redirect_to movement_annotations_url }
+      format.html { redirect_back_or_default }
       format.json { head :no_content }
     end
   end

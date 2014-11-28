@@ -115,7 +115,7 @@ class MovementGroupsController < ApplicationController
       license.write(preamble+@movement_group.project.license)
       z.put_next_entry("license.txt")
       z.print IO.read(open(license))
-      @movement_group.data_tracks.each do |track|
+      @movement_group.data_tracks.where(public: true).each do |track|
         title = track.asset.file_file_name
         z.put_next_entry("tracks/#{title}")
         url = track.asset.file.path

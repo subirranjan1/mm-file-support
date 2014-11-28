@@ -1,18 +1,12 @@
 <% provide(:title, "Annotation #{@movement_annotation.name}") %>
-<p id="notice"><%= notice %></p>
-
+<h2><%= @movement_annotation.name %><% if authorized? @movement_annotation %> <small><%= link_to edit_link_html('Edit'), edit_movement_annotation_path(@movement_annotation) %></small><% end %></h2>
 <p>
-  <strong>Name:</strong>
-  <%= @movement_annotation.name %>
-</p>
-
-<p>
-  <strong>Description:</strong>
   <%= @movement_annotation.description %>
 </p>
 <p>
   <strong>Format:</strong>
-  <%= @movement_annotation.format %>
+	<p><%= @movement_annotation.format %>
+  <% if @movement_annotation.format.blank? %>No additional info provided.<% end %></p>
 </p>
 <% if ! @movement_annotation.tags.empty? -%>
   <p>
@@ -24,9 +18,12 @@
 <% else -%>
  <p>No tags yet</p>
 <% end -%>
-<p>
-  <strong>Public? </strong>
-  <%= @movement_annotation.public %>
-</p>
-<%= link_to 'Edit', edit_movement_annotation_path(@movement_annotation) %> |
-<%= link_to 'Back', movement_annotations_path %>
+<p><em>Notice to owner: <% if @movement_annotation.public? %>
+	 This project is visible to everyone.
+	 <% else %>
+	 This project can only be seen by its creator and approved access groups.
+	 <% end %></em></p>
+
+<%= link_to link_html("Download", @movement_annotation.asset.file_file_name), @movement_annotation.asset.file.url(:original, false) %> (<%= 		@movement_annotation.asset.file_content_type %>)
+<br/>
+<%= link_to back_link_html('Return'), @movement_annotation.attached %>
