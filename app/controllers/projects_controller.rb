@@ -1,5 +1,5 @@
 class ProjectsController < ApplicationController
-  before_action :set_project, only: [:show, :edit, :update, :destroy]
+  before_action :set_project, only: [:show, :edit, :update, :destroy, :export]
   before_filter :ensure_logged_in, except: [:index, :show]
   before_filter ->(param=@project) { ensure_owner param }, only: %w{destroy}
   before_filter ->(param=@project) { ensure_authorized param }, only: %w{edit update}
@@ -111,13 +111,14 @@ class ProjectsController < ApplicationController
       #TODO: add license and readme with some meta info
       license = Tempfile.new("license-#{Time.now}")
       preamble = "Thanks for downloading from the m+m movement database at http://db.mplusm.ca. Here are the licensing terms.\n"
-      license.write(preamble+@movement_group.project.license)
-      z.put_next_entry("/project-#{@project.name}/license.txt")
+      license.write(preamble+@project.license)
+      z.put_next_entry("project-#{@project.name}/license.txt")
       z.print IO.read(open(license))
       @project.movement_groups.where(public: true).each do |group|
         group.data_tracks.where(public: true).each do |track|
           title = track.asset.file_file_name
-          z.put_next_entry("/take-#{group.name}/#{title}")
+          temp_filename = sanitize_filename("project-#{@project.name}/take-#{group.name}/track-#{track.name}/#{title}")
+          z.put_next_entry(temp_filename)
           url = track.asset.file.path
           url_data = open(url)
           z.print IO.read(url_data)
@@ -140,6 +141,17 @@ class ProjectsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def project_params
       params.require(:project).permit(:name, :description, :tag_list, :public, :license, :mover_ids => [])
+    end
+    
+    def sanitize_filename(filename)
+      return filename.strip do |name|
+       # NOTE: File.basename doesn't work right with Windows paths on Unix
+       # get only the filename, not the whole path
+       name.gsub!(/^.*(\\|\/)/, '')
+
+       # Strip out the non-ascii character
+       name.gsub!(/[^0-9A-Za-z.\-]/, '_')
+      end
     end
       
 end

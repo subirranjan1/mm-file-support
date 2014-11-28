@@ -53,7 +53,7 @@
 <div class="row">
   <div class="col-xs-6">
 	View project in Mova (Coming Soon)<br/>
-	Download zip of project (Coming Soon)
+	<%= link_to link_html("download-alt", "Download this take"), controller: "projects", action: "export", id: @project.id unless @project.movement_groups.where(public: true).empty? %>	
 	</div>
 	<div class="col-xs-6">
 		<h5>Attached Files</h5>

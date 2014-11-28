@@ -113,11 +113,12 @@ class MovementGroupsController < ApplicationController
       license = Tempfile.new("license-#{Time.now}")
       preamble = "Thanks for downloading from the m+m movement database at http://db.mplusm.ca. Here are the licensing terms.\n"
       license.write(preamble+@movement_group.project.license)
-      z.put_next_entry("/take-#{@movement_group.name}/license.txt")
+      z.put_next_entry("take-#{@movement_group.name}/license.txt")      
       z.print IO.read(open(license))
       @movement_group.data_tracks.where(public: true).each do |track|
         title = track.asset.file_file_name
-        z.put_next_entry("/take-#{@movement_group.name}/#{title}")
+        temp_filename = sanitize_filename("take-#{@movement_group.name}/track-#{track.name}/#{title}")
+        z.put_next_entry(temp_filename)
         url = track.asset.file.path
         url_data = open(url)
         z.print IO.read(url_data)
@@ -147,6 +148,17 @@ class MovementGroupsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def movement_group_params
       params.require(:movement_group).permit(:name, :description, :project_id, :tag_list, :public, :user_id, :mover_ids => [])
+    end
+    
+    def sanitize_filename(filename)
+      return filename.strip do |name|
+       # NOTE: File.basename doesn't work right with Windows paths on Unix
+       # get only the filename, not the whole path
+       name.gsub!(/^.*(\\|\/)/, '')
+
+       # Strip out the non-ascii character
+       name.gsub!(/[^0-9A-Za-z.\-]/, '_')
+      end
     end
       
 end
