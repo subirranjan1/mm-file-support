@@ -113,11 +113,11 @@ class MovementGroupsController < ApplicationController
       license = Tempfile.new("license-#{Time.now}")
       preamble = "Thanks for downloading from the m+m movement database at http://db.mplusm.ca. Here are the licensing terms.\n"
       license.write(preamble+@movement_group.project.license)
-      z.put_next_entry("license.txt")
+      z.put_next_entry("/take-#{@movement_group.name}/license.txt")
       z.print IO.read(open(license))
       @movement_group.data_tracks.where(public: true).each do |track|
         title = track.asset.file_file_name
-        z.put_next_entry("tracks/#{title}")
+        z.put_next_entry("/take-#{@movement_group.name}/#{title}")
         url = track.asset.file.path
         url_data = open(url)
         z.print IO.read(url_data)
@@ -126,7 +126,7 @@ class MovementGroupsController < ApplicationController
 
     send_file t.path, :type => 'application/zip',
       :disposition => 'attachment',
-      :filename => "mnm-db-movement-group-#{@movement_group.id}.zip"
+      :filename => "mnm-db-movement-group-#{@movement_group.name}.zip"
       t.close
   end
   

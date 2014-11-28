@@ -8,6 +8,7 @@ FileSupportMovingstories::Application.routes.draw do
   get "pages/about"
   get "pages/contact"
   get "pages/howto"  
+  get "projects/export"
   get "movement_groups/export"
   get '/data_tracks/provide', to: 'data_tracks#provide'
   post '/data_tracks/import', to: 'data_tracks#import'

@@ -23,9 +23,9 @@
 			No terms specified. Assume regular copyright in effect.
 			<% end %>
 		</p>		
+		<h5>Tags</h5>
 		<% if ! @movement_group.tags.empty? -%>
 		  <p>
-		    <strong>Tags:</strong>
 		    <% @movement_group.tags.each do |tag| %>
 		    	<%= link_to tag.name, tagged_url(:tag => tag.name) %>
 			<% end %>
@@ -60,6 +60,9 @@
 	</div>
 	<div class="col-xs-6">
 		<h5>Attached Files</h5>
+		<% if current_user %>
+			<%= link_to link_html("paperclip", "Attach a file"), new_movement_annotation_path(attached_id: @movement_group.id, annotated: MovementGroup) %>
+		<% end %>		
 		<% unless @movement_group.movement_annotations.empty? %>
 			<ul>
 			<% @movement_group.movement_annotations.where(public: true).each do |annotation| %>
@@ -83,12 +86,7 @@
 		<% end %>
 		<% if @movement_group.movement_annotations.where(public: true).empty? %>
 			<p>No annotations available.</p>
-		<% end %>
-		
-
-		<% if current_user %>
-		<%= link_to link_html("paperclip", "Attach a file"), new_movement_annotation_path(attached_id: @movement_group.id, annotated: MovementGroup) %>
-		<% end %>		
+		<% end %>	
 	</div>
 </div>
 <% if @movement_group.data_tracks.empty? %>

@@ -36,7 +36,6 @@
 		<h5>Tags</h5>
 		<% if ! @data_track.tags.empty? -%>
 		  <p>
-		    <strong>Tags:</strong>
 		    <% @data_track.tags.each do |tag| %>
 		    	<%= link_to tag.name, tagged_url(:tag => tag.name) %>
 			<% end %>

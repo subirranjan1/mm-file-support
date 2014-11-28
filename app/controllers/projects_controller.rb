@@ -105,6 +105,32 @@ class ProjectsController < ApplicationController
     end
   end
 
+  def export
+    t = Tempfile.new("temp-group-package-#{Time.now}")
+    Zip::OutputStream.open(t.path) do |z|
+      #TODO: add license and readme with some meta info
+      license = Tempfile.new("license-#{Time.now}")
+      preamble = "Thanks for downloading from the m+m movement database at http://db.mplusm.ca. Here are the licensing terms.\n"
+      license.write(preamble+@movement_group.project.license)
+      z.put_next_entry("/project-#{@project.name}/license.txt")
+      z.print IO.read(open(license))
+      @project.movement_groups.where(public: true).each do |group|
+        group.data_tracks.where(public: true).each do |track|
+          title = track.asset.file_file_name
+          z.put_next_entry("/take-#{group.name}/#{title}")
+          url = track.asset.file.path
+          url_data = open(url)
+          z.print IO.read(url_data)
+        end
+      end  
+    end
+
+    send_file t.path, :type => 'application/zip',
+      :disposition => 'attachment',
+      :filename => "mnm-db-project-#{@project.name}.zip"
+      t.close
+  end
+  
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_project

@@ -1,29 +1,34 @@
 <% provide(:title, "Mover: #{@mover.name}") %>
 <h2><%= @mover.name %><% if current_user %> <small><%= link_to edit_link_html('Edit'), edit_mover_path(@mover) %></small><% end %></h2>
-<%= image_tag(@mover.avatar.url(:medium)) if @mover.avatar? %>
-<p>
-  <strong>Date of birth:</strong>
-  <%= @mover.dob %>
-</p>
+<div class="row">
+  <div class="col-xs-6">
+		<%= image_tag(@mover.avatar.url(:medium)) if @mover.avatar? %>
+	</div>
+  <div class="col-xs-6">	
+	<p>
+	  <strong>Date of birth:</strong>
+	  <%= @mover.dob %>
+	</p>
 
-<p>
-  <strong>Gender:</strong>
-  <%= @mover.gender %>
-</p>
+	<p>
+	  <strong>Gender:</strong>
+	  <%= @mover.gender %>
+	</p>
 
-<p>
-  <strong>Expertise:</strong>
-  <%= @mover.expertise %>
-</p>
+	<p>
+	  <strong>Expertise:</strong>
+	  <%= @mover.expertise %>
+	</p>
 
-<p>
-This mover IS <%= 'NOT' unless @mover.cma_like_training? %> trained in CMA or an equivalent.
-</p>
+	<p>
+	This mover IS <%= 'NOT' unless @mover.cma_like_training? %> trained in CMA or an equivalent.
+	</p>
 
-<p>
-  <strong>Other training:</strong>
-  <%= @mover.other_training %>
-</p>
-
+	<p>
+	  <strong>Other training:</strong>
+	  <%= @mover.other_training %>
+	</p>
+	</div>
+</div>	
 
 <%= link_to back_link_html('Return to list of movers'), movers_path %>
