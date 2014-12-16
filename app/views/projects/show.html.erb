@@ -97,7 +97,7 @@
 	<% project_counter ||= 1%>
 	<h5>Movement Takes <small><%= link_to add_link_html("Add new take"), new_movement_group_path(project_id: @project.id) %></small></h5>
 	<div class="panel-group" id="accordion<%=project_counter%>">
-		<%= render partial: 'take', collection: @project.movement_groups %>
+		<%= render partial: 'take', collection: @project.movement_groups.select {|g| g.is_accessible_by?(@current_user) or g.public?} %>
 	</div>
 <% end %>
 

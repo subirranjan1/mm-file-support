@@ -113,7 +113,7 @@
 			</tr>
 		</thead>
 		<tbody>
-		<% @movement_group.data_tracks.each do |track| %>
+		<% @movement_group.data_tracks.select {|track| track.is_accessible_by?(@current_user) or track.public?}.each do |track| %>
 			<tr>
 				<td><%= link_to truncate(track.name, length: 50), track %> 
 					<span class="pull-right">

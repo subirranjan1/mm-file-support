@@ -18,9 +18,14 @@
     <% @data_tracks.each do |track| %>
       <tr>
         <td><%= link_to truncate(track.name, length: 40), data_track_path(track) %> <%= render partial: "owner_options", locals: { track: track} if authorized?(track)%></td>
-				<td><%= link_to truncate(track.movement_group.name, length: 25), movement_group_path(track.movement_group) %><span style="float:right">
-				<%= link_to 'Mova!', mova_url + "group_id=#{track.movement_group.id}"%>
-				</span></td>
+				<td>
+					<% if track.movement_group.is_accessible_by?(@current_user) or track.movement_group.public? %>
+						<%= link_to truncate(track.movement_group.name, length: 25), movement_group_path(track.movement_group) %><span style="float:right">
+						<%= link_to 'Mova!', mova_url + "group_id=#{track.movement_group.id}"%></span>
+					<% else %>
+						<%= truncate(track.movement_group.name, length: 25)%>
+					<% end %>
+				</td>
 				<td><%= raw(track.sensor_types.map{|type| link_to(type.name, sensor_type_path(type)) }.join(", "))%></td>
 				<td><%= raw(track.movers.map{|mover| link_to(mover.name, mover_path(mover)) }.join(", ")) %></td>
 				<td><%= truncate(track.technician, length: 20) %></td>

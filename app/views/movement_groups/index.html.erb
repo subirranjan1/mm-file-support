@@ -18,8 +18,8 @@
       <tr>
         <td><%= movement_group.name %></td>
         <td><%= truncate(movement_group.description, length: 30) %></td>
-		<td><%= link_to movement_group.project.name, project_path(movement_group.project) %></td>
-		<td><%= movement_group.tag_list %></td>
+				<td><%= link_to movement_group.project.name, project_path(movement_group.project) %></td>
+				<td><%= movement_group.tag_list %></td>
         <td><%= link_to 'Show', movement_group %></td>
         <td><%= link_to 'Edit', edit_movement_group_path(movement_group) %></td>
         <td><%= link_to 'Destroy', movement_group, method: :delete, data: { confirm: 'Are you sure?' } %></td>
