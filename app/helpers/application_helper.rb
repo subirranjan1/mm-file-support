@@ -10,12 +10,13 @@ module ApplicationHelper
   end
   
   def authorized?(object)
-    current_user and current_user_authorized_to_access? object
+    current_user and object.is_accessible_by? current_user
+    #current_user_authorized_to_access? object
   end
   
-  def current_user_authorized_to_access?(object)
-    object.owner == current_user
-  end
+  # def current_user_authorized_to_access?(object)
+  #   object.owner == current_user
+  # end
   
   # relies on sending type with a string that matches to a glyphicon class
   def link_html(type, text = '')

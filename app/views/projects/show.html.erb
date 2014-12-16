@@ -54,7 +54,7 @@
   <div class="col-xs-6">
 		View project in Mova (Coming Soon)<br/>
 		<%= link_to link_html("download-alt", "Download this project"), controller: "projects", action: "export", id: @project.id unless @project.movement_groups.where(public: true).empty? %>	<br/>
-		Project owned by <%= @project.owner.alias %><br/>
+		Project owned by <%= @project.owner.display_name %><br/>
 		<%= image_tag(@project.owner.avatar.url(:thumb)) if @project.owner.avatar?%>
 	</div>
 	<div class="col-xs-6">
