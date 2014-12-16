@@ -23,10 +23,10 @@ class ProjectsController < ApplicationController
   error 401, "The user you attempted authentication with cannot be authenticated"      
   def index
     @projects = Project.search(params[:search]).order(:name)
-    if @current_user
-      @projects.select! { |project| project.is_accessible_by?(current_user) }
+    if current_user
+      @projects = @projects.select { |project| project.is_accessible_by?(@current_user) or project.public?}
     else
-      @projects.select! { |project| project.public? }
+      @projects = @projects.select { |project| project.public? }
     end    
   end
 
