@@ -18,6 +18,11 @@ class DataTrack < ActiveRecord::Base
       all
     end
   end
+  
+  # provide a slightly nicer url for referencing individual items
+  def to_param
+    [id, name.parameterize].join("-")
+  end  
     
   def is_accessible_by?(user)
     owner == user or movement_group.is_accessible_by? user

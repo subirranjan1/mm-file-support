@@ -56,6 +56,8 @@
 		<p>
 			<%= link_to link_html("picture", "View take in Mova"), mova_url + "group_id=#{@movement_group.id}"%><br/>
 			<%= link_to link_html("download-alt", "Download this take"), controller: "movement_groups", action: "export", id: @movement_group.id unless @movement_group.data_tracks.where(public: true).empty? %>			
+			Project owned by <%= @movement_group.owner.alias %><br/>
+			<%= image_tag(@movement_group.owner.avatar.url(:thumb)) if @movement_group.owner.avatar?%>			
 		</p>
 	</div>
 	<div class="col-xs-6">

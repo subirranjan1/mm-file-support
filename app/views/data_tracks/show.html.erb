@@ -72,6 +72,10 @@
 				<%= link_to link_html("picture", "View in Mova"), mova_url + "group_id=#{@data_track.movement_group.id}"%>
 		</p>		
 		<% end %>	
+		<% if @data_track.owner %>
+			Project owned by <%= @data_track.owner.alias %><br/>
+			<%= image_tag(@data_track.owner.avatar.url(:thumb)) if @data_track.owner.avatar?%>		
+		<% end %>
 	</div>
   <div class="col-xs-6">
   	<h5>Attached Files</h5>

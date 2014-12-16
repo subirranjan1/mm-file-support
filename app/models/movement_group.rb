@@ -16,4 +16,9 @@ class MovementGroup < ActiveRecord::Base
   def public_data_tracks
     data_tracks.where(public: true)
   end
+  
+  # provide a slightly nicer url for referencing individual items
+  def to_param
+    [id, name.parameterize].join("-")
+  end
 end

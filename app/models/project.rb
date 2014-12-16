@@ -13,6 +13,11 @@ class Project < ActiveRecord::Base
     owner == user or user_in_access_groups? user
   end
   
+  # provide a slightly nicer url for referencing individual items
+  def to_param
+    [id, name.parameterize].join("-")
+  end
+  
   # uses SQL like to determine if the name or preview text matches the search term
   def self.search(search)
     if search

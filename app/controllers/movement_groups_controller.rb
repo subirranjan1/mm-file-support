@@ -1,4 +1,3 @@
-require 'rubygems'
 require 'zip'
 class MovementGroupsController < ApplicationController
   before_action :set_movement_group, only: [:show, :edit, :update, :destroy, :export]
@@ -6,10 +5,7 @@ class MovementGroupsController < ApplicationController
   before_filter ->(param=@movement_group) { ensure_owner param }, only: %w{destroy}
   before_filter ->(param=@movement_group) { ensure_authorized param }, only: %w{edit update}
   before_filter ->(param=@movement_group) { ensure_public_or_authorized param }, only: %w{show}
-  # require 'rubyzip'
-  # require 'zip'
-  # require "open-uri"
-  
+
   def_param_group :movement_group do
     param :movement_group, Hash, :required => true, :action_aware => true do
       param :name, String, "Name of the movement group (take)", :required => true
