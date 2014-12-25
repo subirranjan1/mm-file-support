@@ -54,8 +54,8 @@
 <div class="row">
   <div class="col-xs-6">
 		<p>
-			<%= link_to link_html("picture", "View take in Mova"), mova_url + "group_id=#{@movement_group.id}"%><br/>
-			<%= link_to link_html("download-alt", "Download this take"), controller: "movement_groups", action: "export", id: @movement_group.id unless @movement_group.takes.where(public: true).empty? %>		<br/>	
+			<%= link_to link_html("picture", "View movement group in Mova"), mova_url + "group_id=#{@movement_group.id}"%><br/>
+			<%= link_to link_html("download-alt", "Download this movement group"), controller: "movement_groups", action: "export", id: @movement_group.id unless @movement_group.takes.where(public: true).empty? %>		<br/>	
 			Movement group owned by <%= mail_to(@movement_group.owner.email, @movement_group.owner.display_name) %><br/>
 			<%= image_tag(@movement_group.owner.avatar.url(:thumb)) if @movement_group.owner.avatar?%>			
 		</p>

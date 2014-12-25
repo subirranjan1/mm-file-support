@@ -93,18 +93,20 @@ class TakesController < ApplicationController
     end
   end
   
-  # api :GET, "/takes/export/:id", "Retrieve a zip of all associated files"
+  api :GET, "/takes/export/:id.json", "Retrieve a zip of indicated take with all associated data tracks and attached files (public only)"
+  param :id, String, "Primary key ID of the take in question", :required => true
+  error 404, "A take could not be found with the requested id."
   def export
     t = Tempfile.new("temp-take-package-#{Time.now}")
+    take_dir = sanitize_filename("take-#{@take.name}")    
     Zip::OutputStream.open(t.path) do |z|
       #TODO: add license and readme with some meta info
       license = Tempfile.new("license-#{Time.now}")
       preamble = "Thanks for downloading from the m+m movement database at http://db.mplusm.ca. Here are the licensing terms.\n"
-      license.write(preamble+@take.project.license)
-      take_dir = sanitize_filename("take-#{take.name}")
+      license.write(preamble+@take.movement_group.project.license)
       z.put_next_entry("#{take_dir}/license.txt")      
       z.print IO.read(open(license))
-      take.data_tracks.where(public: true).each do |track|
+      @take.data_tracks.where(public: true).each do |track|
         title = track.asset.file_file_name
         temp_filename = sanitize_filename("#{take_dir}/track-#{track.name}/#{title}")
         z.put_next_entry(temp_filename)
@@ -113,6 +115,11 @@ class TakesController < ApplicationController
         z.print IO.read(url_data)
       end
     end
+    
+    send_file t.path, :type => 'application/zip',
+      :disposition => 'attachment',
+      :filename => "mnm-db-take-#{take_dir}.zip"
+      t.close
   end
   # DELETE /takes/1
   # DELETE /takes/1.json

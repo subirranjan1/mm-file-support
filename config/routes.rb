@@ -1,6 +1,4 @@
 FileSupportMovingstories::Application.routes.draw do
-  resources :takes
-
   root 'projects#index'
   get '/404' => 'errors#not_found'
   get '/500' => 'errors#internal_error'
@@ -16,6 +14,10 @@ FileSupportMovingstories::Application.routes.draw do
   get "log_out" => "sessions#destroy", :as => "log_out"
   get "log_in" => "sessions#new", :as => "log_in"
   get "sign_up" => "users#new", :as => "sign_up"
+  #export routes need to be above the resources 
+  get "projects/export"
+  get "movement_groups/export"
+  get "takes/export"
   resources :sensor_types
   resources :movers
   resources :access_groups
@@ -23,12 +25,10 @@ FileSupportMovingstories::Application.routes.draw do
   resources :data_tracks
   resources :movement_groups
   resources :projects
+  resources :takes  
   resources :users, except: [:index]
   resources :sessions, only: [:new, :create, :destroy]
-  resources :password_resets, except: [:index]
-  get "projects/export"
-  get "movement_groups/export"
-  get "takes/export"  
+  resources :password_resets, except: [:index]  
   match 'tagged' => 'movement_groups#tagged', :via => [:get], :as => 'tagged'
  
   # The priority is based upon order of creation: first created -> highest priority.

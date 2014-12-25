@@ -106,15 +106,18 @@ class MovementGroupsController < ApplicationController
       format.json { head :no_content }
     end
   end
-    
+  
+  api :GET, "/movement_groups/export/:id.json", "Retrieve a zip of indicated movement group with all associated takes, data tracks, and attached files (public only)"
+  param :id, String, "Primary key ID of the movement group in question", :required => true
+  error 404, "A movement group could not be found with the requested id."    
   def export
     t = Tempfile.new("temp-group-package-#{Time.now}")
+    group_dir = sanitize_filename("group-#{@movement_group.name}")  
     Zip::OutputStream.open(t.path) do |z|
       #TODO: add license and readme with some meta info
       license = Tempfile.new("license-#{Time.now}")
       preamble = "Thanks for downloading from the m+m movement database at http://db.mplusm.ca. Here are the licensing terms.\n"
       license.write(preamble+@movement_group.project.license)
-      group_dir = sanitize_filename("group-#{@movement_group.name}")
       z.put_next_entry("#{group_dir}/license.txt")      
       z.print IO.read(open(license))
       @movement_group.takes.where(public: true).each do |take|
@@ -133,7 +136,7 @@ class MovementGroupsController < ApplicationController
 
     send_file t.path, :type => 'application/zip',
       :disposition => 'attachment',
-      :filename => "mnm-db-movement-#{group_dir}.zip"
+      :filename => "mnm-db-group-#{group_dir}.zip"
       t.close
   end
   

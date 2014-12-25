@@ -111,15 +111,18 @@ class ProjectsController < ApplicationController
     end
   end
 
+  api :GET, "/projects/export/:id.json", "Retrieve a zip of indicated projects with all associated groups, takes, and data tracks, with attached files (public only)"
+  param :id, String, "Primary key ID of the project in question", :required => true
+  error 404, "A project could not be found with the requested id."
   def export
     t = Tempfile.new("temp-project-package-#{Time.now}")
+    project_dir = sanitize_filename("project-#{@project.name}")          
     Zip::OutputStream.open(t.path) do |z|
       #TODO: add license and readme with some meta info
       license = Tempfile.new("license-#{Time.now}")
       preamble = "Thanks for downloading from the m+m movement database at http://db.mplusm.ca. Here are the licensing terms.\n"
       license.write(preamble+@project.license)
-      project_dir = sanitize_filename("project-#{@project.name}")      
-      z.put_next_entry("#{project_Dir}/license.txt")
+      z.put_next_entry("#{project_dir}/license.txt")
       z.print IO.read(open(license))
       @project.movement_groups.where(public: true).each do |group|
         group_dir = sanitize_filename("group-#{group.name}")
