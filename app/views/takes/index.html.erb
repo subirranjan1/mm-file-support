@@ -1,0 +1,35 @@
+<h1>Listing takes</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Movement Group</th>
+      <th>Public</th>
+      <th>User</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @takes.each do |take| %>
+      <tr>
+        <td><%= take.name %></td>
+        <td><%= take.description %></td>
+        <td><%= take.movement_group %></td>
+        <td><%= take.public %></td>
+        <td><%= take.owner %></td>
+        <td><%= link_to 'Show', take %></td>
+        <td><%= link_to 'Edit', edit_take_path(take) %></td>
+        <td><%= link_to 'Destroy', take, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Take', new_take_path %>

@@ -49,15 +49,15 @@ class DataTracksController < ApplicationController
   # GET /data_tracks/new
   def new
     @data_track = DataTrack.new  
-    @data_track.movement_group_id = params[:movement_group_id]  
-    @data_track.movers = @data_track.movement_group.movers
-    @movement_groups = MovementGroup.all
+    @data_track.take_id = params[:take_id]  
+    @data_track.movers = @data_track.take.movers
+    @takes = Take.all
     @sensor_types = SensorType.all  
   end
 
   # GET /data_tracks/1/edit
   def edit
-    @movement_groups = MovementGroup.all
+    @takes = Take.all
     @sensor_types = SensorType.all    
   end
 

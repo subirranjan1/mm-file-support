@@ -12,6 +12,7 @@ class ProjectsController < ApplicationController
       param :description, String, "Description of the Data Track", :required => true      
       param :public, ["0", "1"], "Should this project be accessible to the public? (Default: false)"
       param :mover_ids, Array, "Foreign key IDs of related Movers"     
+      param :sensor_type_ids, Array, "Foreign key IDs of the associated sensor types"            
       param :license, String, "Relevant licensing information including a link if possible"     
     end
   end
@@ -49,10 +50,12 @@ class ProjectsController < ApplicationController
   # GET /projects/new
   def new
     @project = Project.new
+    @sensor_types = SensorType.all      
   end
 
   # GET /projects/1/edit
   def edit
+    @sensor_types = SensorType.all      
   end
 
   # POST /projects
@@ -64,6 +67,7 @@ class ProjectsController < ApplicationController
   def create
     @project = Project.new(project_params)
     @project.owner = current_user
+    @sensor_types = SensorType.all      
     respond_to do |format|
       if @project.save
         format.html { redirect_to({action: 'mine'}, notice: 'Project was successfully created.') }
@@ -82,6 +86,7 @@ class ProjectsController < ApplicationController
   error 401, "The user you attempted authentication with cannot be authenticated or is not set to have access to the project"  
   error 404, "A project could not be found with the requested id."    
   def update
+    @sensor_types = SensorType.all      
     respond_to do |format|
       if @project.update(project_params)
         format.html { redirect_to({action: 'mine'}, notice: 'Project was successfully updated.') }
@@ -107,29 +112,34 @@ class ProjectsController < ApplicationController
   end
 
   def export
-    t = Tempfile.new("temp-group-package-#{Time.now}")
+    t = Tempfile.new("temp-project-package-#{Time.now}")
     Zip::OutputStream.open(t.path) do |z|
       #TODO: add license and readme with some meta info
       license = Tempfile.new("license-#{Time.now}")
       preamble = "Thanks for downloading from the m+m movement database at http://db.mplusm.ca. Here are the licensing terms.\n"
       license.write(preamble+@project.license)
-      z.put_next_entry("project-#{@project.name}/license.txt")
+      project_dir = sanitize_filename("project-#{@project.name}")      
+      z.put_next_entry("#{project_Dir}/license.txt")
       z.print IO.read(open(license))
       @project.movement_groups.where(public: true).each do |group|
-        group.data_tracks.where(public: true).each do |track|
-          title = track.asset.file_file_name
-          temp_filename = sanitize_filename("project-#{@project.name}/take-#{group.name}/track-#{track.name}/#{title}")
-          z.put_next_entry(temp_filename)
-          url = track.asset.file.path
-          url_data = open(url)
-          z.print IO.read(url_data)
+        group_dir = sanitize_filename("group-#{group.name}")
+        group.takes.where(public: true).each do |take|
+          take_dir = sanitize_filename("take-#{take.name}")
+          take.data_tracks.where(public: true).each do |track|
+            title = track.asset.file_file_name
+            temp_filename = sanitize_filename("#{project_dir}/#{group_dir}/#{take_dir}track-#{track.name}/#{title}")
+            z.put_next_entry(temp_filename)
+            url = track.asset.file.path
+            url_data = open(url)
+            z.print IO.read(url_data)
+          end
         end
       end  
     end
 
     send_file t.path, :type => 'application/zip',
       :disposition => 'attachment',
-      :filename => "mnm-db-project-#{@project.name}.zip"
+      :filename => sanitize_filename("mnm-db-#{project_dir}.zip")
       t.close
   end
   
@@ -141,7 +151,7 @@ class ProjectsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def project_params
-      params.require(:project).permit(:name, :description, :tag_list, :public, :license, :mover_ids => [])
+      params.require(:project).permit(:name, :description, :tag_list, :public, :license, :sensor_type_ids => [], :mover_ids => [])
     end
     
     def sanitize_filename(filename)

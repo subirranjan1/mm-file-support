@@ -25,6 +25,11 @@
 		<em class="help-block">Hold the ctrl/cmd key while selecting names to choose more than one. These will be the default for any takes added to this take.</em>		
 	</div>
   <div class="field form-group">
+	<%= f.label :sensor_types, class: "control-label"%><br/>
+	<%= f.collection_select :sensor_type_ids, @sensor_types, :id, :name, {:include_blank => 'None'}, {:multiple => true} %>
+	<em class="help-block">Hold the ctrl/cmd key while selecting names to choose more than one.</em>
+  </div>	
+  <div class="field form-group">
     <%= f.label :license, class: "control-label" %><br>
     <%= f.text_area :license, size: "60x12", class: "form-control", placeholder: "Project licensing info" %>
 		<em class="help-block">This indicates with which license you're releasing this project's files under. Ranges from strict copyright to

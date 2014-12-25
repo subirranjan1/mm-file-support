@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  description: MyText
+  MovementGroup_id: 
+  public: false
+  User_id: 
+
+two:
+  name: MyString
+  description: MyText
+  MovementGroup_id: 
+  public: false
+  User_id: 

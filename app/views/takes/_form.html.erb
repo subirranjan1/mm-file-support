@@ -1,10 +1,10 @@
-<%= form_for(@movement_group) do |f| %>
-  <% if @movement_group.errors.any? %>
+<%= form_for(@take) do |f| %>
+  <% if @take.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(@movement_group.errors.count, "error") %> prohibited this movement take from being saved:</h2>
+      <h2><%= pluralize(@take.errors.count, "error") %> prohibited this take from being saved:</h2>
 
       <ul>
-      <% @movement_group.errors.full_messages.each do |msg| %>
+      <% @take.errors.full_messages.each do |msg| %>
         <li><%= msg %></li>
       <% end %>
       </ul>
@@ -40,8 +40,8 @@
 		<em class="help-block">Public pieces are published for everyone to see</em>
   </div>
   <div class="field form-group">
-		<%= f.label :project, class: "control-label" %>
-		<%= f.collection_select :project_id, @projects, :id, :name %>
+		<%= f.label :movement_group, class: "control-label" %>
+		<%= f.collection_select :movement_group_id, @movement_groups, :id, :name %>
 		<em class="help-block">Do not change this from the original unless you're correcting a mistake.</em>
   </div>
   <div class="actions">

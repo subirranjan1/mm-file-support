@@ -8,11 +8,12 @@ class MovementGroupsController < ApplicationController
 
   def_param_group :movement_group do
     param :movement_group, Hash, :required => true, :action_aware => true do
-      param :name, String, "Name of the movement group (take)", :required => true
+      param :name, String, "Name of the movement group", :required => true
       param :project_id, String, "Foreign key ID of the containing Project", :required => true      
-      param :description, String, "Description of the movement group (take)"
+      param :description, String, "Description of the movement group"
       param :public, ["0", "1"], "Should this data track be accessible to the public? (Default: false)"  
-      param :mover_ids, Array, "Foreign key IDs of related Movers"          
+      param :mover_ids, Array, "Foreign key IDs of related Movers"                
+      param :sensor_type_ids, Array, "Foreign key IDs of the associated sensor types"     
     end
   end
   # GET /movement_groups
@@ -42,11 +43,13 @@ class MovementGroupsController < ApplicationController
     @movement_group.project_id = params[:project_id]
     @movement_group.movers = @movement_group.project.movers
     @projects = Project.all
+    @sensor_types = SensorType.all      
   end
 
   # GET /movement_groups/1/edit
   def edit
     @projects = Project.all
+    @sensor_types = SensorType.all      
   end
 
   # POST /movement_groups
@@ -54,10 +57,11 @@ class MovementGroupsController < ApplicationController
   api :POST, "/movement_groups.json", "Create a movement group"
   param_group :movement_group
   error 401, "The user you attempted authentication with cannot be authenticated"  
-  error 422, "The parameters you passed were invalid and rendered the create attempt unprocessable"  
+  error 422, "The parameters you passed were invalid and rendered the creation attempt unprocessable"  
   def create
     @movement_group = MovementGroup.new(movement_group_params)
     @movement_group.owner = current_user
+    @sensor_types = SensorType.all      
     respond_to do |format|
       if @movement_group.save
         # format.html { redirect_to @movement_group, notice: 'Movement group was successfully created.' }
@@ -78,6 +82,7 @@ class MovementGroupsController < ApplicationController
   error 404, "A movement group could not be found with the requested id."  
   def update
     @projects = Project.all
+    @sensor_types = SensorType.all      
     respond_to do |format|
       if @movement_group.update(movement_group_params)
         format.html { redirect_to @movement_group, notice: 'Movement group was successfully updated.' }
@@ -109,21 +114,26 @@ class MovementGroupsController < ApplicationController
       license = Tempfile.new("license-#{Time.now}")
       preamble = "Thanks for downloading from the m+m movement database at http://db.mplusm.ca. Here are the licensing terms.\n"
       license.write(preamble+@movement_group.project.license)
-      z.put_next_entry("take-#{@movement_group.name}/license.txt")      
+      group_dir = sanitize_filename("group-#{@movement_group.name}")
+      z.put_next_entry("#{group_dir}/license.txt")      
       z.print IO.read(open(license))
-      @movement_group.data_tracks.where(public: true).each do |track|
-        title = track.asset.file_file_name
-        temp_filename = sanitize_filename("take-#{@movement_group.name}/track-#{track.name}/#{title}")
-        z.put_next_entry(temp_filename)
-        url = track.asset.file.path
-        url_data = open(url)
-        z.print IO.read(url_data)
+      @movement_group.takes.where(public: true).each do |take|
+        #TODO any additional take metadata file creation
+        take_dir = sanitize_filename("take-#{take.name}")
+        take.data_tracks.where(public: true).each do |track|
+          title = track.asset.file_file_name
+          temp_filename = sanitize_filename("#{group_dir}/#{take_dir}/track-#{track.name}/#{title}")
+          z.put_next_entry(temp_filename)
+          url = track.asset.file.path
+          url_data = open(url)
+          z.print IO.read(url_data)
+        end
       end
     end
 
     send_file t.path, :type => 'application/zip',
       :disposition => 'attachment',
-      :filename => "mnm-db-movement-group-#{@movement_group.name}.zip"
+      :filename => "mnm-db-movement-#{group_dir}.zip"
       t.close
   end
   
@@ -143,7 +153,7 @@ class MovementGroupsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def movement_group_params
-      params.require(:movement_group).permit(:name, :description, :project_id, :tag_list, :public, :user_id, :mover_ids => [])
+      params.require(:movement_group).permit(:name, :description, :project_id, :tag_list, :public, :user_id, :sensor_type_ids => [], :mover_ids => [])
     end
     
     def sanitize_filename(filename)

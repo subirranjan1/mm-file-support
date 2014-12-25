@@ -20,7 +20,7 @@ private
     base = ""
     if attachable.movement_group.exists?
       base = "#{attachable.movement_group.name}_#{base}"
-      if attachable.movproject.exists?
+      if attachable.project.exists?
         base = "#{attachable.movement_group.name}_#{base}"
       end
     end

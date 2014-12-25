@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141028171258) do
+ActiveRecord::Schema.define(version: 20141217194942) do
 
   create_table "access_groups", force: true do |t|
     t.string   "name"
@@ -43,14 +43,14 @@ ActiveRecord::Schema.define(version: 20141028171258) do
 
   create_table "data_tracks", force: true do |t|
     t.string   "name"
-    t.text     "description",       limit: 255
-    t.integer  "movement_group_id"
+    t.text     "description", limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "technician"
-    t.boolean  "public",                        default: false
+    t.boolean  "public",                  default: false
     t.integer  "user_id"
     t.date     "recorded_on"
+    t.integer  "take_id"
   end
 
   add_index "data_tracks", ["user_id"], name: "index_data_tracks_on_user_id"
@@ -122,6 +122,11 @@ ActiveRecord::Schema.define(version: 20141028171258) do
     t.integer "project_id", null: false
   end
 
+  create_table "movers_takes", id: false, force: true do |t|
+    t.integer "mover_id", null: false
+    t.integer "take_id",  null: false
+  end
+
   create_table "projects", force: true do |t|
     t.string   "name"
     t.datetime "created_at"
@@ -164,6 +169,19 @@ ActiveRecord::Schema.define(version: 20141028171258) do
   end
 
   add_index "tags", ["name"], name: "index_tags_on_name", unique: true
+
+  create_table "takes", force: true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "movement_group_id"
+    t.boolean  "public"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "takes", ["movement_group_id"], name: "index_takes_on_movement_group_id"
+  add_index "takes", ["user_id"], name: "index_takes_on_user_id"
 
   create_table "users", force: true do |t|
     t.string   "email"

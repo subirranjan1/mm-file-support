@@ -1,6 +1,4 @@
 <% provide(:title, 'Sensor') %>
-<p id="notice"><%= notice %></p>
-
 <h2><%= @sensor_type.name %><small><% if current_user %> <%= link_to edit_link_html('Edit'), edit_sensor_type_path(@sensor_type) %><% end %></small></h2>
 
 <p>

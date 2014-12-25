@@ -1,8 +1,9 @@
 <% provide(:title, "Track #{@data_track.name}") %>
 <ol class="breadcrumb">
-  <li><a href="/">Projects</a></li>
-	<li><%= link_to @data_track.movement_group.project.name, project_path(@data_track.movement_group.project) %></li>
-	<li><%= link_to @data_track.movement_group.name, movement_group_path(@data_track.movement_group) %></li>
+  <li><a href="/">All Projects</a></li>
+	<li><%= link_to @data_track.take.movement_group.project.name, project_path(@data_track.take.movement_group.project) %></li>
+	<li><%= link_to @data_track.take.movement_group.name, movement_group_path(@data_track.take.movement_group) %></li>
+	<li><%= link_to @data_track.take.name, take_path(@data_track.take) %></li>	
   <li class="active"><%= link_to @data_track.name, data_track_path(@data_track) %></li>
 </ol>
 <h2><%= @data_track.name %> <% if authorized?(@data_track) %><small><%= link_to edit_link_html('Edit'), edit_data_track_path(@data_track) %></small><% end %></h2>
@@ -21,8 +22,8 @@
 		</p>
 		<h5>License terms</h5>
 		<p>
-			<%= @data_track.movement_group.project.license %>
-			<% if @data_track.movement_group.project.license.blank? %>
+			<%= @data_track.take.movement_group.project.license %>
+			<% if @data_track.take.movement_group.project.license.blank? %>
 			No terms specified. Assume regular copyright in effect.
 			<% end %>
 		</p>
@@ -69,7 +70,7 @@
   <div class="col-xs-6">
 		<% unless @data_track.asset.nil? %>
 		<p><%= link_to link_html("download", @data_track.asset.file_file_name), @data_track.asset.file.url(:original, false) %> (<%= @data_track.asset.file_content_type %>)<br/>
-				<%= link_to link_html("picture", "View in Mova"), mova_url + "group_id=#{@data_track.movement_group.id}"%>
+				<%= link_to link_html("picture", "View in Mova"), mova_url + "take_id=#{@data_track.take.id}&track_id=#{@data_track.id}"%>
 		</p>		
 		<% end %>	
 		<% if @data_track.owner %>
@@ -108,4 +109,4 @@
 				<% end %>
 	</div>
 </div>
-<%= link_to back_link_html('Return to take details'), movement_group_path(@data_track.movement_group) %>
+<%= link_to back_link_html('Return to take details'), take_path(@data_track.take) %>

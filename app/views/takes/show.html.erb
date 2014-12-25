@@ -1,0 +1,140 @@
+<% provide(:title, "Movement Take: #{@take.name}") %>
+<ol class="breadcrumb">
+  <li><a href="/">All Projects</a></li>
+	<li><%= link_to @take.movement_group.project.name, project_path(@take.movement_group.project) %></li>
+	<li><%= link_to @take.movement_group.name, movement_group_path(@take.movement_group) %></li>
+	<li><%= link_to @take.name, take_path(@take) %></li>
+</ol>
+<h2><%= @take.name %> <% if authorized? @take %><small><%= link_to edit_link_html('Edit'), edit_take_path(@take) %><% end %></small></h2>
+<div class="row">
+  <div class="col-xs-6">
+		<% if authorized? @take %>
+			<p><span class="glyphicon glyphicon-exclamation-sign"></span> <em>Notice to owner: <% if @take.public? %>
+				 This take is visible to everyone.
+				 <% else %>
+				 This take can only be accessed by its creator and approved access groups.
+				 <% end %></em>
+			</p>
+		<% end %>	
+		<p><%= @take.description %></p>
+		<h5>License terms</h5>
+		<p>
+			<%= @take.movement_group.project.license %>
+			<% if @take.movement_group.project.license.blank? %>
+			No terms specified. Assume regular copyright in effect.
+			<% end %>
+		</p>		
+		<h5>Tags</h5>
+		<% if ! @take.tags.empty? -%>
+		  <p>
+		    <% @take.tags.each do |tag| %>
+		    	<%= link_to tag.name, tagged_url(:tag => tag.name) %>
+			<% end %>
+		  </p>
+		<% else -%>
+		 <p>No tags set.</p>
+		<% end -%>
+	
+	</div>
+  <div class="col-xs-6">
+		<% unless @take.movers.empty? %>
+		<h5>Default Movers</h5>
+		<ul class="horizontal-wrapped">
+			<% @takemovers.each do |mover| %>
+				<li><p>
+				<a href="<%= mover_url(mover) %>"><%= image_tag(mover.avatar.url(:thumb)) if mover.avatar? %><%= mover.name%></a>
+				</p></li>
+			<% end %>
+		</ul>
+		<% else %>
+		No default movers set.
+		<% end %>
+
+	</div>	
+</div>
+<div class="row">
+  <div class="col-xs-6">
+		<p>
+			<%= link_to link_html("picture", "View take in Mova"), mova_url + "take_id=#{@take.id}"%><br/>
+			<%= link_to link_html("download-alt", "Download this take"), controller: "takes", action: "export", id: @take.id unless @take.data_tracks.where(public: true).empty? %><br/>
+			Take owned by <%= mail_to(@take.owner.email, @take.owner.display_name) %><br/>
+			<%= image_tag(@take.owner.avatar.url(:thumb)) if @take.owner.avatar?%>			
+		</p>
+	</div>
+	<div class="col-xs-6">
+		<h5>Attached Files</h5>
+		<% if current_user %>
+			<%= link_to link_html("paperclip", "Attach a file"), new_movement_annotation_path(attached_id: @take.id, annotated: Take) %>
+		<% end %>		
+		<% unless @take.movement_annotations.empty? %>
+			<ul>
+			<% @take.movement_annotations.where(public: true).each do |annotation| %>
+				<li><%= link_to link_html("Download", annotation.asset.file_file_name), annotation.asset.file.url(:original, false) %> (<%= annotation.asset.file_content_type %>) 
+						<% if authorized?(annotation) %>
+							<small><%= link_to edit_link_html("Edit"), edit_movement_annotation_path(annotation) %> 
+							<%= link_to remove_link_html("Delete"), annotation, method: :delete, data: { confirm: 'Are you sure?' } %></small>
+						<% end %>
+					</li>
+			<% end %>
+			<% @take.movement_annotations.where(public:false ).each do |annotation| %>
+				<% if authorized?(annotation) %>
+					<li>
+						<%= link_to link_html("Download", annotation.asset.file_file_name), annotation.asset.file.url(:original, false) %> (<%= 		annotation.asset.file_content_type %>)						
+						<small><%= link_to edit_link_html("Edit"), edit_movement_annotation_path(annotation) %> 
+						<%= link_to remove_link_html("Delete"), annotation, method: :delete, data: { confirm: 'Are you sure?' } %></small>
+					</li>
+				<% end%>
+			<% end %>
+			</ul>
+		<% end %>
+		<% if @take.movement_annotations.where(public: true).empty? %>
+			<p>No annotations available.</p>
+		<% end %>	
+	</div>
+</div>
+<% if @take.data_tracks.empty? %>
+	<p>No associated data tracks yet. 
+		<% if authorized? @take %>
+			<small><%= link_to add_link_html("Add new track"), new_data_track_path(take_id: @take.id) %></small></p>
+		<% end %>
+<% else %>
+	<% data_track_counter ||= 1%>
+	<h5>Data Tracks <small><% if authorized? @take %><%= link_to add_link_html("Add new track"), new_data_track_path(take_id: @take.id) %></small><% end %></h5>
+
+	<div class="panel-group" id="accordion<%=data_track_counter%>">
+		<table class="table table-striped table-bordered" id="mytracks">
+		<thead>
+			<tr>
+				<th>File name</th>
+				<th>File type</th>
+				<th>Sensors</th>
+				<th>Movers</th>				
+				<th>Technician</th>
+				<th>Recorded on</th>
+			</tr>
+		</thead>
+		<tbody>
+		<% @take.data_tracks.select {|track| track.is_accessible_by?(@current_user) or track.public?}.each do |track| %>
+			<tr>
+				<td><%= link_to truncate(track.name, length: 50), track %> 
+					<span class="pull-right">
+				<% if authorized? track %>
+					<small><%= link_to edit_link_html, edit_data_track_path(track) %> <%= link_to remove_link_html, track, method: :delete, data: { confirm: 'Are you sure?' } %></small>
+				<% else %>	
+					<% unless track.asset.nil? %>
+						<%= link_to download_link_html("Download"), track.asset.file.url(:original, false)%>
+					<% end %>
+				</span></td>
+				<% end %>
+				<td><% unless track.asset.nil? %><%= track.asset.file_content_type %> (<%= File.extname(track.asset.file_file_name).downcase %>)<% else %>unknown<% end %></td>
+				<td><%= raw(track.sensor_types.map{|type| link_to(type.name, sensor_type_path(type)) }.join(", "))%></td>
+				<td><%= track.technician %></td>
+				<td><%= raw(track.movers.map{|m| link_to(m.name, mover_path(m)) }.join(", "))%></td>
+				<td><% unless track.recorded_on.nil? %><%= track.recorded_on %><% end %></td>							
+			</tr>
+		<% end %>
+		</tbody>
+	</table>
+	</div>
+<% end %>
+<%= link_to back_link_html('Return to movement group details'), movement_group_path(@take.movement_group) %>

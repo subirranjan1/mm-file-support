@@ -30,10 +30,12 @@ class Project < ActiveRecord::Base
   # the superset of all data_tracks movers -- this is different from the projects' movers which are the defaults for new groups
   def all_movers
     m = []
-    movement_groups.each do |group|
-      group.data_tracks.each do |track|
-        track.movers.each do |mover|
-        m << mover
+    movement_groups.where(public: true).each do |group|
+      group.takes.where(public: true).each do |take|
+        take.where(public: true).data_tracks.each do |track|
+          track.movers.each do |mover|
+          m << mover
+          end
         end
       end
     end

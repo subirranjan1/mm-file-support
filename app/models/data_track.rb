@@ -1,6 +1,6 @@
 require 'csv'
 class DataTrack < ActiveRecord::Base
-  belongs_to :movement_group
+  belongs_to :take
   has_one :asset, as: :attachable, dependent: :destroy
   has_many :movement_annotations, as: :attached
   has_and_belongs_to_many :movers, -> { distinct }
@@ -8,7 +8,7 @@ class DataTrack < ActiveRecord::Base
   has_and_belongs_to_many :sensor_types, -> { distinct }
   belongs_to :owner, class_name: "User", foreign_key: "user_id"
   validates :name, presence: true
-  validates :movement_group_id, presence: true
+  validates :take_id, presence: true
   
   # uses SQL like to determine if the name or preview text matches the search term
   def self.search(search)
@@ -25,9 +25,10 @@ class DataTrack < ActiveRecord::Base
   end  
     
   def is_accessible_by?(user)
-    owner == user or movement_group.is_accessible_by? user
+    owner == user or take.is_accessible_by? user
   end
   
+  #TODO: Add takes
   def self.import(file)
     CSV.foreach(file, headers: true, skip_blanks: true) do |row|
       owner_email = row['owner_email']

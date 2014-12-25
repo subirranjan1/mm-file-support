@@ -52,9 +52,9 @@
 </div>		
 <div class="row">
   <div class="col-xs-6">
-		View project in Mova (Coming Soon)<br/>
+		<%= link_to 'Mova!', mova_url + "project_id=#{@project.id}"%><br/>
 		<%= link_to link_html("download-alt", "Download this project"), controller: "projects", action: "export", id: @project.id unless @project.movement_groups.where(public: true).empty? %>	<br/>
-		Project owned by <%= @project.owner.display_name %><br/>
+		Project owned by <%= mail_to(@project.owner.email, @project.owner.display_name) %><br/>
 		<%= image_tag(@project.owner.avatar.url(:thumb)) if @project.owner.avatar?%>
 	</div>
 	<div class="col-xs-6">
@@ -95,9 +95,9 @@
 		<% end %>
 <% else %>
 	<% project_counter ||= 1%>
-	<h5>Movement Takes <small><%= link_to add_link_html("Add new take"), new_movement_group_path(project_id: @project.id) %></small></h5>
+	<h5>Movement Groups <small><%= link_to add_link_html("Add new group"), new_movement_group_path(project_id: @project.id) %></small></h5>
 	<div class="panel-group" id="accordion<%=project_counter%>">
-		<%= render partial: 'take', collection: @project.movement_groups.select {|g| g.is_accessible_by?(@current_user) or g.public?} %>
+		<%= render partial: 'group', collection: @project.movement_groups.order(:name).select {|g| g.public? or g.is_accessible_by?(@current_user) } %>
 	</div>
 <% end %>
 
