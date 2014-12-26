@@ -112,7 +112,7 @@
 			</tr>
 		</thead>
 		<tbody>
-		<% @movement_group.takes.each do |take| %>
+		<% @movement_group.accessible_and_public_takes(current_user).each do |take| %>
 			<tr>
 				<td><%= link_to truncate(take.name, length: 50), take_path(take)%> 
 					<span class="pull-right">

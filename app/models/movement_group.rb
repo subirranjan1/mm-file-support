@@ -13,8 +13,10 @@ class MovementGroup < ActiveRecord::Base
     owner == user or project.is_accessible_by? user
   end
   
-  def public_data_tracks
-    data_tracks.where(public: true)
+  def accessible_and_public_takes(user)
+    takes.order(:name).select do |take|
+      take.public? or take.is_accessible_by?(user)
+    end
   end
   
   # provide a slightly nicer url for referencing individual items

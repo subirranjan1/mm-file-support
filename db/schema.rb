@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141217194942) do
+ActiveRecord::Schema.define(version: 20141226211750) do
 
   create_table "access_groups", force: true do |t|
     t.string   "name"
@@ -149,6 +149,11 @@ ActiveRecord::Schema.define(version: 20141217194942) do
     t.string   "description"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "sensor_types_takes", id: false, force: true do |t|
+    t.integer "sensor_type_id", null: false
+    t.integer "take_id",        null: false
   end
 
   create_table "taggings", force: true do |t|

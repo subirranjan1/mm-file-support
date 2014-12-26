@@ -40,7 +40,7 @@
 		<% unless @take.movers.empty? %>
 		<h5>Default Movers</h5>
 		<ul class="horizontal-wrapped">
-			<% @takemovers.each do |mover| %>
+			<% @take.movers.each do |mover| %>
 				<li><p>
 				<a href="<%= mover_url(mover) %>"><%= image_tag(mover.avatar.url(:thumb)) if mover.avatar? %><%= mover.name%></a>
 				</p></li>
@@ -114,7 +114,7 @@
 			</tr>
 		</thead>
 		<tbody>
-		<% @take.data_tracks.select {|track| track.is_accessible_by?(@current_user) or track.public?}.each do |track| %>
+		<% @take.data_tracks.order(:name).select {|track| track.public? or track.is_accessible_by?(@current_user)}.each do |track| %>
 			<tr>
 				<td><%= link_to truncate(track.name, length: 50), track %> 
 					<span class="pull-right">

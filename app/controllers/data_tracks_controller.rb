@@ -31,7 +31,7 @@ class DataTracksController < ApplicationController
   def index
     @data_tracks = DataTrack.search(params[:search]).order(:name)
     if current_user
-      @data_tracks.select! { |data_track| data_track.is_accessible_by?(@current_user) or data_track.public? }
+      @data_tracks.select! { |data_track| data_track.public? or data_track.is_accessible_by?(@current_user)  }
     else
       @data_tracks.select! { |data_track| data_track.public? }
     end    
