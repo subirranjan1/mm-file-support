@@ -80,7 +80,7 @@ class DataTrack < ActiveRecord::Base
       
       take = Take.find_by_name(row['movement_take_name']) || Take.new(name: row['movement_take_name'])
       take.description = row['movement_take_desc']
-      take.project = project
+      take.movement_group = group
       take.owner = owner
       take.save!      
       mover_names = row['movement_take_default_mover_names'].split(",")
