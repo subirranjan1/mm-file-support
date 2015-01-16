@@ -49,7 +49,7 @@
 				<tbody>
 				<% group.takes.each do |take| %>
 					<tr>
-						<td><%= link_to truncate(take.name, length: 50), take_path(take)%> 
+						<td><%= link_to take_link_or_name(take)%> 
 							<span class="pull-right">
 								<%= link_to 'Mova!', mova_url + "take_id=#{take.id}"%>
 									<% if authorized? take %>

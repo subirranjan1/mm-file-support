@@ -11,13 +11,21 @@ module ProjectsHelper
     current_most
   end
   
-  def group_link_or_name(take)
+  def group_link_or_name(group)
+    if group.is_accessible_by?(@current_user) or group.public?
+      link_to(truncate(group.name, length: 20), movement_group_path(group)) 
+    else
+      truncate(group.name, length: 20)
+    end
+  end
+  
+  def take_link_or_name(take)
     if take.is_accessible_by?(@current_user) or take.public?
-      link_to(truncate(take.name, length: 20), movement_group_path(take)) 
+      link_to(truncate(take.name, length: 20), take_path(take)) 
     else
       truncate(take.name, length: 20)
     end
-  end
+  end  
   
   def mova_url
     #"http://www.sfu.ca/~oalemi/movan/"
