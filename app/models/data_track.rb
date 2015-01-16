@@ -41,7 +41,7 @@ class DataTrack < ActiveRecord::Base
         owner = User.create(email: row['owner_email'], password: random_password, password_confirmation: random_password)
         Mailer.forgot_password(owner, random_password).deliver
       end      
-      project = Project.find_by_name(row['project_name']) || Project.create(name: row['project_name'])
+      project = Project.find_by_name(row['project_name']) || Project.new(name: row['project_name'])
       project.owner = owner
       project.description = row['project_description']
       mover_names = row['project_default_mover_names'].split(",") 
@@ -60,12 +60,30 @@ class DataTrack < ActiveRecord::Base
         end        
       end
 
-      take = MovementGroup.find_by_name(row['movement_group_name']) || MovementGroup.create(name: row['movement_group_name'])
-      take.description = row['movement_group_desc']
+      group = MovementGroup.find_by_name(row['movement_group_name']) || MovementGroup.new(name: row['movement_group_name'])
+      group.description = row['movement_group_desc']
+      group.project = project
+      group.owner = owner
+      group.save!      
+      mover_names = row['movement_group_default_mover_names'].split(",")
+      if mover_names.empty?
+        group.movers = project.movers
+      else
+        mover_names.each do |name|
+          mover = Mover.find_by_name(name.strip) || Mover.new(name: name.strip)
+          unless group.movers.include?(mover)
+             group.movers << mover
+          end          
+        end
+      end
+      group.save!
+      
+      take = Take.find_by_name(row['movement_take_name']) || Take.new(name: row['movement_take_name'])
+      take.description = row['movement_take_desc']
       take.project = project
       take.owner = owner
       take.save!      
-      mover_names = row['movement_group_default_mover_names'].split(",")
+      mover_names = row['movement_take_default_mover_names'].split(",")
       if mover_names.empty?
         take.movers = project.movers
       else
@@ -76,10 +94,11 @@ class DataTrack < ActiveRecord::Base
           end          
         end
       end
-      take.save!
+      take.save!      
+      
       # DataTrack.find_by_name(row['data_track_name']) || 
       track = DataTrack.create(name: row['data_track_name'])
-      track.movement_group = take
+      track.take = take
       track.owner = owner
       track.recorded_on = row['data_track_recorded_on']
       track.description = row['data_track_desc']
