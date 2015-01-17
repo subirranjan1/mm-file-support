@@ -20,11 +20,13 @@
       <tr>
         <td><%= link_to truncate(track.name, length: 40), data_track_path(track) %> <%= render partial: "owner_options", locals: { track: track} if authorized?(track)%></td>
 				<td>
-					<% if !track.take.nil? and (track.take.public? or track.take.is_accessible_by?(@current_user)) %>
-						<%= link_to truncate(track.take.name, length: 25), take_path(track.take) %><span style="float:right">
-						<%= link_to 'Mova!', mova_url + "take_id=#{track.take.id}&track_id=#{track.id}"%></span>
-					<% else %>
-						<%= truncate(track.take.name, length: 25)%>
+					<% unless track.take.nil? %>
+				    <% if track.take.public? or track.take.is_accessible_by?(@current_user) %>
+							<%= link_to truncate(track.take.name, length: 25), take_path(track.take) %><span style="float:right">
+							<%= link_to 'Mova!', mova_url + "take_id=#{track.take.id}&track_id=#{track.id}"%></span>
+						<% else %>
+							<%= truncate(track.take.name, length: 25)%>
+						<% end %>
 					<% end %>
 				</td>
 				<td>
