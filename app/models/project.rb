@@ -32,7 +32,7 @@ class Project < ActiveRecord::Base
     m = []
     movement_groups.where(public: true).each do |group|
       group.takes.where(public: true).each do |take|
-        take.where(public: true).data_tracks.each do |track|
+        take.data_tracks.where(public: true).each do |track|
           track.movers.each do |mover|
           m << mover
           end
