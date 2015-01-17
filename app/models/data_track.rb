@@ -25,6 +25,7 @@ class DataTrack < ActiveRecord::Base
   end  
     
   def is_accessible_by?(user)
+    return false if take.nil?
     owner == user or take.is_accessible_by? user
   end
   
