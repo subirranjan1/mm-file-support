@@ -31,7 +31,7 @@
 				</td>
 				<td>
 					<% unless track.take.nil? %>
-						<% if track.take.movement_group.project.public? or track.take.movement_group.project.is_accessible_by?(@current_user)) %>
+						<% if track.take.movement_group.project.public? or track.take.movement_group.project.is_accessible_by?(@current_user) %>
 							<%= link_to truncate(track.take.movement_group.project.name, length: 25), project_path(track.take.movement_group.project) %>
 						<% else %>
 							<%= truncate(track.take.movement_group.project.name, length: 25)%>
