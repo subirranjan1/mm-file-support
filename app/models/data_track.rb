@@ -97,7 +97,7 @@ class DataTrack < ActiveRecord::Base
       take.save!      
       
       # DataTrack.find_by_name(row['data_track_name']) || 
-      track = DataTrack.create(name: row['data_track_name'])
+      track = DataTrack.find_by_name(row['data_track_name']) || DataTrack.create(name: row['data_track_name'])
       track.take = take
       track.owner = owner
       track.recorded_on = row['data_track_recorded_on']
