@@ -29,7 +29,6 @@ class DataTrack < ActiveRecord::Base
     owner == user or take.is_accessible_by? user
   end
   
-  #TODO: Add takes
   def self.import(file)
     CSV.foreach(file, headers: true, skip_blanks: true) do |row|
       owner_email = row['owner_email']
@@ -39,7 +38,7 @@ class DataTrack < ActiveRecord::Base
       unless owner = User.find_by_email(owner_email)
         random_password = Array.new(10).map { (65 + rand(58)).chr }.join
         random_password += "1$" # stupid kludge to make it accepted by the acceptable password regex
-        owner = User.create(email: row['owner_email'], password: random_password, password_confirmation: random_password)
+        owner = User.create(email: owner_email, password: random_password, password_confirmation: random_password)
         Mailer.forgot_password(owner, random_password).deliver
       end      
       project = Project.find_by_name(row['project_name']) || Project.new(name: row['project_name'])
@@ -86,7 +85,7 @@ class DataTrack < ActiveRecord::Base
       take.save!      
       mover_names = row['movement_take_default_mover_names'].split(",")
       if mover_names.empty?
-        take.movers = project.movers
+        take.movers = take.movement_group.movers
       else
         mover_names.each do |name|
           mover = Mover.find_by_name(name.strip) || Mover.new(name: name.strip)
