@@ -23,7 +23,7 @@ class ProjectsController < ApplicationController
   param :search, String, "A search parameter to refine terms"  
   error 401, "The user you attempted authentication with cannot be authenticated"      
   def index
-    @projects = Project.search(params[:search]).order(:name)
+    @projects = Project.includes(:owner, :sensor_types).search(params[:search]).order(:name)
     if current_user
       @projects = @projects.select { |project| project.is_accessible_by?(@current_user) or project.public?}
     else
@@ -122,6 +122,7 @@ class ProjectsController < ApplicationController
       license = Tempfile.new("license-#{Time.now}")
       preamble = "Thanks for downloading from the m+m movement database at http://db.mplusm.ca. Here are the licensing terms.\n"
       license.write(preamble+@project.license)
+      # include track back info and author info
       z.put_next_entry("#{project_dir}/license.txt")
       z.print IO.read(open(license))
       @project.movement_groups.where(public: true).each do |group|

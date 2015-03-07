@@ -44,3 +44,4 @@ gem 'apipie-rails'
 gem 'jquery-turbolinks'
 gem 'jquery-datatables-rails' #, github: 'rweng/jquery-datatables-rails'  
 gem 'rubyzip'
+gem "bullet", :group => "development"

@@ -15,7 +15,7 @@
     <% @projects.each do |project| %>
       <tr>
         <td><%= link_to truncate(project.name, length: 40), project_path(project) %> <%= render partial: "owner_options", locals: { project: project} if authorized?(project)%></td>
-				<td><%= raw(project.movement_groups.map{|group| group_link_or_name(group) }.join(", "))%></td>
+				<td><%= raw(project.movement_groups.includes(:owner).map{|group| group_link_or_name(group) }.join(", "))%></td>
 				<td><%= raw(project.sensor_types.map{|type| link_to(type.name, sensor_type_path(type)) }.join(", "))%></td>
 				<td><%= raw(project.all_movers.map{|mover| link_to(mover.name, mover_path(mover)) }.join(", "))%></td>
 				<td><%= project.tag_list %></td>

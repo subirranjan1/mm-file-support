@@ -35,6 +35,9 @@ GEM
     bootstrap-datepicker-rails (1.3.0.2)
       railties (>= 3.0)
     builder (3.1.4)
+    bullet (4.13.1)
+      activesupport (>= 3.0.0)
+      uniform_notifier (>= 1.6.0)
     capistrano (3.2.1)
       i18n
       rake (>= 10.0.0)
@@ -147,6 +150,7 @@ GEM
     uglifier (2.5.0)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
+    uniform_notifier (1.6.2)
 
 PLATFORMS
   ruby
@@ -156,6 +160,7 @@ DEPENDENCIES
   apipie-rails
   bcrypt (~> 3.1.7)
   bootstrap-datepicker-rails
+  bullet
   capistrano
   capistrano-rails
   coffee-rails (~> 4.0.0)

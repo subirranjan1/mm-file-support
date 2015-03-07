@@ -29,7 +29,7 @@ class DataTracksController < ApplicationController
   param :search, String, "A search parameter to refine terms"
   error 401, "The user you attempted authentication with cannot be authenticated"    
   def index
-    @data_tracks = DataTrack.search(params[:search]).order(:name)
+    @data_tracks = DataTrack.includes(:take, :owner, :sensor_types, :movers).search(params[:search]).order(:name)
     if current_user
       @data_tracks.select! { |data_track| data_track.public? or data_track.is_accessible_by?(@current_user)  }
     else

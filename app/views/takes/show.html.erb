@@ -114,7 +114,7 @@
 			</tr>
 		</thead>
 		<tbody>
-		<% @take.data_tracks.order(:name).select {|track| track.public? or track.is_accessible_by?(@current_user)}.each do |track| %>
+		<% @take.data_tracks.includes(:take, :owner, :asset, :sensor_types, :movers).order(:name).select {|track| track.public? or track.is_accessible_by?(@current_user)}.each do |track| %>
 			<tr>
 				<td><%= link_to truncate(track.name, length: 50), track %> 
 					<span class="pull-right">

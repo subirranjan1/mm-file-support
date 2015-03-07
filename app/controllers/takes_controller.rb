@@ -23,7 +23,7 @@ class TakesController < ApplicationController
   error 401, "The user you attempted authentication with cannot be authenticated"  
   def index
     if current_user
-      @takes = Take.select { |take| take.is_accessible_by?(@current_user) or take.public? }
+      @takes = Take.select { |take| take.includes(:take, :owner, :asset, :sensor_types, :movers).is_accessible_by?(@current_user) or take.public? }
     else
       @takes =Take.select { |take| take.public? }
     end    
