@@ -38,7 +38,7 @@ gem 'mysql', group: [:staging, :production]
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 gem 'i18n', '0.6.9'
-
+gem 'newrelic_rpm'
 gem 'bootstrap-datepicker-rails'
 gem 'apipie-rails'
 gem 'jquery-turbolinks'
