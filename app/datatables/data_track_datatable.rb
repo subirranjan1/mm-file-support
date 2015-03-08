@@ -26,7 +26,7 @@ class DataTrackDatatable < AjaxDatatablesRails::Base
 
   def get_raw_records
     # update later to include filtering
-    DataTrack.includes(:take, :sensor_types, :movers).references(:take, :sensor_types, :movers).distinct
+    DataTrack.all.includes(:take, :sensor_types, :movers).references(:take, :sensor_types, :movers).distinct
     # if @current_user
     #   @data_tracks.select! { |data_track| data_track.public? or data_track.is_accessible_by?(@current_user)  }
     # else
