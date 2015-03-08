@@ -43,5 +43,7 @@ gem 'bootstrap-datepicker-rails'
 gem 'apipie-rails'
 gem 'jquery-turbolinks'
 gem 'jquery-datatables-rails' #, github: 'rweng/jquery-datatables-rails'  
+gem 'ajax-datatables-rails'
+gem 'kaminari'
 gem 'rubyzip'
 gem "bullet", :group => "development"

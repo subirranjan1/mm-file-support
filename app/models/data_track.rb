@@ -19,6 +19,10 @@ class DataTrack < ActiveRecord::Base
     end
   end
   
+  def all_tags
+    tag_list
+  end
+  
   # provide a slightly nicer url for referencing individual items
   def to_param
     [id, name.parameterize].join("-")

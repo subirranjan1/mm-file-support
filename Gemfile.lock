@@ -28,6 +28,8 @@ GEM
     acts-as-taggable-on (3.2.3)
       actionpack (>= 3, < 5)
       activerecord (>= 3, < 5)
+    ajax-datatables-rails (0.3.0)
+      railties (>= 3.1)
     apipie-rails (0.2.6)
       json
     arel (4.0.2)
@@ -76,6 +78,9 @@ GEM
       railties (>= 3.1.0)
       turbolinks
     json (1.8.1)
+    kaminari (0.16.3)
+      actionpack (>= 3.0.0)
+      activesupport (>= 3.0.0)
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
@@ -86,6 +91,7 @@ GEM
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (2.9.1)
+    newrelic_rpm (3.9.3.241)
     paperclip (4.1.1)
       activemodel (>= 3.0.0)
       activesupport (>= 3.0.0)
@@ -157,6 +163,7 @@ PLATFORMS
 
 DEPENDENCIES
   acts-as-taggable-on
+  ajax-datatables-rails
   apipie-rails
   bcrypt (~> 3.1.7)
   bootstrap-datepicker-rails
@@ -169,7 +176,9 @@ DEPENDENCIES
   jquery-datatables-rails
   jquery-rails
   jquery-turbolinks
+  kaminari
   mysql
+  newrelic_rpm
   paperclip (~> 4.1.1)
   rails (= 4.0.3)
   rubyzip

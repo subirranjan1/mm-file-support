@@ -1,0 +1,27 @@
+<tr>
+  <td><%= link_to truncate(track.name, length: 40), data_track_path(track) %> <%= render partial: "owner_options", locals: { track: track} if authorized?(track)%></td>
+	<td>
+		<% unless track.take.nil? %>
+	    <% if track.take.public? or track.take.is_accessible_by?(@current_user) %>
+				<%= link_to truncate(track.take.name, length: 25), take_path(track.take) %><span style="float:right">
+				<%= link_to 'Mova!', mova_url + "take_id=#{track.take.id}&track_id=#{track.id}"%></span>
+			<% else %>
+				<%= truncate(track.take.name, length: 25)%>
+			<% end %>
+		<% end %>
+	</td>
+	<td>
+		<% unless track.take.nil? %>
+			<% if track.take.movement_group.project.public? or track.take.movement_group.project.is_accessible_by?(@current_user) %>
+				<%= link_to truncate(track.take.movement_group.project.name, length: 25), project_path(track.take.movement_group.project) %>
+			<% else %>
+				<%= truncate(track.take.movement_group.project.name, length: 25)%>
+			<% end %>		
+		<% end %>			
+	</td>
+	<td><%= raw(track.sensor_types.map{|type| link_to(type.name, sensor_type_path(type)) }.join(", "))%></td>
+	<td><%= raw(track.movers.map{|mover| link_to(mover.name, mover_path(mover)) }.join(", ")) %></td>
+	<td><%= truncate(track.technician, length: 20) %></td>
+	<td><%= track.recorded_on %></td>
+	<td><%= track.tag_list %></td>
+</tr>

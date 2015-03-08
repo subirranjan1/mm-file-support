@@ -88,10 +88,14 @@ class ApplicationController < ActionController::Base
   end
   
   def set_user_with_http_auth
-    if user = authenticate_or_request_with_http_basic{ |u, p| User.authenticate(u, p) }
-      @current_user = user
+    if params[:action].eql? 'index_data_tables'
+      @current_user ||= User.find_by_auth_token(cookies[:auth_token]) if cookies[:auth_token]
     else
-      render nothing: true, status: :unauthorized   
+      if user = authenticate_or_request_with_http_basic{ |u, p| User.authenticate(u, p) }
+        @current_user = user
+      else
+        render nothing: true, status: :unauthorized   
+      end
     end
   end  
   

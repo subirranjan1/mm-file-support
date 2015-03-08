@@ -1,6 +1,6 @@
 class DataTracksController < ApplicationController
   before_action :set_data_track, only: [:show, :edit, :update, :destroy]
-  before_filter :ensure_logged_in, except: [:index, :show]
+  before_filter :ensure_logged_in, except: [:index, :show, :index_data_tables]
   before_filter ->(param=@data_track) { ensure_owner param }, only: %w{destroy}
   before_filter ->(param=@data_track) { ensure_authorized param }, only: %w{edit update}
   before_filter ->(param=@data_track) { ensure_public_or_authorized param }, only: %w{show}
@@ -34,6 +34,21 @@ class DataTracksController < ApplicationController
       @data_tracks.select! { |data_track| data_track.public? or data_track.is_accessible_by?(@current_user)  }
     else
       @data_tracks.select! { |data_track| data_track.public? }
+    end    
+  end
+  
+  def index_data_tables
+    # @data_tracks = DataTrack.includes(:take, :owner, :sensor_types, :movers)
+    # if @current_user
+    #   @data_tracks.select! { |data_track| data_track.public? or data_track.is_accessible_by?(@current_user)  }
+    # else
+    #   @data_tracks.select! { |data_track| data_track.public? }
+    # end    
+    # respond_to do |format|
+    #   format.json { render json: { :data => @data_tracks.map(&:attributes) }}
+    # end
+    respond_to do |format|
+      format.json { render json: DataTrackDatatable.new(view_context)}
     end    
   end
 
