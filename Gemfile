@@ -28,12 +28,8 @@ gem 'bcrypt', '~> 3.1.7', :require => true
 gem 'acts-as-taggable-on'
 # Use unicorn as the app server
 # gem 'unicorn'
-
 # Use Capistrano for deployment
-gem 'capistrano', group: :development
 gem 'capistrano-rails'
-# Use sqlite3 as the database for Active Record
-gem 'sqlite3', group: :development
 gem 'mysql', group: [:staging, :production]
 # Use debugger
 # gem 'debugger', group: [:development, :test]
@@ -46,4 +42,9 @@ gem 'jquery-datatables-rails' #, github: 'rweng/jquery-datatables-rails'
 gem 'ajax-datatables-rails'
 gem 'kaminari'
 gem 'rubyzip'
-gem "bullet", :group => "development"
+group :development do
+    gem 'railroady'
+    gem 'sqlite3'
+    gem 'capistrano' 
+    gem "bullet"   
+end
