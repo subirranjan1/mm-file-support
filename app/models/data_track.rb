@@ -133,6 +133,7 @@ class DataTrack < ActiveRecord::Base
           asset.attachable = track
           asset.save!
           track.asset = asset
+          puts "succeeded on #{row['data_track_filename']}"
         rescue
           puts "failed on #{row['data_track_filename']}"
         end
