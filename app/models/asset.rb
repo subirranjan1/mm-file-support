@@ -12,7 +12,6 @@ class Asset < ActiveRecord::Base
   #must update before going live #TODO
   do_not_validate_attachment_file_type :file
   
-  
 private
 
   def normalize_file_name
