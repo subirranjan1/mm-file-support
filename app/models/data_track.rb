@@ -58,7 +58,7 @@ class DataTrack < ActiveRecord::Base
       end
       sensor_names = row['project_default_sensor_names'].split(",")
       sensor_names.each do |name|
-        sensor = SensorType.find_by_name(name.strip) || Mover.new(name: name.strip)
+        sensor = SensorType.find_by_name(name.strip) || SensorType.new(name: name.strip)
         unless project.sensor_types.include?(sensor)
           project.sensor_types << sensor
         end        
