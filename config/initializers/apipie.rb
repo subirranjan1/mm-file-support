@@ -1,6 +1,6 @@
 Apipie.configure do |config|
   config.app_name                = "FileSupportMovingstories"
-  config.api_base_url            = ""
+  config.api_base_url            = "http://moda.movingstories.ca"
   config.doc_base_url            = "/apipie"
   config.validate = false  
   config.app_info = <<-DOC

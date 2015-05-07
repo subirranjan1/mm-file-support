@@ -136,7 +136,7 @@ class MovementGroupsController < ApplicationController
 
     send_file t.path, :type => 'application/zip',
       :disposition => 'attachment',
-      :filename => "mnm-db-group-#{group_dir}.zip"
+      :filename => "moda-group-#{group_dir}.zip"
       t.close
   end
   

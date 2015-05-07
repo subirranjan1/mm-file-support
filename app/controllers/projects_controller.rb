@@ -143,7 +143,7 @@ class ProjectsController < ApplicationController
 
     send_file t.path, :type => 'application/zip',
       :disposition => 'attachment',
-      :filename => sanitize_filename("mnm-db-#{project_dir}.zip")
+      :filename => sanitize_filename("moda-#{project_dir}.zip")
       t.close
   end
   

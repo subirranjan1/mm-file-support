@@ -118,7 +118,7 @@ class TakesController < ApplicationController
     
     send_file t.path, :type => 'application/zip',
       :disposition => 'attachment',
-      :filename => "mnm-db-take-#{take_dir}.zip"
+      :filename => "moda-take-#{take_dir}.zip"
       t.close
   end
   # DELETE /takes/1
