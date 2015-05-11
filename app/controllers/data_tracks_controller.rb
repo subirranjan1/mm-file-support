@@ -91,12 +91,12 @@ class DataTracksController < ApplicationController
     @data_track = DataTrack.new(data_track_params)
     @data_track.owner = current_user   
     @data_track.asset = asset   
-    @movement_groups = MovementGroup.all
     @sensor_types = SensorType.all
+    @takes = Take.all    
     respond_to do |format|
       if @data_track.save
         # format.html { redirect_to @data_track, notice: 'Data track was successfully created.' }
-        format.html { redirect_to({controller: 'projects', action: 'mine'}, notice: 'Data track was successfully created.') }                
+        format.html { redirect_to(take_path(@data_track.take), notice: 'Data track was successfully created.') }                
         format.json { render action: 'show', status: :created, location: @data_track }
       else
         format.html { render action: 'new' }
@@ -160,7 +160,7 @@ class DataTracksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def data_track_params
-      params.require(:data_track).permit(:name, :description, :format, :movement_group_id, :tag_list, :technician, :recorded_on, :public, :user_id, :sensor_type_ids => [], :mover_ids => [])
+      params.require(:data_track).permit(:name, :description, :format, :take_id, :tag_list, :technician, :recorded_on, :public, :user_id, :sensor_type_ids => [], :mover_ids => [])
     end
     
     def process_attached_file

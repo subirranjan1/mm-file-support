@@ -65,7 +65,7 @@ class MovementGroupsController < ApplicationController
     respond_to do |format|
       if @movement_group.save
         # format.html { redirect_to @movement_group, notice: 'Movement group was successfully created.' }
-        format.html { redirect_to({controller: 'projects', action: 'mine'}, notice: 'Movement take was successfully created.') }        
+        format.html { redirect_to(project_path(@movement_group.project), notice: 'Movement take was successfully created.') }        
         format.json { render action: 'show', status: :created, location: @movement_group }
       else
         format.html { render action: 'new' }

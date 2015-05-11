@@ -89,16 +89,16 @@
 	</div>
 </div>
 <% if @project.movement_groups.empty? %>
-	<p>No associated movement takes yet. 
+	<p>No associated movement groups yet. 
 		<% if authorized? @project %>
-			<small><%= link_to add_link_html("Add new take"), new_movement_group_path(project_id: @project.id) %></small>
+			<small><%= link_to add_link_html("Add new group"), new_movement_group_path(project_id: @project.id) %></small>
 		<% end %>
 	</p>
 <% else %>
 	<% project_counter ||= 1%>
 	<h5>Movement Groups <small><%= link_to add_link_html("Add new group"), new_movement_group_path(project_id: @project.id) %></small></h5>
 	<div class="panel-group" id="accordion<%=project_counter%>">
-		<%= render partial: 'group', collection: @project.movement_groups.includes(:owner, :takes).order(:name).select {|g| g.public? or g.is_accessible_by?(@current_user) } %>
+		<%= render partial: 'group', collection: @project.movement_groups.includes(:owner).order(:name).select {|g| g.public? or g.is_accessible_by?(current_user) } %>
 	</div>
 <% end %>
 
