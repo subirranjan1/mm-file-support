@@ -12,7 +12,7 @@ module ProjectsHelper
   end
   
   def group_link_or_name(group)
-    if group.is_accessible_by?(@current_user) or group.public?
+    if group.is_accessible_by?(current_user) or group.public?
       link_to(truncate(group.name, length: 20), movement_group_path(group)) 
     else
       truncate(group.name, length: 20)
