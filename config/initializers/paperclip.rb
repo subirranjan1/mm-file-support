@@ -8,3 +8,6 @@
 #    end
 #  end
 # end
+Paperclip.options[:content_type_mappings] = {
+  :json => "text/plain"
+}

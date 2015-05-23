@@ -11,6 +11,7 @@ FileSupportMovingstories::Application.routes.draw do
   # get '/data_tracks/provide', to: 'data_tracks#provide'
   # post '/data_tracks/import', to: 'data_tracks#import'
   get "myprojects" => "projects#mine", :as => "myprojects"
+  get "movement_annotations/for"
   get "log_out" => "sessions#destroy", :as => "log_out"
   get "log_in" => "sessions#new", :as => "log_in"
   get "sign_up" => "users#new", :as => "sign_up"

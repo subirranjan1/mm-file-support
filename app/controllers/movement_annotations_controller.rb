@@ -1,6 +1,6 @@
 class MovementAnnotationsController < ApplicationController
   before_action :set_movement_annotation, only: [:show, :edit, :update, :destroy]
-  before_filter :ensure_logged_in, except: [:index, :show]
+  before_filter :ensure_logged_in, except: [:index, :show, :for]
   before_filter ->(param=@movement_annotation) { ensure_owner param }, only: %w{destroy}
   before_filter ->(param=@movement_annotation) { ensure_authorized param }, only: %w{edit update}
   before_filter ->(param=@movement_annotation) { ensure_public_or_authorized param }, only: %w{show}
@@ -9,8 +9,8 @@ class MovementAnnotationsController < ApplicationController
   def_param_group :movement_annotation do
     param :movement_annotation, Hash, :required => true, :action_aware => true do
       param :name, String, "Name of the annotation", :required => true
-      param :attached_id, String, "Foreign key ID of the related DataTrack | MovementGroup | Project", :required => true      
-      param :attached_type, String, "Type of the related DataTrack | MovementGroup | Project"
+      param :attached_id, String, "Foreign key ID of the related (DataTrack | Take | MovementGroup | Project)", :required => true      
+      param :attached_type, String, "Type of the related (DataTrack | Take | MovementGroup | Project)"
       param :description, String, "Description of the :name, :description, :format, :movement_annotation_id, :public, :tag_list, :user_id"
       param :public, ["0", "1"], "Should this annotation be accessible to the public? (Default: false)" 
       param :asset_file, Hash, "Remember to set your header to include 'Content-Type: multipart/form-data'", :required => true do
@@ -26,8 +26,29 @@ class MovementAnnotationsController < ApplicationController
   error 401, "The user you attempted authentication with cannot be authenticated"  
   def index
     @movement_annotations = MovementAnnotation.all
+    if current_user
+      @movement_annotations = @movement_annotations.select { |attached| attached.is_accessible_by?(@current_user) or attached.public?}
+    else
+      @movement_annotations = @movement_annotations.select { |attached| attached.public? }
+    end    
   end
 
+  
+  api :GET, "/movement_annotations/for.json", "List movement annotations for a specific object that are accessible by the current user or are marked public"
+  param :id, String, "Primary key ID of the object in question", :required => true
+  param :attached_type, String, "Type of the related (DataTrack | Take | MovementGroup | Project)", :required => true  
+  error 404, "An object could not be found with the requested id and attachment Type."
+  error 401, "The user you attempted authentication with cannot be authenticated"    
+  def for
+    object = params[:attached_type].constantize.find(params[:id])
+    if current_user
+      @movement_annotations = object.movement_annotations.select { |attached| attached.is_accessible_by?(@current_user) or attached.public?}
+    else
+      @movement_annotations = object.movement_annotations.select { |attached| attached.public? }  
+    end
+    render :index    
+  end
+  
   # GET /movement_annotations/1
   # GET /movement_annotations/1.json
   api :GET, "/movement_annotations/:id.json", "Show a movement annotation that the user has access to or is marked public"

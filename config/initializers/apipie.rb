@@ -5,7 +5,7 @@ Apipie.configure do |config|
   config.validate = false  
   config.app_info = <<-DOC
     This app provides file support for the Moving Stories project and connectivity through the mplusmware middleware.\n
-    The base URL for all API requests is "http://209.87.60.87/". At this time, all requests must use http.\n
+    The base URL for all API requests is http://moda.movingstories.ca. At this time, all requests must use http.\n
     Authentication: Accessing data via the API requires use of an user name and password via HTTP Basic Authentication generated via
     the web front-end.\n
     The following resources are available for access, as described. Per standard RESTful practice, use the appropriate HTTP method.
