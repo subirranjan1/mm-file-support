@@ -170,10 +170,12 @@ class DataTracksController < ApplicationController
         tempfile.binmode
         # get the file nad decode it with base64, then write it to the tempfile
         tempfile.write(Base64.decode64(params[:data_track][:asset_file][:file]))
+        tempfile.close        
         # create a new uploaded file
-        uploaded_file = ActionDispatch::Http::UploadedFile.new(:tempfile => tempfile, :filename => params[:data_track][:asset_file][:original_filename], :original_filename => params[:data_track][:asset_file][:original_filename]) 
+        uploaded_file = ActionDispatch::Http::UploadedFile.new(:tempfile => tempfile, :type => params[:data_track][:asset_file][:content_type], :content_type => params[:data_track][:asset_file][:content_type], :filename => params[:data_track][:asset_file][:original_filename], :original_filename => params[:data_track][:asset_file][:original_filename]) 
         #replace the exisiting params with the new uploaded file
         params[:data_track][:asset_file] = uploaded_file
+      
       end
     end
 end

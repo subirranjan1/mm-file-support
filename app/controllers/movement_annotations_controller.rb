@@ -144,7 +144,7 @@ class MovementAnnotationsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def movement_annotation_params
-      params.require(:movement_annotation).permit(:name, :description, :format, :attached_type, :attached_id, :public, :tag_list, :user_id)
+      params.require(:movement_annotation).permit(:name, :description, :format, :attached_type, :attached_id, :public, :tag_list, :user_id, :asset_file => [])
     end
     
     def process_attached_file
@@ -154,10 +154,13 @@ class MovementAnnotationsController < ApplicationController
         tempfile.binmode
         # get the file nad decode it with base64, then write it to the tempfile
         tempfile.write(Base64.decode64(params[:movement_annotation][:asset_file][:file]))
+        # tempfile.content_type = params[:movement_annotation][:asset_file][:content_type]
+        tempfile.close
         # create a new uploaded file
-        uploaded_file = ActionDispatch::Http::UploadedFile.new(:tempfile => tempfile, :filename => params[:movement_annotation][:asset_file][:original_filename], :original_filename => params[:movement_annotation][:asset_file][:original_filename]) 
+        uploaded_file = ActionDispatch::Http::UploadedFile.new(:tempfile => tempfile, :content_type => params[:movement_annotation][:asset_file][:content_type], :type => params[:movement_annotation][:asset_file][:content_type], :filename => params[:movement_annotation][:asset_file][:original_filename], :original_filename => params[:movement_annotation][:asset_file][:original_filename]) 
         #replace the exisiting params with the new uploaded file
         params[:movement_annotation][:asset_file] = uploaded_file
+        
       end
     end    
 end
