@@ -135,6 +135,7 @@ class DataTrack < ActiveRecord::Base
           track.asset = asset
           #puts "succeeded on #{row['data_track_filename']}"
         rescue
+          p $!, *$@
           puts "failed on #{row['data_track_filename']}"
         end
       end
