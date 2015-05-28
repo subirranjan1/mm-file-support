@@ -9,5 +9,6 @@
 #  end
 # end
 Paperclip.options[:content_type_mappings] = {
-  :json => "text/plain"
+  :json => "text/plain",
+  :c3d => "application/octet-stream"
 }
