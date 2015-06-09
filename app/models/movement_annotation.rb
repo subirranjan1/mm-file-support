@@ -6,6 +6,6 @@ class MovementAnnotation < ActiveRecord::Base
   validates :name, presence: true
 
   def is_accessible_by?(user)
-    owner == user or data_track.movement_group.project.users.include? user
+    owner == user or attached.is_accessible_by?(user)
   end
 end
