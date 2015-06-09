@@ -1,13 +1,52 @@
 <% provide(:title, "Instructions") %>
-<h2>Help!</h2>
-<p>This database collects records for motion capture files. They are stored in a hierarchy of Project - Movement Take - Data Track, with Project being the major thematic division, and Movement Take being a temporal division. Project View allows you to browse available data from a top-down, thematic view. Track View provides bottom-up access with an immediate focus on available files.</p>
+<p>This is a database for recording motion capture files and their corresponding annotations. They are stored in a hierarchy of Project - Movement Take - Data Track, with Project being the major thematic division, and Movement Take being a temporal division. Project View allows you to browse available data from a top-down, thematic view. Track View provides bottom-up access with an immediate focus on available files.</p>
 	
 <h3>Using data</h3>
-<p>Each project is licensed under different terms, so if you wish to use data, you need to check each project individually. </p>
+<p>Each project can be licensed under different terms, so if you wish to use data, you need to check each project individually. </p>
 
 <h3>Programmatic Access</h3>
 <p>The database can be accessed using our <%= link_to "RESTful API", "/apipie"%>. Your API access level is the same as your web account, although
 	authentication is required for all access, unlike the public browsing available on this web site.</p>
 
 <h3>Contributing Data</h3>
-<p>If you wish to contribute data, please contact an existing user for an account, or the <%= mail_to "michael_nixon@sfu.ca", "site administrator"%> if you don't know any.</p>
+<p>If you wish to contribute data, please contact an existing user for an account, or the <%= mail_to "michael_nixon@sfu.ca", "site administrator"%> if you don't know any one.</p>
+<%= image_tag(image_path("sample_menu.png"), :class => "floater")%>
+<h4>How to add data</h4>
+To add data to MoDa, you'll need to add each piece of the hierarchy in turn.
+<ol>
+<li><%= link_to "Login", "http://moda.movingstories.ca/log_in"%>. </li>
+<li>Select your email address to activate the dropdown menu. </li>
+<li>Choose "Create new project" (first item).</li>
+<li>Fill in the fields, including name, and description.
+
+<p>For fields like Movers and Sensor types, make sure you use the appropriate keyboard commands for your OS to select as many names as appropriate. If the Movers or Sensor types don’t exist yet, use "Manage sensors" or "Manage movers" from the menu BEFORE.</p>
+
+<p>Entering the Movers and Sensor Types here provides the default for new objects that are created, and can be overridden later on. So, for example, Mary and Joe could be the movers for your project, while one Take may record Mary and another Take may record Joe.</p>
+
+<p>Paste the appropriate licensing text into the License field. 
+The Tags field allow for freeform tags to be added – separate these with commas, not spaces. Finally, the Public checkbox "publishes" the project for everyone to see.</p>
+</li>
+<li>Click the Create Project button and your project is complete!</li>
+</ol>
+<h4>Adding new Movement Groups and Takes</h4>
+<p>These two subsidiary organizational units are added from their parent element. So, to add a new Movement Group, click "Add new group" from the project page. To add a new take, click "Add new take" from the Movement Group page (once created). Using this layered hierarchy is mandatory, although if your work treats Movement Groups and Takes as the same, you can simply have a "meaningless" empty Movement Group to hold the take. This is similar to how you use meaningless <em>div</em> elements in html simply to hold other things.</p>
+<h4>Adding new Data Tracks</h4>
+<p>Data Tracks are records responsible for holding all information about actual movement capture files. You start a new entry by clicking "Add new data track" from the appropriate Take page.</p>
+
+<p>As with the other elements, you can enter a name and description. You also have the option to designate the Technician who handled the recording, the date the information was recorded on, the Movers, the Sensor Types, freeform Tags. Finally, you have the choice to immediately make the data track available to the public using the Public checkbox.</p>
+
+<p>Don’t forget to use the Asset file 'Browse' button to actually choose your file, too!</p>
+<h4>Controlling who can edit your work</h4>
+<p>In MoDa, only creators normally have the ability to edit any information throughout the hierarchy of elements. However, you can use an "Access Group" to add additional editors. Click "Manage access groups" on the menu, and you will have the ability to create and edit your access groups. An access group is simply a mapping between a project and a list of users who will be permitted to edit it. </p>
+
+<p>The only exception to this is that any logged in user may add annotations (uploaded files) to your work. This is to facilitate data sharing and the creation of supplementary knowledge without requiring everyone be added to an Access Group.</p>
+
+<p>As per above, whether the public (non-logged in viewers and logged in viewers without Access Group Rights) can see your work is controlled by the Public checkbox.</p>
+
+<h4>Batch Adding Existing Caches of Movement Data</h4>
+<p>We have a process that allows us to add existing files all at once without using the web interface. This process requires:</p>
+<ol>
+	<li>You fill out a spreadsheet, one row per file to specify all required info described above (a blank spreadsheet with the appropriate headers will be supplied, as well as some utility scripts to automate the data gathering)</li>
+<li>all the data files are transferred across to our servers (e.g. scp from a network drive)</li>
+</ol>
+<p>You will need to balance which process sounds the most reasonable for your amount of data.</p>
