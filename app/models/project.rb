@@ -42,6 +42,29 @@ class Project < ActiveRecord::Base
     m.uniq
   end
   
+  # returns true if the project or any of its subsidiary components isn't true
+  def any_not_public?
+    return true unless self.public?
+    movement_groups.each do |group|
+      return true unless group.public?
+      group.takes.each do |take|
+        return true unless take.public?
+      end
+    end
+    return false
+  end
+  
+  #this sets the project and all subsidiary components to public==true
+  def make_public
+    unless self.public?
+      self.public = true 
+      self.save!
+    end
+    movement_groups.each do |group|
+      group.make_public
+    end
+  end
+  
   private
   
     def user_in_access_groups?(user)

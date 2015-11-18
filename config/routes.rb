@@ -26,7 +26,9 @@ FileSupportMovingstories::Application.routes.draw do
   resources :movement_annotations
   resources :data_tracks
   resources :movement_groups
-  resources :projects
+  resources :projects do
+    post 'make_public', on: :member
+  end
   resources :takes  
   resources :users, except: [:index]
   resources :sessions, only: [:new, :create, :destroy]

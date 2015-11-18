@@ -13,6 +13,10 @@
 				 This project can only be seen by its creator and approved access groups.
 				 <% end %></em>
 			</p>
+			<% if @project.any_not_public? %>
+			<p><span class="glyphicon glyphicon-exclamation-sign"></span> <em>You can send the entire project and its subsidiary elements <%= link_to "public", make_public_project_path(@project), method: :post, confirm: "Are you sure you want to make the whole project public?" %>.</em>
+		  </p>
+			<% end %>
 		<% end %>
 		<p>
 		  <%= @project.description %>

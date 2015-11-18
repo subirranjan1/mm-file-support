@@ -117,7 +117,7 @@ class MovementGroupsController < ApplicationController
       #TODO: add license and readme with some meta info
       license = Tempfile.new("license-#{Time.now}")
       preamble = "Thanks for downloading from the m+m movement database at http://db.mplusm.ca. Here are the licensing terms.\n"
-      license.write(preamble+@movement_group.project.license)
+      license.write(preamble+"#{@movement_group.project.license}")
       z.put_next_entry("#{group_dir}/license.txt")      
       z.print IO.read(open(license))
       @movement_group.takes.where(public: true).each do |take|

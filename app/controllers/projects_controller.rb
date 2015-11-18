@@ -1,6 +1,6 @@
 require 'zip'
 class ProjectsController < ApplicationController
-  before_action :set_project, only: [:show, :edit, :update, :destroy, :export]
+  before_action :set_project, only: [:show, :edit, :update, :destroy, :export, :make_public]
   before_filter :ensure_logged_in, except: [:index, :show]
   before_filter ->(param=@project) { ensure_owner param }, only: %w{destroy}
   before_filter ->(param=@project) { ensure_authorized param }, only: %w{edit update}
@@ -45,6 +45,7 @@ class ProjectsController < ApplicationController
   error 404, "A project could not be found with the requested id."  
   error 401, "The user you attempted authentication with cannot be authenticated or is not set to have access to the project and it is not public."  
   def show
+    
   end
 
   # GET /projects/new
@@ -110,6 +111,18 @@ class ProjectsController < ApplicationController
       format.json { head :no_content }
     end
   end
+  
+  api :POST, "/projects/make_public/:id.json", "Switch an entire project and its subsidiary components to public access mode."
+  error 401, "The user you attempted authentication with cannot be authenticated or is not set to have access to the project"  
+  error 404, "A project could not be found with the requested id."  
+  def make_public
+    # if @project.is_accessible_by current_user
+    @project.make_public
+    respond_to do |format|
+      format.html { redirect_to({action: 'show', id: @project.id}, notice: 'Project was successfully set public.') }
+      format.json { head :no_content }
+    end    
+  end
 
   api :GET, "/projects/export/:id.json", "Retrieve a zip of indicated projects with all associated groups, takes, and data tracks, with attached files (public only)"
   param :id, String, "Primary key ID of the project in question", :required => true
@@ -121,7 +134,7 @@ class ProjectsController < ApplicationController
       #TODO: add license and readme with some meta info
       license = Tempfile.new("license-#{Time.now}")
       preamble = "Thanks for downloading from the m+m movement database at http://db.mplusm.ca. Here are the licensing terms.\n"
-      license.write(preamble+@project.license)
+      license.write(preamble+"#{@project.license}")
       # include track back info and author info
       z.put_next_entry("#{project_dir}/license.txt")
       z.print IO.read(open(license))
@@ -150,7 +163,7 @@ class ProjectsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_project
-      @project = Project.find(params[:id])
+      @project = Project.find(params[:id], :include => [:owner, :movement_groups])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

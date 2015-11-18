@@ -19,6 +19,16 @@ class MovementGroup < ActiveRecord::Base
     end
   end
   
+  def make_public
+    unless self.public?
+      self.public = true 
+      self.save!
+    end
+    takes.each do |take|
+      take.make_public
+    end
+  end
+  
   # provide a slightly nicer url for referencing individual items
   def to_param
     [id, name.parameterize].join("-")
