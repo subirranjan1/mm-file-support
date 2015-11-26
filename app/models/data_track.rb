@@ -33,7 +33,7 @@ class DataTrack < ActiveRecord::Base
     owner == user or take.is_accessible_by? user
   end
   
-  def self.import(file)
+  def self.import(file, override)
     CSV.foreach(file, headers: true, skip_blanks: true) do |row|
       owner_email = row['owner_email']
       owner_email = "default-owner@movingstories.ca" if owner_email.blank?
@@ -48,31 +48,34 @@ class DataTrack < ActiveRecord::Base
       project = Project.find_by_name(row['project_name']) || Project.new(name: row['project_name'])
       project.owner = owner
       project.description = row['project_description']
-      mover_names = row['project_default_mover_names'].split(",") 
       project.save!      
-      mover_names.each do |name|
-        mover = Mover.find_by_name(name.strip) || Mover.new(name: name.strip)
-        unless project.movers.include?(mover)
-           project.movers << mover
+      unless row['project_default_mover_names'].blank?
+        mover_names = row['project_default_mover_names'].split(",") 
+        mover_names.each do |name|
+          mover = Mover.find_by_name(name.strip) || Mover.new(name: name.strip)
+          unless project.movers.include?(mover)
+             project.movers << mover
+          end
         end
       end
-      sensor_names = row['project_default_sensor_names'].split(",")
-      sensor_names.each do |name|
-        sensor = SensorType.find_by_name(name.strip) || SensorType.new(name: name.strip)
-        unless project.sensor_types.include?(sensor)
-          project.sensor_types << sensor
-        end        
+      unless row['project_default_sensor_names'].blank?
+        sensor_names = row['project_default_sensor_names'].split(",")
+        sensor_names.each do |name|
+          sensor = SensorType.find_by_name(name.strip) || SensorType.new(name: name.strip)
+          unless project.sensor_types.include?(sensor)
+            project.sensor_types << sensor
+          end        
+        end
       end
-
+      
       group = MovementGroup.find_by_name(row['movement_group_name']) || MovementGroup.new(name: row['movement_group_name'])
       group.description = row['movement_group_desc']
       group.project = project
       group.owner = owner
-      group.save!      
-      mover_names = row['movement_group_default_mover_names'].split(",")
-      if mover_names.empty?
+      if row['movement_group_default_mover_names'].blank?
         group.movers = project.movers
       else
+        mover_names = row['movement_group_default_mover_names'].split(",")
         mover_names.each do |name|
           mover = Mover.find_by_name(name.strip) || Mover.new(name: name.strip)
           unless group.movers.include?(mover)
@@ -86,11 +89,10 @@ class DataTrack < ActiveRecord::Base
       take.description = row['movement_take_desc']
       take.movement_group = group
       take.owner = owner
-      take.save!      
-      mover_names = row['movement_take_default_mover_names'].split(",")
-      if mover_names.empty?
+      if row['movement_take_default_mover_names'].blank?
         take.movers = take.movement_group.movers
       else
+        mover_names = row['movement_take_default_mover_names'].split(",")
         mover_names.each do |name|
           mover = Mover.find_by_name(name.strip) || Mover.new(name: name.strip)
           unless take.movers.include?(mover)
@@ -100,7 +102,6 @@ class DataTrack < ActiveRecord::Base
       end
       take.save!      
       
-      # DataTrack.find_by_name(row['data_track_name']) || 
       track = DataTrack.find_by_name(row['data_track_name']) || DataTrack.create(name: row['data_track_name'])
       track.take = take
       track.owner = owner
@@ -108,10 +109,11 @@ class DataTrack < ActiveRecord::Base
       track.description = row['data_track_desc']
       track.technician = row['data_track_technician']
       track.save!       
-      mover_names = row['data_track_mover_names'].split(",")
-      if mover_names.empty?
+
+      if row['data_track_mover_names'].blank?
         track.movers = take.movers
       else
+        mover_names = row['data_track_mover_names'].split(",")        
         mover_names.each do |name|
           mover = Mover.find_by_name(name.strip) || Mover.new(name: name.strip)
           unless track.movers.include?(mover)
@@ -119,24 +121,27 @@ class DataTrack < ActiveRecord::Base
           end          
         end
       end
-      sensor_names = row['data_track_sensor_names'].split(",")
-      sensor_names.each do |name|
-        sensor = SensorType.find_by_name(name.strip) || SensorType.new(name: name.strip)
-        unless track.sensor_types.include?(sensor)
-          track.sensor_types << sensor
-        end        
+      unless row['data_track_sensor_names'].blank?
+        sensor_names = row['data_track_sensor_names'].split(",")
+        sensor_names.each do |name|
+          sensor = SensorType.find_by_name(name.strip) || SensorType.new(name: name.strip)
+          unless track.sensor_types.include?(sensor)
+            track.sensor_types << sensor
+          end        
+        end
       end
-      
-      unless row['data_track_filename'].blank? 
-        begin
-          asset = Asset.new(:file => File.open(row['data_track_filename']))
-          asset.attachable = track
-          asset.save!
-          track.asset = asset
-          #puts "succeeded on #{row['data_track_filename']}"
-        rescue
-          p $!, *$@
-          puts "failed on #{row['data_track_filename']}"
+      unless track.asset and not override
+        unless row['data_track_filename'].blank? 
+          begin
+            asset = Asset.new(:file => File.open(row['data_track_filename']))
+            asset.attachable = track
+            asset.save!
+            track.asset = asset
+            #puts "succeeded on #{row['data_track_filename']}"
+          rescue
+            p $!, *$@
+            puts "failed on #{row['data_track_filename']}"
+          end
         end
       end
       track.save!
