@@ -23,6 +23,13 @@ class DataTrack < ActiveRecord::Base
     tag_list
   end
   
+  def make_public
+    unless self.public?
+      self.public = true 
+      self.save!
+    end
+  end
+  
   # provide a slightly nicer url for referencing individual items
   def to_param
     [id, name.parameterize].join("-")

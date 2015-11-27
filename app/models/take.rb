@@ -23,6 +23,9 @@ class Take < ActiveRecord::Base
       self.public = true 
       self.save!
     end
+    data_tracks.each do |track|
+      track.make_public
+    end
   end
   
   # provide a slightly nicer url for referencing individual items

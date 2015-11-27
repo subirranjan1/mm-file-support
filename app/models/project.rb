@@ -49,6 +49,9 @@ class Project < ActiveRecord::Base
       return true unless group.public?
       group.takes.each do |take|
         return true unless take.public?
+        take.data_tracks.each do |track|
+          return true unless track.public?
+        end
       end
     end
     return false
