@@ -28,13 +28,19 @@ class DataTracksController < ApplicationController
   api :GET, "/data_tracks.json", "List data tracks that are accessible by the current user or are marked public"
   param :search, String, "A search parameter to refine terms"
   error 401, "The user you attempted authentication with cannot be authenticated"    
+  # todo: this needs to not complete this search on load since it's completely bogging down the load and the json method loads partial elements much faster
   def index
-    @data_tracks = DataTrack.includes(:take, :owner, :sensor_types, :movers).search(params[:search]).order(:name)
-    if current_user
-      @data_tracks.select! { |data_track| data_track.public? or data_track.is_accessible_by?(@current_user)  }
-    else
-      @data_tracks.select! { |data_track| data_track.public? }
-    end    
+    respond_to do |format|
+      format.html { }
+      format.json {
+        @data_tracks = DataTrack.includes(:take, :owner, :sensor_types, :movers).search(params[:search]).order(:name)
+        if current_user
+          @data_tracks.select! { |data_track| data_track.public? or data_track.is_accessible_by?(@current_user)  }
+        else
+          @data_tracks.select! { |data_track| data_track.public? }
+        end    
+      }
+    end
   end
   
   def index_data_tables
