@@ -1,21 +1,21 @@
-<nav class="navbar navbar-default navbar-fixed-top ng-scope" role="navigation"  style="background-color: azure;">
-  <div class="container">
+<nav class="navbar navbar-inverse navbar-fixed-top ng-scope" role="navigation"  >
+  <div class="container-fluid">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-ex1-collapse">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-ex1-collapse">
         <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a href="/" class="navbar-brand">MoDa - M+M Movement Database</a>
+      <a href="/" class="navbar-brand">MoDa</a>
     </div>
     <div class="collapse navbar-collapse" id="navbar-ex1-collapse">
 			<ul class="nav navbar-nav">
-				<li><%= link_to "Browse Projects", "/projects/"%></li>				
-				<li><%= link_to "Browse Tracks", "/data_tracks/"%></li>				
+				<li><%= link_to "Projects", "/projects/"%></li>
+				<li><%= link_to "Tracks", "/data_tracks/"%></li>
 				<li><%= link_to "About", "/pages/about" %></li>
 				<li><%= link_to "Contact Us", "/pages/contact" %></li>
-				<li><%= link_to "Help", "/pages/howto" %></li>				
+				<li><%= link_to "Help", "/pages/howto" %></li>
 			</ul>
       <ul class="nav navbar-nav navbar-right">
 				<% if current_user %>
@@ -25,11 +25,11 @@
           </a>
           <ul class="dropdown-menu" role="menu">
 						<li><%= link_to 'Create new project', new_project_path %></li>
-						<li><%= link_to 'View my projects', myprojects_path %></li>													
+						<li><%= link_to 'View my projects', myprojects_path %></li>
 						<li class="divider"></li>
 						<li><%= link_to 'Manage sensors', sensor_types_path %></li>
 						<li><%= link_to 'Manage movers',  movers_path %></li>
-						<li><%= link_to 'Manage access groups',  access_groups_path %></li>						
+						<li><%= link_to 'Manage access groups',  access_groups_path %></li>
             <li class="divider"></li>
             <li><%= link_to "Create new user account", new_user_path %></li>
             <li><%= link_to "Edit my profile", edit_user_path(current_user) %></li>
@@ -42,6 +42,34 @@
 					</li>
 				<% end %>
       </ul>
+      <form class="navbar-form navbar-right">
+        <input type="text" class="form-control" placeholder="Search Portal...">
+      </form>
     </div>
   </div>
 </nav>
+
+<!--<nav class="navbar navbar-inverse navbar-fixed-top">-->
+  <!--<div class="container-fluid">-->
+    <!--<div class="navbar-header">-->
+      <!--<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">-->
+        <!--<span class="sr-only">Toggle navigation</span>-->
+        <!--<span class="icon-bar"></span>-->
+        <!--<span class="icon-bar"></span>-->
+        <!--<span class="icon-bar"></span>-->
+      <!--</button>-->
+      <!--<a class="navbar-brand" href="#">Project name</a>-->
+    <!--</div>-->
+    <!--<div id="navbar" class="navbar-collapse collapse">-->
+      <!--<ul class="nav navbar-nav navbar-right">-->
+        <!--<li><a href="#">Dashboard</a></li>-->
+        <!--<li><a href="#">Settings</a></li>-->
+        <!--<li><a href="#">Profile</a></li>-->
+        <!--<li><a href="#">Help</a></li>-->
+      <!--</ul>-->
+      <!--<form class="navbar-form navbar-right">-->
+        <!--<input type="text" class="form-control" placeholder="Search...">-->
+      <!--</form>-->
+    <!--</div>-->
+  <!--</div>-->
+<!--</nav>-->
